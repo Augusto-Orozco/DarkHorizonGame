@@ -26,7 +26,7 @@ public class LightsRange : MonoBehaviour
     void Start()
     {
         if (myLight == null) 
-            myLight = GetComponentInChildren<Light>();
+            myLight = GetComponent<Light>();
     }
 
     void Update()
