@@ -16,10 +16,12 @@ public class PlayerMovement : MonoBehaviour
     public string preRunAnimation = "PreRun";
     public string runAnimation = "Run";
     public string postRunAnimation = "PostRun";
+    public string shootingAnimation = "Shooting";
 
     [Header("Duraciones")]
     public float preRunDuration = 0.35f;
     public float postRunDuration = 0.35f;
+    public float shootingDuration = 0.5f;
 
     private CharacterController controller;
     private Vector3 verticalVelocity;
@@ -33,7 +35,8 @@ public class PlayerMovement : MonoBehaviour
         Idle,
         PreRun,
         Run,
-        PostRun
+        PostRun,
+        Shooting
     }
 
     void Start()
@@ -181,6 +184,17 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 break;
+
+            case MovementState.Shooting:
+
+                animationTimer += Time.deltaTime;
+                if (animationTimer >= shootingDuration)
+                {
+                    state = MovementState.Idle;
+                    PlayAnimation(idleAnimation);
+                }
+
+            break;
         }
     }
 
