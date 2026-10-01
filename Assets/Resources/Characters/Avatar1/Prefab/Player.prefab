@@ -198,26 +198,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightsRange
   myLight: {fileID: 8941930463409932196}
-  Radio: 7
+  Radio: 10
   UbicacionRango: {x: 0.52, y: 1.99, z: 3.34}
   playerLayer:
     serializedVersion: 2
     m_Bits: 8
   NivelesIntenso:
-  - 50
-  - 70
-  - 90
-  - 110
+  - 700
+  - 1400
+  - 2100
+  - 2800
   rangeLevels:
-  - 80
-  - 90
-  - 100
-  - 110
+  - 500
+  - 1000
+  - 1500
+  - 2000
   AngulosSpot:
-  - 70
-  - 90
-  - 110
-  - 130
+  - 100
+  - 120
+  - 140
+  - 150
   suavizado: 3
 --- !u!1 &5036839293908583148
 GameObject:
@@ -322,7 +322,7 @@ Light:
   m_Type: 0
   m_Color: {r: 0.82641506, g: 0.6215744, b: 0.3664293, a: 1}
   m_Intensity: 10
-  m_Range: 36.72789
+  m_Range: 40
   m_SpotAngle: 60
   m_InnerSpotAngle: 30
   m_CookieSize2D: {x: 0.5, y: 0.5}
@@ -363,7 +363,7 @@ Light:
   m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
