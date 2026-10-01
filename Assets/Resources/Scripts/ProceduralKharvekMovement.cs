@@ -1,39 +1,42 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ProceduralKharvekMovement : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float moveSpeed = 250f;
-    [SerializeField] private float acceleration = 8f;
-    [SerializeField] private float deceleration = 10f;
-    [SerializeField] private float rotationSpeed = 8f;
-    [SerializeField] private Camera movementCamera;
+    [SerializeField] private float moveSpeed = 25f;
+    [SerializeField] private float acceleration = 0.8f;
+    [SerializeField] private float deceleration = 1f;
+    [SerializeField] private float rotationSpeed = 0.8f;
+
+    [Header("Persecution")]
+    [SerializeField] private Transform player;
+    [SerializeField] private float detectionRange = 30f;
+    [SerializeField] private bool findPlayerAutomatically = true;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask = ~0;
-    [SerializeField] private float bodyProbeHeight = 150f;
-    [SerializeField] private float bodyProbeDistance = 400f;
-    [SerializeField] private float bodyHeight = 50f;
+    [SerializeField] private float bodyProbeHeight = 15f;
+    [SerializeField] private float bodyProbeDistance = 40f;
+    [SerializeField] private float bodyHeight = 5f;
     [SerializeField] private bool autoCalculateBodyHeight = true;
     [SerializeField] private float bodyLowering = 0f;
-    [SerializeField] private float groundFollowSpeed = 12f;
-    [SerializeField] private float bodyBobAmount = 5f;
-    [SerializeField] private float bodyBobSpeed = 0.05f;
+    [SerializeField] private float groundFollowSpeed = 1.2f;
+    [SerializeField] private float bodyBobAmount = 0.5f;
+    [SerializeField] private float bodyBobSpeed = 0.005f;
 
     [Header("Leg IK Targets")]
     [SerializeField] private Transform[] legTargets = new Transform[4];
-    [SerializeField] private float footProbeHeight = 150f;
-    [SerializeField] private float footProbeDistance = 400f;
-    [SerializeField] private float footOffset = 2f;
-    [SerializeField] private float footFollowSpeed = 18f;
-    [SerializeField] private float stepThreshold = 45f;
-    [SerializeField] private float stepHeight = 25f;
-    [SerializeField] private float stepDuration = 0.1f;
-    [SerializeField] private float stepDistance = 55f;
-    [SerializeField] private float stepForwardOffset = 50f;
-    [SerializeField] private float stepLeadFromSpeed = 0.5f;
-    [SerializeField] private float gaitInterval = 25f;
+    [SerializeField] private float footProbeHeight = 15f;
+    [SerializeField] private float footProbeDistance = 40f;
+    [SerializeField] private float footOffset = 0.2f;
+    [SerializeField] private float footFollowSpeed = 1.8f;
+    [SerializeField] private float stepThreshold = 4.5f;
+    [SerializeField] private float stepHeight = 2.5f;
+    [SerializeField] private float stepDuration = 0.01f;
+    [SerializeField] private float stepDistance = 5.5f;
+    [SerializeField] private float stepForwardOffset = 5f;
+    [SerializeField] private float stepLeadFromSpeed = 0.05f;
+    [SerializeField] private float gaitInterval = 2.5f;
 
     private Vector3[] legHomePositions;
     private Vector3[] stepStartPositions;
@@ -54,11 +57,16 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     private void Awake()
     {
-        if (movementCamera == null)
-            movementCamera = Camera.main;
 
         if (autoCalculateBodyHeight)
             CalculateBodyHeightFromStartPosition();
+
+        if (player == null && findPlayerAutomatically)
+        {
+            PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
+            if (playerMovement != null)
+                player = playerMovement.transform;
+        }
 
         int legCount = legTargets == null ? 0 : legTargets.Length;
         legHomePositions = new Vector3[legCount];
@@ -103,41 +111,50 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     private void MoveBody()
     {
-        Vector2 input = Vector2.zero;
-
-        if (Keyboard.current != null)
+        bool isChasing = TryGetChaseDirection(out Vector3 chaseDirection);
+        if (isChasing)
         {
-            if (Keyboard.current.wKey.isPressed) input.y += 1f;
-            if (Keyboard.current.sKey.isPressed) input.y -= 1f;
-            if (Keyboard.current.dKey.isPressed) input.x += 1f;
-            if (Keyboard.current.aKey.isPressed) input.x -= 1f;
+            lastMoveDirection = chaseDirection;
+
+            Vector3 facingDirection = Vector3.ProjectOnPlane(chaseDirection, Vector3.up);
+            if (facingDirection.sqrMagnitude > 0.001f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(facingDirection, Vector3.up);
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime);
+            }
         }
 
-        bool hasInput = input.sqrMagnitude > 0.001f;
-        float targetSpeed = hasInput ? moveSpeed : 0f;
-        float speedChange = (hasInput ? acceleration : deceleration) * moveSpeed * Time.deltaTime;
+        float targetSpeed = isChasing ? moveSpeed : 0f;
+        float speedChange = (isChasing ? acceleration : deceleration) * moveSpeed * Time.deltaTime;
         currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, speedChange);
         isMoving = currentSpeed > moveSpeed * 0.05f;
-
-        if (hasInput)
-        {
-            input.Normalize();
-
-            Vector3 forward = movementCamera == null ? Vector3.forward : movementCamera.transform.forward;
-            Vector3 right = movementCamera == null ? Vector3.right : movementCamera.transform.right;
-            forward.y = 0f;
-            right.y = 0f;
-            forward.Normalize();
-            right.Normalize();
-
-            lastMoveDirection = (forward * input.y + right * input.x).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(lastMoveDirection, transform.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
 
         transform.position += lastMoveDirection * (currentSpeed * Time.deltaTime);
         distanceSinceStep += currentSpeed * Time.deltaTime;
         bodyBobPhase += currentSpeed * Time.deltaTime * bodyBobSpeed;
+    }
+
+    private bool TryGetChaseDirection(out Vector3 chaseDirection)
+    {
+        chaseDirection = Vector3.zero;
+
+        if (player == null || detectionRange <= 0f)
+            return false;
+
+        Vector3 offset = player.position - transform.position;
+        offset.y = 0f;
+
+        if (offset.sqrMagnitude > detectionRange * detectionRange)
+            return false;
+
+        if (offset.sqrMagnitude <= 0.001f)
+            return false;
+
+        chaseDirection = offset.normalized;
+        return true;
     }
 
     private void FitBodyToGround()
@@ -243,6 +260,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(transform.position + Vector3.up * bodyProbeHeight, transform.position + Vector3.up * bodyProbeHeight + Vector3.down * bodyProbeDistance);
 
