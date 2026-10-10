@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6eec463cd4219f4382ce5f61c234851, type: 3}
   m_Name: Pistola
   m_EditorClassIdentifier: Assembly-CSharp::AmmoWeaponData
-  itemName: 
+  itemName: Pistola
   icon: {fileID: 0}
   prefab: {fileID: 0}
   slot: 1
-  damage: 10
+  damage: 100
   timeBetweenShots: 0.2
   magazineSize: 25
   maxReserveAmo: 75

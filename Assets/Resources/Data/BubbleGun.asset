@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HeatWeaponData
   itemName: Bubble Gun
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 630717805198233418, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
   slot: 0
   damage: 10
   timeBetweenShots: 0.2
