@@ -18,6 +18,8 @@ MonoBehaviour:
   slot: 0
   damage: 10
   timeBetweenShots: 0.2
+  heldPrefab: {fileID: 8841270499998432789, guid: d4ef18294e03a894880a1d84a0ba4e8f, type: 3}
+  hidesRightArm: 1
   maxHeat: 100
   heatPerShot: 8
   coolingPerSecond: 25
