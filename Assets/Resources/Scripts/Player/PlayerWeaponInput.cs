@@ -101,7 +101,6 @@ public class PlayerWeaponInput : MonoBehaviour
 
     private void DropAmmo()
     {
-        Debug.Log($"[C] Arma: {inventory.ActiveWeapon?.Data.ItemName ?? "ninguna"} | Reserva: {inventory.ActiveWeapon?.ReserveAmmo}");
 
         if (dropPoint == null || ammoBoxToDrop == null || ammoBoxToDrop.Prefab == null)
         {
