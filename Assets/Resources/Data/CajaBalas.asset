@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AmmoBoxData
   itemName: Caja de balas
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 8537393960515256092, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
   ammoAmount: 25

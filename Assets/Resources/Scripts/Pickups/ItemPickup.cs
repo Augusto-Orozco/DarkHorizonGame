@@ -3,6 +3,7 @@ using UnityEngine;
 public class ItemPickup : Pickup
 {
     [SerializeField] private ItemData item;
+    private float blockedUntil;
 
     public ItemData Item => item;
 
@@ -15,7 +16,12 @@ public class ItemPickup : Pickup
             Debug.LogWarning("Las armas usan GroundWeapon no ItemPickup");
 
     }
-   
+
+    public void BlockPickup(float seconds)
+    {
+        blockedUntil = Time.time + seconds;
+    }
+
     protected override void OnPlayerEnter(PlayerInventory inventory)
     {
         TryGiveTo(inventory);
@@ -31,7 +37,14 @@ public class ItemPickup : Pickup
         if (item == null)
             return;
 
+        if (Time.time < blockedUntil)
+            return;
+
         if (inventory.TryCollect(item))
             Collect(inventory);
+    }
+    protected override void Despawn()
+    {
+        Destroy(gameObject);
     }
 }

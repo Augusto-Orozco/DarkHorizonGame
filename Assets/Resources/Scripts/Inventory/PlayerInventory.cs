@@ -110,6 +110,27 @@ public class PlayerInventory : MonoBehaviour
         return true;
     }
 
+    public bool TryDropBread(out ConsumableData bread)
+    {
+        bread = breadType;
+        if (breadCount <= 0)
+            return false;
+
+        breadCount--;
+        OnBreadsChanged?.Invoke(breadCount);
+        return true;
+    }
+
+    public bool TryDropAmmo(int amount)
+    {
+        WeaponState weapon = ActiveWeapon;
+        if (weapon == null || !weapon.TryRemoveReserveAmmo(amount))
+            return false;
+
+        OnAmmoChanged?.Invoke(activeSlot, weapon);
+        return true;
+    }
+
     public bool TryTakeGrenade(out ThrowableData grenade)
     {
         grenade = grenadeType;

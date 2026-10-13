@@ -28,4 +28,13 @@ public class WeaponState
         ReserveAmmo += added;
         return added;
     }
+
+    public bool TryRemoveReserveAmmo(int amount)
+    {
+        if (!UsesAmmo || amount <= 0 || ReserveAmmo < amount)
+            return false;
+
+        ReserveAmmo -= amount;
+        return true;
+    }
 }
