@@ -86,6 +86,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("PlayerMovement Update ejecutándose");
+
         HandleMovement();
         HandleGravity();
         HandleAnimations();
@@ -117,8 +119,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    /*
     void HandleMovement()
-    {
+    { 
         float forwardInput = 0f;
         float turnInput = 0f;
 
@@ -163,7 +166,70 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(movement);
             distanceSinceStep += movement.magnitude;
         }
+        
+        */
+        
+    
+void HandleMovement()
+{
+    if (Keyboard.current == null)
+    {
+        Debug.LogWarning("No se detecta el teclado.", this);
+        return;
     }
+
+    float forwardInput = 0f;
+    float turnInput = 0f;
+
+    if (Keyboard.current.wKey.isPressed)
+        forwardInput = 1f;
+    else if (Keyboard.current.sKey.isPressed)
+        forwardInput = -1f;
+
+    if (Keyboard.current.aKey.isPressed)
+        turnInput = -1f;
+    else if (Keyboard.current.dKey.isPressed)
+        turnInput = 1f;
+
+    isMoving = Mathf.Abs(forwardInput) > 0.01f;
+
+    if (isMoving)
+        movementDirection = Mathf.Sign(forwardInput);
+
+    // Girar con A y D.
+    if (turnInput != 0f)
+    {
+        transform.Rotate(
+            0f,
+            turnInput * rotationSpeed * Time.deltaTime,
+            0f
+        );
+    }
+
+    // Moverse con W y S.
+    if (forwardInput != 0f)
+    {
+        if (controller == null)
+        {
+            Debug.LogError(
+                "No hay CharacterController en el objeto del jugador.",
+                this
+            );
+            return;
+        }
+
+        Vector3 movement = transform.forward
+            * forwardInput
+            * moveSpeed
+            * Time.deltaTime;
+
+        controller.Move(movement);
+        distanceSinceStep += movement.magnitude;
+    }
+}
+
+
+
     void HandleGravity()
     {
         if (controller.isGrounded && verticalVelocity.y < 0)
