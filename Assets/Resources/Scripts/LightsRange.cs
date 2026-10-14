@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections.Generic;
 
 public class LightsRange : MonoBehaviour
 {
-    
+    public event System.Action<int> OnJugadoresCercanosChanged;
+    private int ultimoConteo = 0;
+    public int JugadoresCercanosActual => ultimoConteo;
+
     public Light myLight;
 
     [Header("Grupo")]
@@ -45,6 +49,12 @@ public class LightsRange : MonoBehaviour
 
         int JugadoresCercanos = uniquePlayers.Count;
 
+        if (JugadoresCercanos != ultimoConteo)
+        {
+            ultimoConteo = JugadoresCercanos;
+            OnJugadoresCercanosChanged?.Invoke(JugadoresCercanos);
+        }
+        
         if (JugadoresCercanos > 0)
         {
             int index = Mathf.Clamp(JugadoresCercanos - 1, 0, NivelesIntenso.Length - 1);
