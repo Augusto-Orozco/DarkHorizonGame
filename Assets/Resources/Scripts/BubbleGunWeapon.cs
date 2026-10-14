@@ -15,10 +15,13 @@ public class BubbleGunWeapon : MonoBehaviour
 
     private PlayerMovement player;
     private float nextFireTime;
+    private PlayerInventory inventory;
+    private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
     private void Awake()
     {
         player = GetComponentInParent<PlayerMovement>();
+        inventory = GetComponentInParent<PlayerInventory>();
         if (muzzle == null)
             muzzle = transform;
     }
@@ -32,9 +35,12 @@ public class BubbleGunWeapon : MonoBehaviour
             ? Mouse.current.leftButton.isPressed
             : Mouse.current.leftButton.wasPressedThisFrame;
 
-        player.SetShootingActive(wantsToFire);
+        WeaponState state = CurrentState;
+        bool canFire = state == null || state.CanFire;
 
-        if (wantsToFire && Time.time >= nextFireTime)
+        player.SetShootingActive(wantsToFire && canFire);
+
+        if (wantsToFire && canFire && Time.time >= nextFireTime)
             Fire();
     }
 
@@ -47,6 +53,7 @@ public class BubbleGunWeapon : MonoBehaviour
         }
 
         nextFireTime = Time.time + fireCooldown;
+        CurrentState?.AddShotHeat();
         player.StartShooting();
 
         int bubbleCount = Mathf.Max(1, bubblesPerShot);

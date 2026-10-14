@@ -10,6 +10,8 @@ public class HeatWeaponData : WeaponData
     [SerializeField] private float heatPerShot = 8f;
     [Tooltip("Calor que pierde por segundo al no disparar.")]
     [SerializeField] private float coolingPerSecond = 25f;
+    [Tooltip("Segundos sin disparar antes de empezar a enfriarse.")]
+    [SerializeField] private float coolDelay = 0.5f;
     [Tooltip("Al sobrecalentarse, no vuelve a disparar hasta bajar a este calor.")]
     [SerializeField] private float resumeAtHeat = 30f;
 
@@ -17,5 +19,6 @@ public class HeatWeaponData : WeaponData
     public float HeatPerShot => heatPerShot;
     public float CoolingPerSecond => coolingPerSecond;
     public float ResumeAtHeat => resumeAtHeat;
+    public float CoolDelay => coolDelay;
 
 }               
