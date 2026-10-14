@@ -41,6 +41,13 @@ public class PlayerInventory : MonoBehaviour
         return slot == WeaponSlotType.Primary ? primary : secondary;
     }
 
+    private void Update()
+    {
+        float deltaTime = Time.deltaTime;
+        primary?.Cool(deltaTime);
+        secondary?.Cool(deltaTime);
+    }
+
     //Armas
     public WeaponState EquipWeapon(WeaponState weapon)
     {
