@@ -1221,6 +1221,7 @@ GameObject:
   - component: {fileID: 8723021721966773799}
   - component: {fileID: 5576641979192539773}
   - component: {fileID: 8933308122503918734}
+  - component: {fileID: 8023203900948093165}
   m_Layer: 3
   m_Name: Spot Light (1)
   m_TagString: Untagged
@@ -1337,6 +1338,40 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &8023203900948093165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4626758866910568516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cd0c1ed9f441fe4eac7d0368fe059e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightsRange
+  myLight: {fileID: 5576641979192539773}
+  Radio: 7
+  UbicacionRango: {x: 0, y: 0, z: 0}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  NivelesIntenso:
+  - 20
+  - 30
+  - 40
+  - 50
+  rangeLevels:
+  - 50
+  - 60
+  - 70
+  - 800
+  AngulosSpot:
+  - 70
+  - 90
+  - 110
+  - 130
+  suavizado: 3
 --- !u!1 &4640038459219816487
 GameObject:
   m_ObjectHideFlags: 0
@@ -2523,6 +2558,7 @@ GameObject:
   - component: {fileID: 8195158323687625373}
   - component: {fileID: 6132412677487630615}
   - component: {fileID: 2433558173698191032}
+  - component: {fileID: 4026351597780626248}
   m_Layer: 3
   m_Name: Player_Armas
   m_TagString: Player
@@ -2762,6 +2798,19 @@ MonoBehaviour:
   dropPoint: {fileID: 5343904135583492390}
   dropPickupDelay: 2
   ammoBoxToDrop: {fileID: 11400000, guid: 439272832fb07db4683408c2a5ab2a47, type: 2}
+--- !u!114 &4026351597780626248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7842152596992407466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a17ef9e28d4ad434c8f2b1862e42e64f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 100
 --- !u!1 &7968192699816020817
 GameObject:
   m_ObjectHideFlags: 0

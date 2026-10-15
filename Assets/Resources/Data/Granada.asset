@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Granada
   m_EditorClassIdentifier: Assembly-CSharp::ThrowableData
   itemName: Granada
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  icon: {fileID: -1239217512581088671, guid: a4f114a061446c94f9bb259c7b2ffb63, type: 3}
+  prefab: {fileID: 8537393960515256092, guid: 8cf8b341eb642a047bde4ed2c8bcad06, type: 3}
   damage: 50
   explosionRadius: 4
   throwForce: 12
