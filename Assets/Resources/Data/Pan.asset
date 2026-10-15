@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Pan
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableData
   itemName: Pan
-  icon: {fileID: 0}
+  icon: {fileID: -7035395089224301892, guid: e6ff0632a07e95a4298e93f31e0ab8e6, type: 3}
   prefab: {fileID: 8537393960515256092, guid: bc60171b66727d24e9fdc09dd4c282ff, type: 3}
   healAmount: 25

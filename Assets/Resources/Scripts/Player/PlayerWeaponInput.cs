@@ -24,11 +24,13 @@ public class PlayerWeaponInput : MonoBehaviour
     [SerializeField] private AmmoBoxData ammoBoxToDrop;
 
     private PlayerInventory inventory;
+    private PlayerHealth health;
 
 
     private void Awake()
     {
         inventory = GetComponent<PlayerInventory>();
+        health = GetComponent<PlayerHealth>();
     }
 
     private void Update()
@@ -49,7 +51,7 @@ public class PlayerWeaponInput : MonoBehaviour
         if (keyboard[secondaryKey].wasPressedThisFrame)
             inventory.SelectSlot(WeaponSlotType.Secondary);
 
-        if (keyboard[breadKey].wasPressedThisFrame)
+        if (keyboard[breadKey].wasPressedThisFrame && (health == null || health.CanHeal))
             inventory.TryConsumeBread();
         if (keyboard[dropBreadKey].wasPressedThisFrame)
             DropBread();

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BubbleGun
   m_EditorClassIdentifier: Assembly-CSharp::HeatWeaponData
   itemName: Bubble Gun
-  icon: {fileID: 0}
+  icon: {fileID: 2464793322233907598, guid: b5a6c7d0812ea4a4c980c74940fd234c, type: 3}
   prefab: {fileID: 630717805198233418, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
   slot: 0
   damage: 10
@@ -23,4 +23,5 @@ MonoBehaviour:
   maxHeat: 100
   heatPerShot: 8
   coolingPerSecond: 25
+  coolDelay: 0.5
   resumeAtHeat: 30
