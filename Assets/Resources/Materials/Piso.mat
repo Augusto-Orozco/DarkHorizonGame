@@ -14,6 +14,7 @@ Material:
   m_ValidKeywords:
   - _ALPHATEST_ON
   - _DETAIL_MULX2
+  - _ENVIRONMENTREFLECTIONS_OFF
   - _NORMALMAP
   - _RECEIVE_SHADOWS_OFF
   - _SPECULARHIGHLIGHTS_OFF
@@ -103,7 +104,7 @@ Material:
     - _DetailNormalMapScale: 0
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 1
+    - _EnvironmentReflections: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.85
     - _GlossyReflections: 1
@@ -124,8 +125,8 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.4339623, g: 0.19569243, b: 0.19569243, a: 1}
-    - _Color: {r: 0.43396226, g: 0.19569239, b: 0.19569239, a: 1}
+    - _BaseColor: {r: 0.8113208, g: 0.34749022, b: 0.34749022, a: 1}
+    - _Color: {r: 0.8113207, g: 0.3474902, b: 0.3474902, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.22, g: 0.22, b: 0.22, a: 1}
   m_BuildTextureStacks: []
