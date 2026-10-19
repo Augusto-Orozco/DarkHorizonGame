@@ -148,26 +148,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763b230d22fd334bbc9441aed267b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 100, y: 100}
-  roomCount: 30
-  maxAttemptsPerRoom: 10
+  size: {x: 75, y: 60}
+  roomCount: 25
+  maxAttemptsPerRoom: 50
   roomPrefabs:
   - prefab: {fileID: 1201438342487178271, guid: 9263163d42cb6da40b4db976b83803f1, type: 3}
     footprint: {x: 9, y: 9}
     material: {fileID: 0}
-    weight: 5
+    weight: 2
   - prefab: {fileID: 9144793327182237962, guid: 1a7a5c2958ec64842acb752f2d30d2a6, type: 3}
     footprint: {x: 9, y: 9}
     material: {fileID: 0}
-    weight: 1
+    weight: 5
   - prefab: {fileID: 3452566386615979760, guid: 652f2847fed236348951847f58144696, type: 3}
     footprint: {x: 6, y: 6}
     material: {fileID: 0}
-    weight: 3
+    weight: 7
   - prefab: {fileID: 4375365394652556357, guid: a3f22e56e77a6da4594d286145154a86, type: 3}
     footprint: {x: 3, y: 3}
     material: {fileID: 0}
-    weight: 2
+    weight: 6
   applyRoomMaterial: 0
   hallwayPrefab: {fileID: 6810830819618700573, guid: 6561de2050a4c7a4aafa9fc4fb8ba30b, type: 3}
   hallwayMaterial: {fileID: 0}
@@ -447,15 +447,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9216307094835964679, guid: 865fd3f6bb6182c459d4b953102ab839, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 9216307094835964679, guid: 865fd3f6bb6182c459d4b953102ab839, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 9216307094835964679, guid: 865fd3f6bb6182c459d4b953102ab839, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 9216307094835964679, guid: 865fd3f6bb6182c459d4b953102ab839, type: 3}
       propertyPath: m_LocalPosition.x
