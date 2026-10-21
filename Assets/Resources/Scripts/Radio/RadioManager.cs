@@ -17,7 +17,7 @@ public class RadioManager : MonoBehaviour
     [Header("Interface")]
     [SerializeField] private GameObject radioPanel;
     [SerializeField] private TMP_Text messageText;
-    [SerializeField] private Image portrait;
+    [SerializeField] private RawImage portrait;
 
     [Header("Configuration")]
     [SerializeField, Min(1f)]
@@ -78,6 +78,7 @@ public class RadioManager : MonoBehaviour
     private IEnumerator TypeMessage(string message)
     {
         messageText.text = message;
+        messageText.ForceMeshUpdate();
         messageText.maxVisibleCharacters = 0;
 
         if (portrait != null)
