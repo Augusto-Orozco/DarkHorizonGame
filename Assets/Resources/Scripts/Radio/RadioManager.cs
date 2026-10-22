@@ -2,7 +2,7 @@
 | Daniel Díaz Romero........A01801486                        | 21-10-2026 | 
 |                                                                         |
 | RadioManager.cs | Script that administrates the dialague system for the |
-| commander NPC                                                           |
+| commander NPC, dissapears after a set time and only is triggered once.  |
 |                                                                         |
 \*=======================================================================*/
 
@@ -21,7 +21,10 @@ public class RadioManager : MonoBehaviour
 
     [Header("Configuration")]
     [SerializeField, Min(1f)]
-    private float charactersPerSecond = 35f; //Determines typing script
+    private float charactersPerSecond = 15f; //Determines typing script
+
+    [SerializeField, Min(0f)]
+    private float displayDuration = 4f; //Duration of the display message
 
     [Header("Portrait Bright")]
     [SerializeField] private Color idleColor = Color.white;
@@ -29,7 +32,7 @@ public class RadioManager : MonoBehaviour
     [SerializeField]
     private Color speakingColor = new Color(1f, 1f, 0.8f, 1f);
 
-    private Coroutine typingCoroutine;
+    private Coroutine messageCoroutine;
 
     private void Awake()
     {
@@ -54,18 +57,21 @@ public class RadioManager : MonoBehaviour
         if (radioPanel == null || messageText == null)
         {
             Debug.LogWarning(
-                "RadioManager: falta asignar el panel o el texto.",
+                "RadioManager: Unassigned Panel or text",
                 this
             );
             return;
         }
 
+        // Avoids simultaneus messages
+        if (messageCoroutine != null)
+            StopCoroutine(messageCoroutine);
+
         radioPanel.SetActive(true);
 
-        if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
-
-        typingCoroutine = StartCoroutine(TypeMessage(message));
+        messageCoroutine = StartCoroutine(
+            DisplayMessage(message)
+        );
     }
 
     /*--<summary>------------------------------------------------------------------\
@@ -75,23 +81,23 @@ public class RadioManager : MonoBehaviour
     |...                                                                           |
     \-----------------------------------------------------------------------------*/
 
-    private IEnumerator TypeMessage(string message)
+    private IEnumerator DisplayMessage(string message)
     {
         messageText.text = message;
-        messageText.ForceMeshUpdate();
         messageText.maxVisibleCharacters = 0;
+        messageText.ForceMeshUpdate();
 
         if (portrait != null)
             portrait.color = speakingColor;
 
         float elapsed = 0f;
-        int visibleCharacters = 0;
+        int totalCharacters = messageText.textInfo.characterCount;
 
-        while (visibleCharacters < messageText.textInfo.characterCount)
+        while (elapsed < totalCharacters / charactersPerSecond)
         {
             elapsed += Time.deltaTime;
 
-            visibleCharacters = Mathf.Min(
+            int visibleCharacters = Mathf.Min(
                 Mathf.FloorToInt(elapsed * charactersPerSecond),
                 messageText.textInfo.characterCount
             );
@@ -101,12 +107,18 @@ public class RadioManager : MonoBehaviour
             yield return null;
         }
 
-        messageText.maxVisibleCharacters =
-            messageText.textInfo.characterCount;
+        // Show the complete message
+        messageText.maxVisibleCharacters = totalCharacters;
 
         if (portrait != null)
             portrait.color = idleColor;
 
-        typingCoroutine = null;
+        // Wait for the configurated display time.
+        yield return new WaitForSeconds(displayDuration);
+
+        // Hide the radio Window.
+        radioPanel.SetActive(false);
+
+        messageCoroutine = null;
     }
 }

@@ -572,8 +572,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 502, y: -138}
-  m_SizeDelta: {x: 800, y: 250}
+  m_AnchoredPosition: {x: 586.1925, y: -177.2135}
+  m_SizeDelta: {x: 700, y: 320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &293005710
 CanvasRenderer:
@@ -596,14 +596,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19228373, g: 0.2735849, b: 0.20122594, a: 0.29411766}
+  m_Color: {r: 0.19228373, g: 0.2735849, b: 0.20122594, a: 0.88235295}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: b432278f6627ddd4fa9916081ca9635c, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -1159,6 +1159,135 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14716b53d713de545960fd6fe089c8dd, type: 3}
+--- !u!1 &642667484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 642667488}
+  - component: {fileID: 642667487}
+  - component: {fileID: 642667486}
+  - component: {fileID: 642667485}
+  - component: {fileID: 642667489}
+  m_Layer: 0
+  m_Name: RadioTrigger_Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &642667485
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642667484}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 30, y: 30, z: 30}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &642667486
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642667484}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &642667487
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642667484}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &642667488
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642667484}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 284, y: 4, z: 303.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &642667489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642667484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32742e902bec5064a886766f5d085cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadioTrigger
+  radioManager: {fileID: 1239833766}
+  message: Grab the food and search for weapons, private.
+  playerTag: Player
+  triggerOnce: 1
 --- !u!1001 &653340193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1310,8 +1439,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -129, y: -29}
-  m_SizeDelta: {x: 500, y: 200}
+  m_AnchoredPosition: {x: -56.5, y: -23.25}
+  m_SizeDelta: {x: 403, y: 150.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &687112833
 CanvasRenderer:
@@ -1375,7 +1504,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1407,7 +1536,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -56.62439, y: -45.743042, z: 103.188965, w: -27.186157}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1619,7 +1748,8 @@ MonoBehaviour:
   radioPanel: {fileID: 293005707}
   messageText: {fileID: 687112834}
   portrait: {fileID: 1897809333}
-  charactersPerSecond: 35
+  charactersPerSecond: 10
+  displayDuration: 5
   idleColor: {r: 1, g: 1, b: 1, a: 1}
   speakingColor: {r: 1, g: 1, b: 0.8, a: 1}
 --- !u!4 &1239833767
@@ -1671,8 +1801,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -265.99997, y: 89.00004}
-  m_SizeDelta: {x: 250, y: 50}
+  m_AnchoredPosition: {x: -223.39291, y: 82.99997}
+  m_SizeDelta: {x: 183, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1272832663
 MonoBehaviour:
@@ -1681,7 +1811,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272832661}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -2638,6 +2768,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1764381209 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 630717805198233418, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
+  m_PrefabInstance: {fileID: 2058554752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1764381214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764381209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32742e902bec5064a886766f5d085cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadioTrigger
+  radioManager: {fileID: 1239833766}
+  message: Grab the bubble gun
+  playerTag: Player
+  triggerOnce: 1
 --- !u!1 &1771345693
 GameObject:
   m_ObjectHideFlags: 0
@@ -2714,7 +2865,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -2857,7 +3008,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: b7d6122d94ec048469d2f3f402d6afcd, type: 3}
+  m_Texture: {fileID: 2800000, guid: 2f76432c1dda6104a8db7cc8a2dff3e0, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -2881,15 +3032,15 @@ RectTransform:
   m_GameObject: {fileID: 1897809332}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 293005708}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 280, y: 2}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchoredPosition: {x: 189.5, y: -3}
+  m_SizeDelta: {x: 221, y: 221}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1963514673
 PrefabInstance:
@@ -3022,10 +3173,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3145832557411855107, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
+      propertyPath: m_Size.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3145832557411855107, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
+      propertyPath: m_Size.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3145832557411855107, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
+      propertyPath: m_Size.z
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 630717805198233418, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1764381214}
   m_SourcePrefab: {fileID: 100100000, guid: 56910c6420759df428eb0e4dabfba27e, type: 3}
 --- !u!1001 &2063391111
 PrefabInstance:
@@ -3617,4 +3783,5 @@ SceneRoots:
   - {fileID: 1730690956}
   - {fileID: 1771345697}
   - {fileID: 1239833767}
+  - {fileID: 642667488}
   - {fileID: 1830122860}

@@ -3,7 +3,7 @@
 |                                                                         |
 | RadioTrigger.cs | Reusable componnt for triggering a radio message, for |
 | in game locations (rooms, doors, weapons, etc). Support multiple        |
-| messages configuration.                                                 |
+| messages configuration. Every object activates the message only once.   |
 |                                                                         |
 \*=======================================================================*/
 
