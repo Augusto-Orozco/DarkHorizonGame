@@ -9,9 +9,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed = 0.8f;
 
     [Header("Persecution")]
-    [SerializeField] private Transform player;
+    [SerializeField] private string playerTag = "Player";
     [SerializeField] private float detectionRange = 30f;
-    [SerializeField] private bool findPlayerAutomatically = true;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask = ~0;
@@ -60,13 +59,6 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
         if (autoCalculateBodyHeight)
             CalculateBodyHeightFromStartPosition();
-
-        if (player == null && findPlayerAutomatically)
-        {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-            if (playerObject != null)
-                player = playerObject.transform;
-        }
 
         int legCount = legTargets == null ? 0 : legTargets.Length;
         legHomePositions = new Vector3[legCount];
@@ -141,19 +133,33 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         chaseDirection = Vector3.zero;
 
-        if (player == null || detectionRange <= 0f)
+        if (detectionRange <= 0f || string.IsNullOrWhiteSpace(playerTag))
             return false;
 
-        Vector3 offset = player.position - transform.position;
-        offset.y = 0f;
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(playerTag);
+        float detectionRangeSqr = detectionRange * detectionRange;
+        float closestDistanceSqr = detectionRangeSqr;
+        Transform closestPlayer = null;
 
-        if (offset.sqrMagnitude > detectionRange * detectionRange)
+        for (int i = 0; i < taggedObjects.Length; i++)
+        {
+            Vector3 offset = taggedObjects[i].transform.position - transform.position;
+            offset.y = 0f;
+            float distanceSqr = offset.sqrMagnitude;
+
+            if (distanceSqr <= 0.001f || distanceSqr > closestDistanceSqr)
+                continue;
+
+            closestDistanceSqr = distanceSqr;
+            closestPlayer = taggedObjects[i].transform;
+        }
+
+        if (closestPlayer == null)
             return false;
 
-        if (offset.sqrMagnitude <= 0.001f)
-            return false;
-
-        chaseDirection = offset.normalized;
+        Vector3 chaseOffset = closestPlayer.position - transform.position;
+        chaseOffset.y = 0f;
+        chaseDirection = chaseOffset.normalized;
         return true;
     }
 

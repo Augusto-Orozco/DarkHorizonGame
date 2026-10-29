@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.42835, y: 0, z: -241.60654}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6836775992654558950}
@@ -92,13 +92,61 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6091644090586062534, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
+    - target: {fileID: 6091644090586062534, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
     - target: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: m_Name
       value: KharvekCangrejo
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: moveSpeed
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: stepHeight
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: acceleration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: bodyBobSpeed
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: bodyLowering
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: stepDistance
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: stepDuration
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: rotationSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: detectionRange
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: footFollowSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: stepForwardOffset
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7443892170127445250, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: m_LocalPosition.x
