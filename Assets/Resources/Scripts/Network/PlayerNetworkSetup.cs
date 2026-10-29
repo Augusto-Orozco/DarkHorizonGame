@@ -1,7 +1,5 @@
-using UnityEngine;
 using Photon.Pun;
-
-
+using UnityEngine;
 
 [RequireComponent(typeof(PhotonView))]
 public class PlayerNetworkSetup : MonoBehaviourPun
@@ -10,21 +8,29 @@ public class PlayerNetworkSetup : MonoBehaviourPun
     [Tooltip("Scripts que leen input o controlan al jugador (movimiento, armas, interactuar...)")]
     [SerializeField] private Behaviour[] localOnlyComponents;
 
-    [Tooltip("Objetos completos que solo debe tener el local (cámara...)")]
+    [Tooltip("Objetos completos que solo debe tener el local")]
     [SerializeField] private GameObject[] localOnlyObjects;
 
     private void Awake()
     {
-        if (photonView.IsMine) return;   
+        if (photonView.IsMine) return;  
 
-        foreach (Behaviour component in localOnlyComponents)
-        {
-            if (component != null) component.enabled = false;
-        }
+        DisableAll(localOnlyComponents);
+
+        DisableAll(GetComponentsInChildren<Camera>(true));
+        DisableAll(GetComponentsInChildren<AudioListener>(true));
 
         foreach (GameObject obj in localOnlyObjects)
         {
             if (obj != null) obj.SetActive(false);
+        }
+    }
+
+    private static void DisableAll(Behaviour[] components)
+    {
+        foreach (Behaviour component in components)
+        {
+            if (component != null) component.enabled = false;
         }
     }
 }

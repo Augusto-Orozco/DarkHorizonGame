@@ -668,6 +668,8 @@ GameObject:
   - component: {fileID: 3526604138638688941}
   - component: {fileID: 4590241207305451954}
   - component: {fileID: 7645694998568775379}
+  - component: {fileID: -1995471051811677255}
+  - component: {fileID: 6275265237115370822}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -907,6 +909,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
+--- !u!114 &-1995471051811677255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &6275265237115370822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977a57957e55b8e44aeb3140d943f942, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNetworkSetup
+  localOnlyComponents:
+  - {fileID: 2769511308342723146}
+  - {fileID: 4590241207305451954}
+  - {fileID: 3526604138638688941}
+  - {fileID: 530976228149968239}
+  - {fileID: 7886535012554090264}
+  - {fileID: 2322653812770342190}
+  localOnlyObjects: []
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0
