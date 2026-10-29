@@ -63,9 +63,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
         if (player == null && findPlayerAutomatically)
         {
-            PlayerMovement playerMovement = FindFirstObjectByType<PlayerMovement>();
-            if (playerMovement != null)
-                player = playerMovement.transform;
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+            if (playerObject != null)
+                player = playerObject.transform;
         }
 
         int legCount = legTargets == null ? 0 : legTargets.Length;
