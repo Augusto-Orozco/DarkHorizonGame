@@ -9,7 +9,7 @@ public class WeaponState
     public float Heat { get; private set; }
     public bool IsOverheated { get; private set; }
     public bool UsesHeat => Data is HeatWeaponData;
-    public bool CanFire => !IsOverheated;
+    public bool CanFire => !IsOverheated && (!UsesAmmo || AmmoInMagazine > 0);
     private float lastShotTime;
 
     public bool UsesAmmo => Data is AmmoWeaponData;
@@ -42,6 +42,29 @@ public class WeaponState
 
         ReserveAmmo -= amount;
         return true;
+    }
+
+    public bool TryConsumeAmmo()
+    {
+        if (!UsesAmmo || AmmoInMagazine <= 0)
+            return false;
+
+        AmmoInMagazine--;
+        return true;
+    }
+
+    public bool TryReload()
+    {
+        if (!(Data is AmmoWeaponData ammoData) ||
+            AmmoInMagazine >= ammoData.MagazineSize ||
+            ReserveAmmo <= 0)
+            return false;
+
+        int needed = ammoData.MagazineSize - AmmoInMagazine;
+        int loaded = Mathf.Min(needed, ReserveAmmo);
+        AmmoInMagazine += loaded;
+        ReserveAmmo -= loaded;
+        return loaded > 0;
     }
 
     public void AddShotHeat()

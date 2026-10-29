@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6eec463cd4219f4382ce5f61c234851, type: 3}
+  m_Name: LanzaTazos
+  m_EditorClassIdentifier: Assembly-CSharp::AmmoWeaponData
+  itemName: LanzaTazos
+  icon: {fileID: -1210898104216734291, guid: 0817db1543172024c897f9277af13f52, type: 3}
+  prefab: {fileID: 4097906022010865782, guid: 2b2242ec1bc037f408fb990ce9cb8231, type: 3}
+  slot: 1
+  damage: 10
+  timeBetweenShots: 0.2
+  heldPrefab: {fileID: 735269302230076099, guid: 24f0f62f912f074428196f3becf550e8, type: 3}
+  hidesRightArm: 1
+  magazineSize: 25
+  maxReserveAmo: 75

@@ -74,6 +74,14 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
         if (movement != null && currentModel.GetComponentInChildren<BubbleGunWeapon>() != null)
             movement.EquipBubbleGun();
+
+        if (data is AmmoWeaponData)
+        {
+            if (currentModel.GetComponentInChildren<LanzaTazosWeapon>() == null)
+                currentModel.AddComponent<LanzaTazosWeapon>();
+
+            movement?.EquipBubbleGun();
+        }
     }
 
 }

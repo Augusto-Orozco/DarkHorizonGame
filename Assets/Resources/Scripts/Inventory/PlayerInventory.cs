@@ -138,6 +138,26 @@ public class PlayerInventory : MonoBehaviour
         return true;
     }
 
+    public bool TryConsumeActiveAmmo()
+    {
+        WeaponState weapon = ActiveWeapon;
+        if (weapon == null || !weapon.TryConsumeAmmo())
+            return false;
+
+        OnAmmoChanged?.Invoke(activeSlot, weapon);
+        return true;
+    }
+
+    public bool TryReloadActiveWeapon()
+    {
+        WeaponState weapon = ActiveWeapon;
+        if (weapon == null || !weapon.TryReload())
+            return false;
+
+        OnAmmoChanged?.Invoke(activeSlot, weapon);
+        return true;
+    }
+
     public bool TryTakeGrenade(out ThrowableData grenade)
     {
         grenade = grenadeType;
