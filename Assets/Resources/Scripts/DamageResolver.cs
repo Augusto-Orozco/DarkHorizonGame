@@ -1,8 +1,8 @@
 /*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 28-10-2026 | 
+| Daniel Díaz Romero........A01801486                        | 28-10-2026 |
 |                                                                         |
 | DamageResolver.cs | Common entry point for all attacks. Any weapon,     |
-| proyectile or NPC may invoke it. Resolves for basic damage.             |
+| projectile or NPC may invoke it. Resolves for basic damage.             |
 |                                                                         |
 \*=======================================================================*/
 
@@ -15,12 +15,14 @@ public static class DamageResolver
         float amount,
         GameObject attacker)
     {
-        if (target == null || attacker == null)
+        if (target == null || attacker == null || amount <= 0f)
             return false;
 
+        // Prevent self-damage
         if (target.transform.root == attacker.transform.root)
             return false;
 
+        // Find IDamageable in target or its parent
         IDamageable damageable =
             target.GetComponentInParent<IDamageable>();
 
@@ -30,7 +32,7 @@ public static class DamageResolver
         damageable.TakeDamage(amount);
 
         Debug.Log(
-            $"{attacker.name} causó {amount} de daño a {target.name}"
+            $"[DAMAGE] {attacker.name} causó {amount} de daño a {target.name}"
         );
 
         return true;

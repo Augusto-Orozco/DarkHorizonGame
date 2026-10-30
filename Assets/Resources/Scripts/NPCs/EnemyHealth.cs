@@ -1,39 +1,40 @@
 /*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 28-10-2026 | 
+| Daniel Díaz Romero........A01801486                        | 28-10-2026 |
 |                                                                         |
-| EnemyHealth.cs | This component manages NPC life value amd general      |
+| EnemyHealth.cs | This component manages NPC life value and general      |
 | health.                                                                 |
 |                                                                         |
 \*=======================================================================*/
-
 
 using System;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, IDamageable
 {
-    [SerializeField] private EnemyData data;
+    [SerializeField] private float maxHealth = 100f;
+
+    private EnemyData data;
 
     public float CurrentHealth { get; private set; }
-    public float MaxHealth => data != null ? data.MaxHealth : 100f;
-    public bool IsDead { get; private set; }
+    public float MaxHealth => maxHealth;
+    public bool IsDead => CurrentHealth <= 0f;
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
 
     private void Awake()
     {
-        if (data == null)
-        {
-            Debug.LogError(
-                "EnemyHealth needs an EnemyData asignation.",
-                this
-            );
-            enabled = false;
-            return;
-        }
+        CurrentHealth = maxHealth;
+    }
 
-        CurrentHealth = data.MaxHealth;
+    public void SetData(EnemyData newData)
+    {
+        data = newData;
+
+        if (data != null)
+            maxHealth = data.MaxHealth;
+
+        SetHealth(maxHealth);
     }
 
     public void TakeDamage(float amount)
@@ -41,14 +42,24 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (IsDead || amount <= 0f)
             return;
 
-        CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+        SetHealth(CurrentHealth - amount);
 
-        if (CurrentHealth <= 0f)
+        Debug.Log(
+            $"[KHARVEK] Recibió {amount} de daño. " +
+            $"Vida: {CurrentHealth}/{maxHealth}"
+        );
+
+        if (IsDead)
         {
-            IsDead = true;
+            Debug.Log("[KHARVEK] Ha sido derrotado.");
             OnDied?.Invoke();
-            Destroy(gameObject);
         }
+    }
+
+    private void SetHealth(float value)
+    {
+        CurrentHealth = Mathf.Clamp(value, 0f, maxHealth);
+
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 }
