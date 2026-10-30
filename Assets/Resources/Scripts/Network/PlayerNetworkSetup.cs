@@ -13,10 +13,11 @@ public class PlayerNetworkSetup : MonoBehaviourPun
 
     private void Awake()
     {
-        if (photonView.IsMine) return;  
+        if (photonView.IsMine) return;
+
+        if (TryGetComponent(out Rigidbody body)) body.isKinematic = true;
 
         DisableAll(localOnlyComponents);
-
         DisableAll(GetComponentsInChildren<Camera>(true));
         DisableAll(GetComponentsInChildren<AudioListener>(true));
 

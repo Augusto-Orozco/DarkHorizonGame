@@ -670,6 +670,8 @@ GameObject:
   - component: {fileID: 7645694998568775379}
   - component: {fileID: -1995471051811677255}
   - component: {fileID: 6275265237115370822}
+  - component: {fileID: 180472488893359606}
+  - component: {fileID: -5161808181410841403}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -760,6 +762,7 @@ MonoBehaviour:
   moveSpeed: 45
   rotationSpeed: 150
   gravity: -20
+  readInput: 1
   bodyAnimator: {fileID: 883481202450960661}
   armAnimators:
   - {fileID: 6302123016019885714}
@@ -927,7 +930,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 180472488893359606}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -944,13 +948,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNetworkSetup
   localOnlyComponents:
-  - {fileID: 2769511308342723146}
   - {fileID: 4590241207305451954}
   - {fileID: 3526604138638688941}
   - {fileID: 530976228149968239}
   - {fileID: 7886535012554090264}
   - {fileID: 2322653812770342190}
   localOnlyObjects: []
+--- !u!114 &180472488893359606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 0
+--- !u!114 &-5161808181410841403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab6ce74da234e9a42a5114ed1a26ebbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkMovementAnimation
+  movement: {fileID: 0}
+  movingThreshold: 0.5
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,10 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed = 10f;
     public float gravity = -20f;
 
+    [Header("Control")]
+    [Tooltip("Si es false, no lee teclado ni mueve; otro script le dice si se está moviendo (ej. jugadores en red).")]
+    public bool readInput = true;
+
     [Header("Animadores del personaje")]
     [Tooltip("Animator del cuerpo principal.")]
     public Animator bodyAnimator;
@@ -62,8 +66,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleGravity();
+        if (readInput)
+        {
+            HandleMovement();
+            HandleGravity();
+        }
+
         HandleAnimations();
         UpdateBodyAnimatorState();
     }
@@ -234,6 +242,11 @@ public class PlayerMovement : MonoBehaviour
     public bool HasBubbleGun()
     {
         return hasBubbleGun;
+    }
+
+    public void SetMovingExternally(bool moving)
+    {
+        isMoving = moving;
     }
 
     public void StartShooting()
