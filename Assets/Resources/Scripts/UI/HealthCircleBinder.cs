@@ -14,15 +14,17 @@ public class HealthCircleBinder : MonoBehaviour
         }
 
         health.OnHealthChanged += HandleHealthChanged;
+
+        HandleHealthChanged(
+            health.CurrentHealth,
+            health.MaxHealth);
         
     }
 
     private void OnDisable()
     {
         if (health != null)
-            HandleHealthChanged(health.CurrentHealth, health.MaxHealth); ;
-
-        health.OnHealthChanged -= HandleHealthChanged;
+            health.OnHealthChanged -= HandleHealthChanged;
     }
 
     private void HandleHealthChanged(float current, float max)

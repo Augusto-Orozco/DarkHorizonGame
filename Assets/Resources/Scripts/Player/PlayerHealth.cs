@@ -1,3 +1,11 @@
+/*=======================================================================*\
+| Daniel Díaz Romero........A01801486                        | 30-10-2026 | 
+|                                                                         |
+| PlayerHealth.cs | Administrates the life value of the player and        |
+| conserves their healing system.                                         |
+|                                                                         |
+\*=======================================================================*/
+
 using System;
 using UnityEngine;
 
@@ -41,8 +49,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         SetHealth(CurrentHealth - amount);
 
+        Debug.Log(
+            $"[PLAYER] Recibió {amount} de daño. " +
+            $"Vida: {CurrentHealth}/{maxHealth}"
+        );
+
         if (IsDead)
+        {
+            Debug.Log("[PLAYER] Ha sido derrotado.");
             OnDied?.Invoke();
+        }
     }
 
     public void Heal(float amount)
