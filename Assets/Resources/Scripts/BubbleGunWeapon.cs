@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 public class BubbleGunWeapon : MonoBehaviour
 {
     [Header("Disparo")]
+    [SerializeField] private float damage = 10f;
+    
+    [Header("Disparo")]
     [SerializeField] private Transform muzzle;
     [SerializeField] private GameObject bubblePrefab;
     [SerializeField] private float bubbleSpeed = 12f;
@@ -48,7 +51,10 @@ public class BubbleGunWeapon : MonoBehaviour
     {
         if (bubblePrefab == null)
         {
-            Debug.LogWarning("BubbleGunWeapon necesita un Bubble Prefab para disparar.", this);
+            Debug.LogWarning(
+                "BubbleGunWeapon necesita un Bubble Prefab.",
+                this
+            );
             return;
         }
 
@@ -57,25 +63,38 @@ public class BubbleGunWeapon : MonoBehaviour
         player.StartShooting();
 
         int bubbleCount = Mathf.Max(1, bubblesPerShot);
+
         for (int i = 0; i < bubbleCount; i++)
         {
             Vector3 direction = GetSpreadDirection();
+
             GameObject bubble = Instantiate(
                 bubblePrefab,
                 muzzle.position,
                 Quaternion.LookRotation(direction, muzzle.up)
             );
 
-            Rigidbody rigidbody = bubble.GetComponentInChildren<Rigidbody>();
-            if (rigidbody != null)
+            BubbleProjectile projectile =
+                bubble.GetComponent<BubbleProjectile>();
+
+            if (projectile == null)
             {
-                rigidbody.linearVelocity = direction * bubbleSpeed;
+                Debug.LogError(
+                    "El Bubble Prefab necesita BubbleProjectile.",
+                    bubble
+                );
+
+                Destroy(bubble);
+                continue;
             }
-            else
-            {
-                BubbleProjectile projectile = bubble.AddComponent<BubbleProjectile>();
-                projectile.Initialize(direction, bubbleSpeed, bubbleLifetime);
-            }
+
+            projectile.Initialize(
+                direction,
+                bubbleSpeed,
+                bubbleLifetime,
+                damage,
+                player.gameObject
+            );
         }
     }
 

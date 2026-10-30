@@ -690,6 +690,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5337dc16881d8bb4f901c2f833a5a8fb, type: 3}
+--- !u!1 &537202389 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172969605374913628, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
+  m_PrefabInstance: {fileID: 653340193}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &537202395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537202389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHealth: 100
+--- !u!65 &537202396
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537202389}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.75, z: 1}
+  m_Center: {x: 0, y: 0.4, z: 0}
+--- !u!64 &537202397
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537202389}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &541864985
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1226,16 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6172969605374913628, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 537202395}
+    - targetCorrespondingSourceObject: {fileID: 6172969605374913628, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 537202396}
+    - targetCorrespondingSourceObject: {fileID: 6172969605374913628, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 537202397}
   m_SourcePrefab: {fileID: 100100000, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
 --- !u!1 &687112831
 GameObject:

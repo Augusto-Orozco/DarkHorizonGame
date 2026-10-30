@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
-public class PlayerHealth : MonoBehaviour
-{
+public class PlayerHealth : MonoBehaviour, IDamageable
+{ //                                     // Interface that registers taken damage   
     [SerializeField] private float maxHealth = 100f;
 
     public float CurrentHealth { get; private set; }
@@ -36,13 +36,20 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        if (IsDead || amount <= 0f)
+        if (CurrentHealth <= 0f || amount <= 0f)
             return;
 
-        SetHealth(CurrentHealth - amount);
+        CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
 
-        if (IsDead)
-            OnDied?.Invoke();
+        Debug.Log(
+            $"[PLAYER] Recibió {amount} de daño. " +
+            $"Vida: {CurrentHealth}/{maxHealth}"
+        );
+
+        if (CurrentHealth <= 0f)
+        {
+            Debug.Log("[PLAYER] Ha sido derrotado.");
+        }
     }
 
     public void Heal(float amount)
