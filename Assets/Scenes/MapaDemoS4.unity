@@ -1671,15 +1671,15 @@ MonoBehaviour:
   losePlayerRange: 50
   chaseSpeed: 5
   rotationSpeed: 6
-  spitPrefab: {fileID: 5713431887841041717, guid: 4290bfdf6ecc7a44cb400bce403465c7, type: 3}
+  spitPrefab: {fileID: 8541896682611892029, guid: 5072b7669e44cb740bc3b508826bcdbe, type: 3}
   spitSpawnPoint: {fileID: 2097549251}
-  spitProjectileSpeed: 12
-  spitProjectileLifetime: 5
+  spitProjectileSpeed: 20
+  spitProjectileLifetime: 3
   spitDistance: 70
   spitDistanceTolerance: 0.75
-  spitCooldown: 2.5
+  spitCooldown: 1.5
   spitAnimationDuration: 1
-  spitSpawnTime: 0.4
+  spitSpawnTime: 0.2
   animator: {fileID: 1351580043}
   idleAnimation: Rig_Shurkur|Idle_Hover
   moveAnimation: Rig_Shurkur|Fly
