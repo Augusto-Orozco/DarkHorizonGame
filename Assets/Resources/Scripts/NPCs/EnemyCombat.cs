@@ -120,4 +120,9 @@ public class EnemyCombat : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, 2f);
     }
+
+        public void SetData(EnemyData newData)
+    {
+        data = newData;
+    }
 }

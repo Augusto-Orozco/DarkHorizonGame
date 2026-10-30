@@ -15,7 +15,10 @@ public static class DamageResolver
         float amount,
         GameObject attacker)
     {
-        if (target == null || attacker == null || amount <= 0f)
+        if (target == null || attacker == null)
+            return false;
+
+        if (target.transform.root == attacker.transform.root)
             return false;
 
         IDamageable damageable =
@@ -24,11 +27,11 @@ public static class DamageResolver
         if (damageable == null || damageable.IsDead)
             return false;
 
-        // Evita que un ataque dañe al propio atacante.
-        if (target.transform.root == attacker.transform.root)
-            return false;
-
         damageable.TakeDamage(amount);
+
+        Debug.Log(
+            $"{attacker.name} causó {amount} de daño a {target.name}"
+        );
 
         return true;
     }

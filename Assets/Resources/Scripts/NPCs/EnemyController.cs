@@ -44,12 +44,17 @@ public class EnemyController : MonoBehaviour
             player.position
         );
 
-        bool inRange = distance <= data.DetectionRange;
+    /*    bool inRange = distance <= data.DetectionRange;
 
         if (movement != null)
             movement.enabled = inRange;
 
         if (inRange)
-            combat.TryAttack();
+            combat.TryAttack();*/
+    }
+
+    public void SetData(EnemyData newData)
+    {
+        data = newData;
     }
 }
