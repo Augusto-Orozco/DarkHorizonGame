@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class LanzaTazosWeapon : MonoBehaviour
 {
+    [Header("Daño")]
+    [SerializeField] private float tazoDamage = 15f;
+
     [Header("Disparo")]
     [SerializeField] private Transform muzzle;
     [Tooltip("Si queda vacío, usa el prefab configurado en los datos del arma.")]
@@ -70,22 +73,34 @@ public class LanzaTazosWeapon : MonoBehaviour
         player.StartShooting();
 
         Vector3 direction = GetSpreadDirection();
+
         GameObject tazo = Instantiate(
             prefab,
             muzzle.position,
             Quaternion.LookRotation(direction, muzzle.up)
         );
 
-        Rigidbody rigidbody = tazo.GetComponentInChildren<Rigidbody>();
-        if (rigidbody != null)
+        BubbleProjectile projectile =
+            tazo.GetComponent<BubbleProjectile>();
+
+        if (projectile == null)
         {
-            rigidbody.linearVelocity = direction * tazoSpeed;
+            Debug.LogError(
+                "El Tazo Prefab necesita BubbleProjectile.",
+                tazo
+            );
+
+            Destroy(tazo);
+            return;
         }
-        else
-        {
-            BubbleProjectile projectile = tazo.AddComponent<BubbleProjectile>();
-            projectile.Initialize(direction, tazoSpeed, tazoLifetime);
-        }
+
+        projectile.Initialize(
+            direction,
+            tazoSpeed,
+            tazoLifetime,
+            tazoDamage,
+            player.gameObject
+        );
     }
 
     private Vector3 GetSpreadDirection()
