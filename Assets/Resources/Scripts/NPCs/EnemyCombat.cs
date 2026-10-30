@@ -120,4 +120,6 @@ public class EnemyCombat : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, 2f);
     }
+
+    
 }

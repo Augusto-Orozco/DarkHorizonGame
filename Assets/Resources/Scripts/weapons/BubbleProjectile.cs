@@ -5,6 +5,7 @@
 | bubble projectiles. Register impacts and resolves for damage.           |
 |                                                                         |
 \*=======================================================================*/
+// 
 
 
 using UnityEngine;
@@ -19,6 +20,7 @@ public class BubbleProjectile : MonoBehaviour
     private GameObject owner;
     private float lifetime;
     private bool initialized;
+    private bubbleSpeed = speed * 1.5f;
 
     private void Awake()
     {
@@ -32,7 +34,7 @@ public class BubbleProjectile : MonoBehaviour
 
     public void Initialize(
         Vector3 direction,
-        float speed,
+        float speed //* 1.5f,
         float duration,
         float projectileDamage,
         GameObject attacker)
