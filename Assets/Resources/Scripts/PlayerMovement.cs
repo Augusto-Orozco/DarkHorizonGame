@@ -6,8 +6,18 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimiento")]
     public float moveSpeed = 5f;
-    public float rotationSpeed = 10f;
     public float gravity = -20f;
+
+    [Header("Cámara y Mouse")]
+    [Tooltip("Asigna la Cámara (o el Pivot de la Cámara) que es hijo de este personaje.")]
+    public Transform cameraTransform;
+    public float mouseSensitivity = 15f;
+    public float minPitch = -35f;
+    public float maxPitch = 60f;
+
+    [Header("Control")]
+    [Tooltip("Si es false, no lee teclado ni mueve; otro script le dice si se está moviendo (ej. jugadores en red).")]
+    public bool readInput = true;
 
     [Header("Animadores del personaje")]
     [Tooltip("Animator del cuerpo principal.")]
@@ -32,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private CharacterController controller;
     private Vector3 verticalVelocity;
+    private float cameraPitch = 0f;
 
     private bool isMoving = false;
     private MovementState state = MovementState.Idle;
@@ -53,6 +64,15 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
 
+        // Ocultar y bloquear el cursor en el centro de la pantalla
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (cameraTransform == null && Camera.main != null)
+        {
+            cameraTransform = Camera.main.transform;
+        }
+
         preRunDuration = GetAnimationDuration(preRunAnimation, preRunDuration);
         postRunDuration = GetAnimationDuration(postRunAnimation, postRunDuration);
         shootingDuration = GetAnimationDuration(shootingAnimation, shootingDuration);
@@ -62,54 +82,64 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        HandleMovement();
-        HandleGravity();
+        if (readInput)
+        {
+            HandleMouseLook();
+            HandleMovement();
+            HandleGravity();
+        }
+
         HandleAnimations();
         UpdateBodyAnimatorState();
     }
 
+    void HandleMouseLook()
+    {
+        if (Mouse.current == null)
+            return;
+
+        Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity * Time.deltaTime;
+
+        // 1. Girar el cuerpo entero del personaje horizontalmente con el mouse
+        transform.Rotate(Vector3.up * mouseDelta.x);
+
+        // 2. Inclinar la cámara verticalmente (Pitch)
+        if (cameraTransform != null)
+        {
+            cameraPitch -= mouseDelta.y;
+            cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
+            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
+        }
+    }
+
     void HandleMovement()
     {
-        float forwardInput = 0f;
-        float turnInput = 0f;
-
         if (Keyboard.current == null)
             return;
 
+        float forwardInput = 0f;
+        float strafeInput = 0f;
+
         if (Keyboard.current.wKey.isPressed)
-            forwardInput = 1f;
-        else if (Keyboard.current.sKey.isPressed)
-            forwardInput = -1f;
+            forwardInput += 1f;
+        if (Keyboard.current.sKey.isPressed)
+            forwardInput -= 1f;
 
         if (Keyboard.current.aKey.isPressed)
-            turnInput -= 1f;
-
+            strafeInput -= 1f;
         if (Keyboard.current.dKey.isPressed)
-            turnInput += 1f;
+            strafeInput += 1f;
 
-        isMoving = Mathf.Abs(forwardInput) > 0.01f;
+        isMoving = (Mathf.Abs(forwardInput) > 0.01f || Mathf.Abs(strafeInput) > 0.01f);
 
-        // Girar mientras A o D esten presionadas.
-        if (turnInput != 0f)
+        if (isMoving)
         {
-            transform.Rotate(
-                0f,
-                turnInput * rotationSpeed * Time.deltaTime,
-                0f
-            );
-        }
-
-        if (forwardInput != 0f)
-        {
-            Vector3 movement =
-                transform.forward *
-                forwardInput *
-                moveSpeed *
-                Time.deltaTime;
-
-            controller.Move(movement);
+            // Movimiento relativo a la orientación local del personaje
+            Vector3 moveDirection = (transform.forward * forwardInput + transform.right * strafeInput).normalized;
+            controller.Move(moveDirection * moveSpeed * Time.deltaTime);
         }
     }
+
     void HandleGravity()
     {
         if (controller.isGrounded && verticalVelocity.y < 0)
@@ -222,7 +252,7 @@ public class PlayerMovement : MonoBehaviour
                     PlayAnimation(idleAnimation);
                 }
 
-            break;
+                break;
         }
     }
 
@@ -234,6 +264,11 @@ public class PlayerMovement : MonoBehaviour
     public bool HasBubbleGun()
     {
         return hasBubbleGun;
+    }
+
+    public void SetMovingExternally(bool moving)
+    {
+        isMoving = moving;
     }
 
     public void StartShooting()
