@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
-public class PlayerHealth : MonoBehaviour
-{
+public class PlayerHealth : MonoBehaviour, IDamageable
+{ //                                     // Interface that registers taken damage   
     [SerializeField] private float maxHealth = 100f;
 
     public float CurrentHealth { get; private set; }
