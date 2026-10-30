@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c00c8b529b8ddf409a3499a8ef170da, type: 3}
+  m_Name: Pan
+  m_EditorClassIdentifier: Assembly-CSharp::ConsumableData
+  itemName: Pan
+  icon: {fileID: -7035395089224301892, guid: e6ff0632a07e95a4298e93f31e0ab8e6, type: 3}
+  prefab: {fileID: 8537393960515256092, guid: bc60171b66727d24e9fdc09dd4c282ff, type: 3}
+  healAmount: 25

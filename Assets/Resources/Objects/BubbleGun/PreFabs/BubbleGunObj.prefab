@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2236163919618372062
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 49.11177
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.364203
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.015518
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      propertyPath: m_Name
+      value: BubbleGunObj
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4726665600729877320}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4039016195888316220}
+  m_SourcePrefab: {fileID: 100100000, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+--- !u!1 &1425700363799415951 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 53e6f787fcd56e84997a38e6b8f3e138, type: 3}
+  m_PrefabInstance: {fileID: 2236163919618372062}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &4726665600729877320
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425700363799415951}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.0026092075
+  m_Height: 0.012971201
+  m_Direction: 0
+  m_Center: {x: -0.0016672468, y: 0.000006529689, z: 0.00000086009504}
+--- !u!114 &4039016195888316220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425700363799415951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6565ff205c9242848bb2b0a40fb38136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPickup
+  bubbleGunToActivate: {fileID: 0}
+  rightArmToDisable: {fileID: 0}
+  player: {fileID: 0}
+  findBubbleGunInPlayer: 1
