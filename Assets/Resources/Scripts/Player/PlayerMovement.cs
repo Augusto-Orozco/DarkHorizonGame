@@ -43,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     private CharacterController controller;
     private Vector3 verticalVelocity;
     private float cameraPitch = 0f;
+    private bool cameraPitchHandledByThirdPersonCamera;
 
     private bool isMoving = false;
     private MovementState state = MovementState.Idle;
@@ -72,6 +73,10 @@ public class PlayerMovement : MonoBehaviour
         {
             cameraTransform = Camera.main.transform;
         }
+
+        cameraPitchHandledByThirdPersonCamera =
+            cameraTransform != null &&
+            cameraTransform.GetComponentInParent<ThirdPersonCamera>() != null;
 
         preRunDuration = GetAnimationDuration(preRunAnimation, preRunDuration);
         postRunDuration = GetAnimationDuration(postRunAnimation, postRunDuration);
@@ -104,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(Vector3.up * mouseDelta.x);
 
         // 2. Inclinar la cámara verticalmente (Pitch)
-        if (cameraTransform != null)
+        if (cameraTransform != null && !cameraPitchHandledByThirdPersonCamera)
         {
             cameraPitch -= mouseDelta.y;
             cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);

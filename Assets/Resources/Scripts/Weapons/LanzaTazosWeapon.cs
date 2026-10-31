@@ -20,6 +20,7 @@ public class LanzaTazosWeapon : MonoBehaviour
     [SerializeField] private Key reloadKey = Key.R;
 
     private PlayerMovement player;
+    private PlayerWeaponAim weaponAim;
     private PlayerInventory inventory;
     private float nextFireTime;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
@@ -27,6 +28,9 @@ public class LanzaTazosWeapon : MonoBehaviour
     private void Awake()
     {
         player = GetComponentInParent<PlayerMovement>();
+        weaponAim = GetComponentInParent<PlayerWeaponAim>();
+        if (weaponAim == null && player != null)
+            weaponAim = player.gameObject.AddComponent<PlayerWeaponAim>();
         inventory = GetComponentInParent<PlayerInventory>();
         if (muzzle == null)
             muzzle = transform;
@@ -72,7 +76,10 @@ public class LanzaTazosWeapon : MonoBehaviour
         nextFireTime = Time.time + Mathf.Max(0.01f, fireCooldown);
         player.StartShooting();
 
-        Vector3 direction = GetSpreadDirection();
+        Vector3 aimDirection = weaponAim != null
+            ? weaponAim.GetAimDirection(muzzle)
+            : muzzle.forward;
+        Vector3 direction = GetSpreadDirection(aimDirection);
 
         GameObject tazo = Instantiate(
             prefab,
@@ -103,10 +110,10 @@ public class LanzaTazosWeapon : MonoBehaviour
         );
     }
 
-    private Vector3 GetSpreadDirection()
+    private Vector3 GetSpreadDirection(Vector3 aimDirection)
     {
         Vector2 spread = Random.insideUnitCircle * spreadAngle;
-        return (muzzle.forward
+        return (aimDirection
             + muzzle.right * Mathf.Tan(spread.x * Mathf.Deg2Rad)
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
     }

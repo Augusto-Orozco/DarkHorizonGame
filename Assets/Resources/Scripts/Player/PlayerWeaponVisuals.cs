@@ -12,6 +12,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
     private PlayerInventory inventory;
     private PlayerMovement movement;
+    private PlayerWeaponAim weaponAim;
 
     private GameObject currentModel;
     private WeaponData currentData;
@@ -20,6 +21,9 @@ public class PlayerWeaponVisuals : MonoBehaviour
     {
         inventory = GetComponent<PlayerInventory>();
         movement = GetComponent<PlayerMovement>();
+        weaponAim = GetComponent<PlayerWeaponAim>();
+        if (weaponAim == null)
+            weaponAim = gameObject.AddComponent<PlayerWeaponAim>();
 
         if (weaponHolder == null)
             weaponHolder = transform;
@@ -66,7 +70,10 @@ public class PlayerWeaponVisuals : MonoBehaviour
         if (rightArm != null)
             rightArm.SetActive(!hideArm);
         if (data == null || data.HeldPrefab == null)
+        {
+            weaponAim.SetWeaponActive(false);
             return;
+        }
 
         currentModel = Instantiate(data.HeldPrefab, weaponHolder);
         currentModel.transform.localPosition = Vector3.zero;
@@ -82,6 +89,11 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
             movement?.EquipBubbleGun();
         }
+
+        bool hasAimWeapon =
+            currentModel.GetComponentInChildren<BubbleGunWeapon>() != null ||
+            currentModel.GetComponentInChildren<LanzaTazosWeapon>() != null;
+        weaponAim.SetWeaponActive(hasAimWeapon);
     }
 
 }

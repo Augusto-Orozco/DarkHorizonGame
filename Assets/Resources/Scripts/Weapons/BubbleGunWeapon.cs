@@ -17,6 +17,7 @@ public class BubbleGunWeapon : MonoBehaviour
     [SerializeField] private float spreadAngle = 10f;
 
     private PlayerMovement player;
+    private PlayerWeaponAim weaponAim;
     private float nextFireTime;
     private PlayerInventory inventory;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
@@ -24,6 +25,9 @@ public class BubbleGunWeapon : MonoBehaviour
     private void Awake()
     {
         player = GetComponentInParent<PlayerMovement>();
+        weaponAim = GetComponentInParent<PlayerWeaponAim>();
+        if (weaponAim == null && player != null)
+            weaponAim = player.gameObject.AddComponent<PlayerWeaponAim>();
         inventory = GetComponentInParent<PlayerInventory>();
         if (muzzle == null)
             muzzle = transform;
@@ -63,10 +67,13 @@ public class BubbleGunWeapon : MonoBehaviour
         player.StartShooting();
 
         int bubbleCount = Mathf.Max(1, bubblesPerShot);
+        Vector3 aimDirection = weaponAim != null
+            ? weaponAim.GetAimDirection(muzzle)
+            : muzzle.forward;
 
         for (int i = 0; i < bubbleCount; i++)
         {
-            Vector3 direction = GetSpreadDirection();
+            Vector3 direction = GetSpreadDirection(aimDirection);
 
             GameObject bubble = Instantiate(
                 bubblePrefab,
@@ -98,10 +105,10 @@ public class BubbleGunWeapon : MonoBehaviour
         }
     }
 
-    private Vector3 GetSpreadDirection()
+    private Vector3 GetSpreadDirection(Vector3 aimDirection)
     {
         Vector2 spread = Random.insideUnitCircle * spreadAngle;
-        return (muzzle.forward
+        return (aimDirection
             + muzzle.right * Mathf.Tan(spread.x * Mathf.Deg2Rad)
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
     }
