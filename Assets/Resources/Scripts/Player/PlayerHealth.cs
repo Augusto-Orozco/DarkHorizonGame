@@ -1,3 +1,12 @@
+/*=======================================================================*\
+| Daniel Díaz Romero........A01801486                        | 31-10-2026 | 
+|                                                                         |
+| PlayerHealth.cs | Script that administrates the health of the player,   |
+| damage an heal recieved as well a isDead state. Updates the player HUD. |
+|                                                                         |
+\*=======================================================================*/
+
+
 using System;
 using UnityEngine;
 
