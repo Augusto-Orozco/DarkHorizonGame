@@ -763,7 +763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
-  bombPrefab: {fileID: 5111203136683434897, guid: cbbe09887a509d24fbb1e7ecdb210361, type: 3}
+  bombPrefab: {fileID: 8537393960515256092, guid: 8cf8b341eb642a047bde4ed2c8bcad06, type: 3}
   destroyEnemyOnDeath: 1
 --- !u!114 &537202399
 MonoBehaviour:
@@ -2017,7 +2017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
-  bombPrefab: {fileID: 5111203136683434897, guid: cbbe09887a509d24fbb1e7ecdb210361, type: 3}
+  bombPrefab: {fileID: 8537393960515256092, guid: 8cf8b341eb642a047bde4ed2c8bcad06, type: 3}
   destroyEnemyOnDeath: 1
 --- !u!114 &1351580047
 MonoBehaviour:
@@ -3607,7 +3607,8 @@ PrefabInstance:
       propertyPath: patrolCenter
       value: 
       objectReference: {fileID: 1727711638}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3166063239260502705, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -3617,6 +3618,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3171787666840924659, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4745378514711960120}
+    - targetCorrespondingSourceObject: {fileID: 3171787666840924659, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4745378514711960126}
   m_SourcePrefab: {fileID: 100100000, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
 --- !u!1 &4745378514711960119 stripped
 GameObject:
@@ -3635,7 +3639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
-  bombPrefab: {fileID: 5111203136683434897, guid: cbbe09887a509d24fbb1e7ecdb210361, type: 3}
+  bombPrefab: {fileID: 8537393960515256092, guid: 8cf8b341eb642a047bde4ed2c8bcad06, type: 3}
   destroyEnemyOnDeath: 1
 --- !u!114 &4745378514711960121
 MonoBehaviour:
@@ -3650,6 +3654,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 100
+--- !u!65 &4745378514711960126
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4745378514711960119}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.641108, y: 6.2615967, z: 3.8256319}
+  m_Center: {x: 0.46605873, y: 2.6307983, z: -0.11302643}
 --- !u!1001 &6122572644766901149
 PrefabInstance:
   m_ObjectHideFlags: 0
