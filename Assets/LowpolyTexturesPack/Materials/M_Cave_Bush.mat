@@ -26,7 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
-  - _DETAIL_MULX2
+  - _DETAIL_SCALED
   - _EMISSION
   - _NORMALMAP
   - _RECEIVE_SHADOWS_OFF
@@ -45,15 +45,15 @@ Material:
     m_TexEnvs:
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: f66cf91fe79cffe4bbe6a155e61e4bb7, type: 3}
-        m_Scale: {x: 55, y: 55}
+        m_Scale: {x: 30, y: 30}
         m_Offset: {x: 10, y: 10}
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: ddc7357dea51bbc46a8404b842b5c7bb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 10, y: 10}
+        m_Texture: {fileID: 2800000, guid: f66cf91fe79cffe4bbe6a155e61e4bb7, type: 3}
+        m_Scale: {x: 0, y: 0}
         m_Offset: {x: 0, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
@@ -69,7 +69,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 2800000, guid: f66cf91fe79cffe4bbe6a155e61e4bb7, type: 3}
-        m_Scale: {x: 55, y: 55}
+        m_Scale: {x: 30, y: 30}
         m_Offset: {x: 10, y: 10}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -111,7 +111,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 1
-    - _DetailAlbedoMapScale: 1
+    - _DetailAlbedoMapScale: 0.95
     - _DetailNormalMapScale: 2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
