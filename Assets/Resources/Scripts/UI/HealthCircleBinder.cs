@@ -1,12 +1,3 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 31-10-2026 |
-| Omar o Roge no sé qpd....                                               | 
-|                                                                         |
-| HealthCircleBinder.cs | Updates the UI health distribution component,   |
-| changes on real time, if healed or if damaged.                          |
-|                                                                         |
-\*=======================================================================*/
-
 using UnityEngine;
 
 public class HealthCircleBinder : MonoBehaviour
@@ -23,17 +14,15 @@ public class HealthCircleBinder : MonoBehaviour
         }
 
         health.OnHealthChanged += HandleHealthChanged;
-
-        HandleHealthChanged(
-            health.CurrentHealth,
-            health.MaxHealth
-        );
+        
     }
 
     private void OnDisable()
     {
         if (health != null)
-            health.OnHealthChanged -= HandleHealthChanged;
+            HandleHealthChanged(health.CurrentHealth, health.MaxHealth); ;
+
+        health.OnHealthChanged -= HandleHealthChanged;
     }
 
     private void HandleHealthChanged(float current, float max)
