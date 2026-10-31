@@ -36,22 +36,22 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public void TakeDamage(float amount)
     {
-        if (CurrentHealth <= 0f || amount <= 0f)
+        if (IsDead || amount <= 0f)
             return;
 
-        CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
+        SetHealth(CurrentHealth - amount);
 
         Debug.Log(
             $"[PLAYER] Recibió {amount} de daño. " +
             $"Vida: {CurrentHealth}/{maxHealth}"
         );
 
-        if (CurrentHealth <= 0f)
+        if (IsDead)
         {
             Debug.Log("[PLAYER] Ha sido derrotado.");
+            OnDied?.Invoke();
         }
     }
-
     public void Heal(float amount)
     {
         if (IsDead || amount <= 0f)
