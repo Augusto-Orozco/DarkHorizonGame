@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -7,7 +8,6 @@ public class BubbleProjectile : MonoBehaviour
 
     private GameObject owner;
     private Rigidbody rb;
-
     private float lifetime;
 
     private void Awake()
@@ -23,6 +23,7 @@ public class BubbleProjectile : MonoBehaviour
     public void Initialize(
         Vector3 direction,
         float speed,
+        float playerSpeed,
         float duration,
         float projectileDamage,
         GameObject attacker)
@@ -31,7 +32,13 @@ public class BubbleProjectile : MonoBehaviour
         damage = projectileDamage;
         lifetime = duration;
 
-        rb.linearVelocity = direction.normalized * speed;
+        // La dirección depende exclusivamente de la mira y dispersión.
+        Vector3 finalDirection = direction.normalized;
+
+        // La velocidad actual del jugador funciona como multiplicador.
+        float finalSpeed = speed * (1f + playerSpeed);
+
+        rb.linearVelocity = finalDirection * finalSpeed;
     }
 
     private void Update()

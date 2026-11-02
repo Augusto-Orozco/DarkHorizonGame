@@ -27,6 +27,8 @@ public class ShurkurMovement : MonoBehaviour
     [SerializeField] private Transform spitSpawnPoint;
     [SerializeField] private float spitProjectileSpeed = 12f;
     [SerializeField] private float spitProjectileLifetime = 5f;
+    [SerializeField] private float spitProjectileDamage = 15f;
+
     [SerializeField] private float spitDistance = 8f;
     [SerializeField] private float spitDistanceTolerance = 0.75f;
     [SerializeField] private float spitCooldown = 2.5f;
@@ -192,7 +194,11 @@ public class ShurkurMovement : MonoBehaviour
             spit = projectile.AddComponent<ShurkurSpitProjectile>();
         }
 
-        spit.Initialize(direction, spitProjectileSpeed, spitProjectileLifetime);
+        spit.Initialize(direction,
+            spitProjectileSpeed,
+            spitProjectileLifetime,
+            spitProjectileDamage,
+            gameObject);
     }
 
     private Transform FindClosestPlayer()
@@ -347,28 +353,5 @@ public class ShurkurMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
-    }
-}
-
-public class ShurkurSpitProjectile : MonoBehaviour
-{
-    private Vector3 direction;
-    private float speed;
-    private float lifetime;
-
-    public void Initialize(Vector3 launchDirection, float launchSpeed, float duration)
-    {
-        direction = launchDirection.normalized;
-        speed = launchSpeed;
-        lifetime = duration;
-    }
-
-    private void Update()
-    {
-        transform.position += direction * speed * Time.deltaTime;
-        lifetime -= Time.deltaTime;
-
-        if (lifetime <= 0f)
-            Destroy(gameObject);
     }
 }

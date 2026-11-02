@@ -25,6 +25,8 @@ public class LanzaTazosWeapon : MonoBehaviour
     private float nextFireTime;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
+    private Rigidbody playerRb;
+
     private void Awake()
     {
         player = GetComponentInParent<PlayerMovement>();
@@ -34,6 +36,8 @@ public class LanzaTazosWeapon : MonoBehaviour
         inventory = GetComponentInParent<PlayerInventory>();
         if (muzzle == null)
             muzzle = transform;
+
+        playerRb = player.GetComponentInParent<Rigidbody>();
     }
 
     private void Update()
@@ -81,6 +85,8 @@ public class LanzaTazosWeapon : MonoBehaviour
             : muzzle.forward;
         Vector3 direction = GetSpreadDirection(aimDirection);
 
+        float movementMultiplier = GetMovementMultiplier();
+
         GameObject tazo = Instantiate(
             prefab,
             muzzle.position,
@@ -104,6 +110,7 @@ public class LanzaTazosWeapon : MonoBehaviour
         projectile.Initialize(
             direction,
             tazoSpeed,
+            movementMultiplier,
             tazoLifetime,
             tazoDamage,
             player.gameObject
@@ -117,4 +124,19 @@ public class LanzaTazosWeapon : MonoBehaviour
             + muzzle.right * Mathf.Tan(spread.x * Mathf.Deg2Rad)
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
     }
+
+        private float GetMovementMultiplier()
+    {
+        if (playerRb == null)
+            return 0f;
+
+        // Obtiene la magnitud de la velocidad actual.
+        float currentSpeed = playerRb.linearVelocity.magnitude;
+
+        // Normaliza la velocidad respecto a la velocidad de movimiento.
+        float normalizedSpeed = currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
+
+        return normalizedSpeed;
+    }
+
 }

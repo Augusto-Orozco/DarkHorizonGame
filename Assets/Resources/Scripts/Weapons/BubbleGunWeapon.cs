@@ -18,6 +18,7 @@ public class BubbleGunWeapon : MonoBehaviour
 
     private PlayerMovement player;
     private PlayerWeaponAim weaponAim;
+    private Rigidbody playerRb;
     private float nextFireTime;
     private PlayerInventory inventory;
     private TraitorPlayer traitor;
@@ -33,6 +34,8 @@ public class BubbleGunWeapon : MonoBehaviour
         traitor = GetComponentInParent<TraitorPlayer>();
         if (muzzle == null)
             muzzle = transform;
+
+        playerRb = player.GetComponentInParent<Rigidbody>();
     }
 
     private void Update()
@@ -78,6 +81,8 @@ public class BubbleGunWeapon : MonoBehaviour
         Vector3 aimDirection = weaponAim != null
             ? weaponAim.GetAimDirection(muzzle)
             : muzzle.forward;
+        
+        float movementMultiplier = GetMovementMultiplier(); 
 
         for (int i = 0; i < bubbleCount; i++)
         {
@@ -106,6 +111,7 @@ public class BubbleGunWeapon : MonoBehaviour
             projectile.Initialize(
                 direction,
                 bubbleSpeed,
+                movementMultiplier,
                 bubbleLifetime,
                 damage,
                 player.gameObject
@@ -119,5 +125,19 @@ public class BubbleGunWeapon : MonoBehaviour
         return (aimDirection
             + muzzle.right * Mathf.Tan(spread.x * Mathf.Deg2Rad)
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
+    }
+
+    private float GetMovementMultiplier()
+    {
+        if (playerRb == null)
+            return 0f;
+
+        // Obtiene la magnitud de la velocidad actual.
+        float currentSpeed = playerRb.linearVelocity.magnitude;
+
+        // Normaliza la velocidad respecto a la velocidad de movimiento.
+        float normalizedSpeed = currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
+
+        return normalizedSpeed;
     }
 }
