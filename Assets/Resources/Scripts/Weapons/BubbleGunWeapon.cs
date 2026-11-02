@@ -20,6 +20,7 @@ public class BubbleGunWeapon : MonoBehaviour
     private PlayerWeaponAim weaponAim;
     private float nextFireTime;
     private PlayerInventory inventory;
+    private TraitorPlayer traitor;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
     private void Awake()
@@ -29,6 +30,7 @@ public class BubbleGunWeapon : MonoBehaviour
         if (weaponAim == null && player != null)
             weaponAim = player.gameObject.AddComponent<PlayerWeaponAim>();
         inventory = GetComponentInParent<PlayerInventory>();
+        traitor = GetComponentInParent<TraitorPlayer>();
         if (muzzle == null)
             muzzle = transform;
     }
@@ -38,12 +40,18 @@ public class BubbleGunWeapon : MonoBehaviour
         if (player == null || !player.HasBubbleGun() || Mouse.current == null)
             return;
 
+        if (traitor == null)
+            traitor = GetComponentInParent<TraitorPlayer>();
+
         bool wantsToFire = automaticFire
             ? Mouse.current.leftButton.isPressed
             : Mouse.current.leftButton.wasPressedThisFrame;
 
         WeaponState state = CurrentState;
-        bool canFire = state == null || state.CanFire;
+        bool canFire = state == null ||
+            (!state.IsOverheated &&
+             (!state.UsesAmmo || (traitor != null && traitor.HasUnlimitedAmmo) ||
+              state.AmmoInMagazine > 0));
 
         player.SetShootingActive(wantsToFire && canFire);
 

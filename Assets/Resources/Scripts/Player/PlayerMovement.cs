@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimiento")]
@@ -51,6 +52,7 @@ public class PlayerMovement : MonoBehaviour
     private MovementState bodyAnimationState = (MovementState)(-1);
     private bool hasBubbleGun;
     private bool shootingActive;
+    private TraitorPlayer traitor;
 
     private enum MovementState
     {
@@ -61,9 +63,11 @@ public class PlayerMovement : MonoBehaviour
         Shooting
     }
 
-    void Start()
+    private void Start()
     {
         controller = GetComponent<CharacterController>();
+        traitor = GetComponent<TraitorPlayer>();
+        TraitorGameManager.Instance?.RegisterPlayer(this);
 
         // Ocultar y bloquear el cursor en el centro de la pantalla
         Cursor.lockState = CursorLockMode.Locked;
@@ -85,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         PlayAnimation(idleAnimation);
     }
 
-    void Update()
+    private void Update()
     {
         if (readInput)
         {
@@ -120,7 +124,10 @@ public class PlayerMovement : MonoBehaviour
     void HandleMovement()
     {
         if (Keyboard.current == null)
+        {
+            isMoving = false;
             return;
+        }
 
         float forwardInput = 0f;
         float strafeInput = 0f;
@@ -141,8 +148,24 @@ public class PlayerMovement : MonoBehaviour
         {
             // Movimiento relativo a la orientación local del personaje
             Vector3 moveDirection = (transform.forward * forwardInput + transform.right * strafeInput).normalized;
-            controller.Move(moveDirection * moveSpeed * Time.deltaTime);
+            if (traitor == null)
+                traitor = GetComponent<TraitorPlayer>();
+
+            float speedMultiplier = traitor != null
+                ? traitor.MovementSpeedMultiplier
+                : 1f;
+            controller.Move(moveDirection * moveSpeed * speedMultiplier * Time.deltaTime);
         }
+    }
+
+    private void OnDisable()
+    {
+        TraitorGameManager.Instance?.UnregisterPlayer(this);
+    }
+
+    private void OnEnable()
+    {
+        TraitorGameManager.Instance?.RegisterPlayer(this);
     }
 
     void HandleGravity()
@@ -342,6 +365,9 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
+        if (armAnimators == null)
+            return;
 
         foreach (Animator animator in armAnimators)
         {
