@@ -8,12 +8,18 @@
 
 
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
+[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(PlayerMovement))]
 public class PlayerHealth : MonoBehaviour, IDamageable
-{ //                                     // Interface that registers taken damage   
+{ //                                     // Interface that registers taken damage
     [SerializeField] private float maxHealth = 100f;
+    [Header("Respawn")]
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField, Min(0f)] private float respawnDelay = 2f;
 
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
@@ -25,10 +31,21 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
 
     private PlayerInventory inventory;
+    private PlayerMovement movement;
+    private CharacterController controller;
+    private Vector3 defaultSpawnPosition;
+    private Quaternion defaultSpawnRotation;
+    private bool deathHandled;
+    private bool originalReadInput;
 
     private void Awake()
     {
         inventory = GetComponent<PlayerInventory>();
+        movement = GetComponent<PlayerMovement>();
+        controller = GetComponent<CharacterController>();
+        defaultSpawnPosition = transform.position;
+        defaultSpawnRotation = transform.rotation;
+        originalReadInput = movement.readInput;
         CurrentHealth = maxHealth;
     }
 
@@ -58,7 +75,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (IsDead)
         {
             Debug.Log("[PLAYER] Ha sido derrotado.");
-            OnDied?.Invoke();
+            DeathPlayer();
         }
     }
     public void Heal(float amount)
@@ -79,5 +96,37 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         if (bread != null)
             Heal(bread.HealAmount);
+    }
+
+    private void DeathPlayer()
+    {
+        if (deathHandled)
+            return;
+
+        deathHandled = true;
+        movement.readInput = false;
+        OnDied?.Invoke();
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        Vector3 position = spawnPoint != null
+            ? spawnPoint.position
+            : defaultSpawnPosition;
+        Quaternion rotation = spawnPoint != null
+            ? spawnPoint.rotation
+            : defaultSpawnRotation;
+
+        controller.enabled = false;
+        transform.SetPositionAndRotation(position, rotation);
+        controller.enabled = true;
+
+        CurrentHealth = maxHealth;
+        deathHandled = false;
+        movement.readInput = originalReadInput;
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 }
