@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BubbleGunWeapon : MonoBehaviour
+public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
 {
-    [Header("Disparo")]
+    [Header("Daño")]
     [SerializeField] private float damage = 10f;
-    
+
     [Header("Disparo")]
     [SerializeField] private Transform muzzle;
     [SerializeField] private GameObject bubblePrefab;
@@ -22,6 +22,7 @@ public class BubbleGunWeapon : MonoBehaviour
     private float nextFireTime;
     private PlayerInventory inventory;
     private TraitorPlayer traitor;
+    private NetworkShotRelay shotRelay;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
     private void Awake()
@@ -32,15 +33,18 @@ public class BubbleGunWeapon : MonoBehaviour
             weaponAim = player.gameObject.AddComponent<PlayerWeaponAim>();
         inventory = GetComponentInParent<PlayerInventory>();
         traitor = GetComponentInParent<TraitorPlayer>();
+        shotRelay = GetComponentInParent<NetworkShotRelay>();  
         if (muzzle == null)
             muzzle = transform;
 
-        playerRb = player.GetComponentInParent<Rigidbody>();
+        if (player != null)
+            playerRb = player.GetComponentInParent<Rigidbody>();
     }
 
     private void Update()
     {
-        if (player == null || !player.HasBubbleGun() || Mouse.current == null)
+
+        if (player == null || !player.readInput || !player.HasBubbleGun() || Mouse.current == null)
             return;
 
         if (traitor == null)
@@ -62,14 +66,12 @@ public class BubbleGunWeapon : MonoBehaviour
             Fire();
     }
 
+
     private void Fire()
     {
         if (bubblePrefab == null)
         {
-            Debug.LogWarning(
-                "BubbleGunWeapon necesita un Bubble Prefab.",
-                this
-            );
+            Debug.LogWarning("BubbleGunWeapon necesita un Bubble Prefab.", this);
             return;
         }
 
@@ -77,45 +79,48 @@ public class BubbleGunWeapon : MonoBehaviour
         CurrentState?.AddShotHeat();
         player.StartShooting();
 
-        int bubbleCount = Mathf.Max(1, bubblesPerShot);
         Vector3 aimDirection = weaponAim != null
             ? weaponAim.GetAimDirection(muzzle)
             : muzzle.forward;
-        
-        float movementMultiplier = GetMovementMultiplier(); 
 
+        SpawnBubbles(muzzle.position, aimDirection, GetMovementMultiplier(), damage, player.gameObject);
+
+        if (shotRelay != null)
+            shotRelay.SendShot(muzzle.position, aimDirection);
+    }
+
+   
+    public void PlayRemoteShot(Vector3 origin, Vector3 direction)
+    {
+        if (bubblePrefab == null) return;
+        if (player != null) player.StartShooting();
+        SpawnBubbles(origin, direction, 0f, 0f, null);
+    }
+
+    private void SpawnBubbles(Vector3 origin, Vector3 aimDirection, float movementMultiplier,
+                              float bubbleDamage, GameObject attacker)
+    {
+        int bubbleCount = Mathf.Max(1, bubblesPerShot);
         for (int i = 0; i < bubbleCount; i++)
         {
             Vector3 direction = GetSpreadDirection(aimDirection);
 
             GameObject bubble = Instantiate(
                 bubblePrefab,
-                muzzle.position,
+                origin,
                 Quaternion.LookRotation(direction, muzzle.up)
             );
 
-            BubbleProjectile projectile =
-                bubble.GetComponent<BubbleProjectile>();
-
+            BubbleProjectile projectile = bubble.GetComponent<BubbleProjectile>();
             if (projectile == null)
             {
-                Debug.LogError(
-                    "El Bubble Prefab necesita BubbleProjectile.",
-                    bubble
-                );
-
+                Debug.LogError("El Bubble Prefab necesita BubbleProjectile.", bubble);
                 Destroy(bubble);
                 continue;
             }
 
-            projectile.Initialize(
-                direction,
-                bubbleSpeed,
-                movementMultiplier,
-                bubbleLifetime,
-                damage,
-                player.gameObject
-            );
+            projectile.Initialize(direction, bubbleSpeed, movementMultiplier,
+                                  bubbleLifetime, bubbleDamage, attacker);
         }
     }
 
@@ -129,15 +134,10 @@ public class BubbleGunWeapon : MonoBehaviour
 
     private float GetMovementMultiplier()
     {
-        if (playerRb == null)
+        if (playerRb == null || player == null)
             return 0f;
 
-        // Obtiene la magnitud de la velocidad actual.
         float currentSpeed = playerRb.linearVelocity.magnitude;
-
-        // Normaliza la velocidad respecto a la velocidad de movimiento.
-        float normalizedSpeed = currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
-
-        return normalizedSpeed;
+        return currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
     }
 }

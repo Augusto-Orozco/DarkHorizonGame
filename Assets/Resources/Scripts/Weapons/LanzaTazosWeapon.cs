@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class LanzaTazosWeapon : MonoBehaviour
+public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 {
     [Header("Daño")]
     [SerializeField] private float tazoDamage = 15f;
@@ -22,10 +22,10 @@ public class LanzaTazosWeapon : MonoBehaviour
     private PlayerMovement player;
     private PlayerWeaponAim weaponAim;
     private PlayerInventory inventory;
+    private Rigidbody playerRb;
+    private NetworkShotRelay shotRelay;
     private float nextFireTime;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
-
-    private Rigidbody playerRb;
 
     private void Awake()
     {
@@ -34,15 +34,17 @@ public class LanzaTazosWeapon : MonoBehaviour
         if (weaponAim == null && player != null)
             weaponAim = player.gameObject.AddComponent<PlayerWeaponAim>();
         inventory = GetComponentInParent<PlayerInventory>();
+        shotRelay = GetComponentInParent<NetworkShotRelay>();
         if (muzzle == null)
             muzzle = transform;
 
-        playerRb = player.GetComponentInParent<Rigidbody>();
+        if (player != null)
+            playerRb = player.GetComponentInParent<Rigidbody>();
     }
 
     private void Update()
     {
-        if (player == null || !player.HasBubbleGun())
+        if (player == null || !player.readInput || !player.HasBubbleGun())
             return;
 
         Keyboard keyboard = Keyboard.current;
@@ -64,9 +66,10 @@ public class LanzaTazosWeapon : MonoBehaviour
             Fire();
     }
 
+
     private void Fire()
     {
-        GameObject prefab = tazoPrefab != null ? tazoPrefab : CurrentState?.Data.Prefab;
+        GameObject prefab = GetTazoPrefab();
         if (prefab == null)
         {
             Debug.LogWarning("LanzaTazosWeapon necesita un prefab de tazo.", this);
@@ -85,36 +88,45 @@ public class LanzaTazosWeapon : MonoBehaviour
             : muzzle.forward;
         Vector3 direction = GetSpreadDirection(aimDirection);
 
-        float movementMultiplier = GetMovementMultiplier();
+        SpawnTazo(prefab, muzzle.position, direction, GetMovementMultiplier(), tazoDamage, player.gameObject);
 
+        if (shotRelay != null)
+            shotRelay.SendShot(muzzle.position, direction);
+    }
+
+
+    public void PlayRemoteShot(Vector3 origin, Vector3 direction)
+    {
+        GameObject prefab = GetTazoPrefab();
+        if (prefab == null) return;
+        if (player != null) player.StartShooting();
+        SpawnTazo(prefab, origin, direction, 0f, 0f, null);
+    }
+
+    private GameObject GetTazoPrefab()
+    {
+        return tazoPrefab != null ? tazoPrefab : CurrentState?.Data.Prefab;
+    }
+
+    private void SpawnTazo(GameObject prefab, Vector3 origin, Vector3 direction,
+                           float movementMultiplier, float damage, GameObject attacker)
+    {
         GameObject tazo = Instantiate(
             prefab,
-            muzzle.position,
+            origin,
             Quaternion.LookRotation(direction, muzzle.up)
         );
 
-        BubbleProjectile projectile =
-            tazo.GetComponent<BubbleProjectile>();
-
+        BubbleProjectile projectile = tazo.GetComponent<BubbleProjectile>();
         if (projectile == null)
         {
-            Debug.LogError(
-                "El Tazo Prefab necesita BubbleProjectile.",
-                tazo
-            );
-
+            Debug.LogError("El Tazo Prefab necesita BubbleProjectile.", tazo);
             Destroy(tazo);
             return;
         }
 
-        projectile.Initialize(
-            direction,
-            tazoSpeed,
-            movementMultiplier,
-            tazoLifetime,
-            tazoDamage,
-            player.gameObject
-        );
+        projectile.Initialize(direction, tazoSpeed, movementMultiplier,
+                              tazoLifetime, damage, attacker);
     }
 
     private Vector3 GetSpreadDirection(Vector3 aimDirection)
@@ -125,18 +137,12 @@ public class LanzaTazosWeapon : MonoBehaviour
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
     }
 
-        private float GetMovementMultiplier()
+    private float GetMovementMultiplier()
     {
-        if (playerRb == null)
+        if (playerRb == null || player == null)
             return 0f;
 
-        // Obtiene la magnitud de la velocidad actual.
         float currentSpeed = playerRb.linearVelocity.magnitude;
-
-        // Normaliza la velocidad respecto a la velocidad de movimiento.
-        float normalizedSpeed = currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
-
-        return normalizedSpeed;
+        return currentSpeed / Mathf.Max(0.01f, player.moveSpeed);
     }
-
 }
