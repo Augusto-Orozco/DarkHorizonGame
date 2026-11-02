@@ -1,18 +1,9 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 31-10-2026 | 
-|                                                                         |
-| PlayerHealth.cs | Script that administrates the health of the player,   |
-| damage an heal recieved as well a isDead state. Updates the player HUD. |
-|                                                                         |
-\*=======================================================================*/
-
-
 using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
-public class PlayerHealth : MonoBehaviour, IDamageable
-{ //                                     // Interface that registers taken damage   
+public class PlayerHealth : MonoBehaviour
+{
     [SerializeField] private float maxHealth = 100f;
 
     public float CurrentHealth { get; private set; }
@@ -50,17 +41,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         SetHealth(CurrentHealth - amount);
 
-        Debug.Log(
-            $"[PLAYER] Recibió {amount} de daño. " +
-            $"Vida: {CurrentHealth}/{maxHealth}"
-        );
-
         if (IsDead)
-        {
-            Debug.Log("[PLAYER] Ha sido derrotado.");
             OnDied?.Invoke();
-        }
     }
+
     public void Heal(float amount)
     {
         if (IsDead || amount <= 0f)

@@ -74,7 +74,7 @@ public class PlayerWeaponInput : MonoBehaviour
             return;
 
         Quaternion rotation = Quaternion.Euler(0f, dropPoint.eulerAngles.y, 0f);
-        GroundWeapon.Spawn(dropped, dropPoint.position, rotation, transform);
+        GroundWeapon.Spawn(dropped, dropPoint.position, rotation);
     }
 
     private void DropBread()
@@ -96,7 +96,6 @@ public class PlayerWeaponInput : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(0f, dropPoint.eulerAngles.y, 0f);
         GameObject spawned = Instantiate(bread.Prefab, dropPoint.position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, dropPoint.position, transform);
         if (spawned.TryGetComponent(out ItemPickup pickup))
             pickup.BlockPickup(dropPickupDelay);
 
@@ -116,7 +115,6 @@ public class PlayerWeaponInput : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(0f, dropPoint.eulerAngles.y, 0f);
         GameObject spawned = Instantiate(ammoBoxToDrop.Prefab, dropPoint.position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, dropPoint.position, transform);
         if (spawned.TryGetComponent(out ItemPickup pickup))
             pickup.BlockPickup(dropPickupDelay);
     }

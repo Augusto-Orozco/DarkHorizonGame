@@ -73,12 +73,7 @@ public class GroundWeapon : Pickup, IInteractable
             : $"[E] Cambiar {current.Data.ItemName} por {newName}";
     }
 
-    public static GroundWeapon Spawn(
-        WeaponState weapon,
-        Vector3 position,
-        Quaternion rotation,
-        Transform ignoredRoot = null
-    )
+    public static GroundWeapon Spawn(WeaponState weapon, Vector3 position, Quaternion rotation)
     {
         GameObject prefab = weapon.Data.Prefab;
         if(prefab == null)
@@ -87,7 +82,6 @@ public class GroundWeapon : Pickup, IInteractable
             return null;
         }
         GameObject spawned = Instantiate(prefab, position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, position, ignoredRoot);
         GroundWeapon groundWeapon = spawned.GetComponent<GroundWeapon>();
         if(groundWeapon == null)
         {
