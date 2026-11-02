@@ -672,6 +672,8 @@ GameObject:
   - component: {fileID: 6275265237115370822}
   - component: {fileID: 180472488893359606}
   - component: {fileID: -5161808181410841403}
+  - component: {fileID: 2191914351189830403}
+  - component: {fileID: 6377378761740383943}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -986,6 +988,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkMovementAnimation
   movement: {fileID: 0}
   movingThreshold: 0.5
+--- !u!114 &2191914351189830403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff24ed7af87b59d43aef712f152e053a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkWeaponSync
+  inventory: {fileID: 7199304953641350939}
+--- !u!114 &6377378761740383943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac68e5ecd252df46b1920ae81c0df74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkShotRelay
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0

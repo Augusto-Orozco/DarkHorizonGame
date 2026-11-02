@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class LanzaTazosWeapon : MonoBehaviour
+public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 {
     [Header("Disparo")]
     [SerializeField] private Transform muzzle;
@@ -18,6 +18,7 @@ public class LanzaTazosWeapon : MonoBehaviour
 
     private PlayerMovement player;
     private PlayerInventory inventory;
+    private NetworkShotRelay shotRelay;
     private float nextFireTime;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
@@ -25,13 +26,14 @@ public class LanzaTazosWeapon : MonoBehaviour
     {
         player = GetComponentInParent<PlayerMovement>();
         inventory = GetComponentInParent<PlayerInventory>();
+        shotRelay = GetComponentInParent<NetworkShotRelay>();
         if (muzzle == null)
             muzzle = transform;
     }
 
     private void Update()
     {
-        if (player == null || !player.HasBubbleGun())
+        if (player == null || !player.readInput || !player.HasBubbleGun())
             return;
 
         Keyboard keyboard = Keyboard.current;
@@ -53,9 +55,10 @@ public class LanzaTazosWeapon : MonoBehaviour
             Fire();
     }
 
+  
     private void Fire()
     {
-        GameObject prefab = tazoPrefab != null ? tazoPrefab : CurrentState?.Data.Prefab;
+        GameObject prefab = GetTazoPrefab();
         if (prefab == null)
         {
             Debug.LogWarning("LanzaTazosWeapon necesita un prefab de tazo.", this);
@@ -70,9 +73,32 @@ public class LanzaTazosWeapon : MonoBehaviour
         player.StartShooting();
 
         Vector3 direction = GetSpreadDirection();
+        SpawnTazo(prefab, muzzle.position, direction);
+
+        if (shotRelay != null)
+            shotRelay.SendShot(muzzle.position, direction);
+    }
+
+
+    public void PlayRemoteShot(Vector3 origin, Vector3 direction)
+    {
+        GameObject prefab = GetTazoPrefab();
+        if (prefab == null) return;
+        if (player != null) player.StartShooting();
+        SpawnTazo(prefab, origin, direction);
+    }
+
+    private GameObject GetTazoPrefab()
+    {
+        return tazoPrefab != null ? tazoPrefab : CurrentState?.Data.Prefab;
+    }
+
+  
+    private void SpawnTazo(GameObject prefab, Vector3 origin, Vector3 direction)
+    {
         GameObject tazo = Instantiate(
             prefab,
-            muzzle.position,
+            origin,
             Quaternion.LookRotation(direction, muzzle.up)
         );
 

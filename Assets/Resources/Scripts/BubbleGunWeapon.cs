@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BubbleGunWeapon : MonoBehaviour
+public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
 {
     [Header("Disparo")]
     [SerializeField] private Transform muzzle;
@@ -16,19 +16,21 @@ public class BubbleGunWeapon : MonoBehaviour
     private PlayerMovement player;
     private float nextFireTime;
     private PlayerInventory inventory;
+    private NetworkShotRelay shotRelay;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
 
     private void Awake()
     {
         player = GetComponentInParent<PlayerMovement>();
         inventory = GetComponentInParent<PlayerInventory>();
+        shotRelay = GetComponentInParent<NetworkShotRelay>();  
         if (muzzle == null)
             muzzle = transform;
     }
 
     private void Update()
     {
-        if (player == null || !player.HasBubbleGun() || Mouse.current == null)
+        if (player == null || !player.readInput || !player.HasBubbleGun() || Mouse.current == null)
             return;
 
         bool wantsToFire = automaticFire
@@ -44,6 +46,7 @@ public class BubbleGunWeapon : MonoBehaviour
             Fire();
     }
 
+
     private void Fire()
     {
         if (bubblePrefab == null)
@@ -56,13 +59,29 @@ public class BubbleGunWeapon : MonoBehaviour
         CurrentState?.AddShotHeat();
         player.StartShooting();
 
+        SpawnBubbles(muzzle.position, muzzle.forward);
+
+        if (shotRelay != null)
+            shotRelay.SendShot(muzzle.position, muzzle.forward);
+    }
+
+  
+    public void PlayRemoteShot(Vector3 origin, Vector3 direction)
+    {
+        if (bubblePrefab == null) return;
+        if (player != null) player.StartShooting();
+        SpawnBubbles(origin, direction);
+    }
+
+    private void SpawnBubbles(Vector3 origin, Vector3 forward)
+    {
         int bubbleCount = Mathf.Max(1, bubblesPerShot);
         for (int i = 0; i < bubbleCount; i++)
         {
-            Vector3 direction = GetSpreadDirection();
+            Vector3 direction = GetSpreadDirection(forward);
             GameObject bubble = Instantiate(
                 bubblePrefab,
-                muzzle.position,
+                origin,
                 Quaternion.LookRotation(direction, muzzle.up)
             );
 
@@ -79,10 +98,10 @@ public class BubbleGunWeapon : MonoBehaviour
         }
     }
 
-    private Vector3 GetSpreadDirection()
+    private Vector3 GetSpreadDirection(Vector3 forward)
     {
         Vector2 spread = Random.insideUnitCircle * spreadAngle;
-        return (muzzle.forward
+        return (forward
             + muzzle.right * Mathf.Tan(spread.x * Mathf.Deg2Rad)
             + muzzle.up * Mathf.Tan(spread.y * Mathf.Deg2Rad)).normalized;
     }
