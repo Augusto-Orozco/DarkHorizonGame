@@ -1,0 +1,121 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public sealed class TraitorGameManager : MonoBehaviour
+{
+    public static TraitorGameManager Instance { get; private set; }
+
+    [Header("Desbloqueo de la sala")]
+    [SerializeField] private int requiredBombotellas = 4;
+    [SerializeField] private TraitorRoomGate[] roomGates;
+
+    private readonly List<PlayerMovement> players = new List<PlayerMovement>();
+    private int collectedBombotellas;
+    private bool artifactCollected;
+    private bool roomUnlocked;
+
+    public bool RoomUnlocked => roomUnlocked;
+    public int CollectedBombotellas => collectedBombotellas;
+    public int RequiredBombotellas => requiredBombotellas;
+    public bool HasRequiredBombotellas => collectedBombotellas >= requiredBombotellas;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        if (roomGates == null || roomGates.Length == 0)
+            roomGates = FindObjectsByType<TraitorRoomGate>(FindObjectsSortMode.None);
+
+        foreach (PlayerMovement player in FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None))
+            RegisterPlayer(player);
+
+        CheckRoomUnlock();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
+    }
+
+    public void RegisterPlayer(PlayerMovement player)
+    {
+        if (player != null && !players.Contains(player))
+            players.Add(player);
+    }
+
+    public void UnregisterPlayer(PlayerMovement player)
+    {
+        players.Remove(player);
+    }
+
+    public void RegisterBombotella()
+    {
+        if (roomUnlocked)
+            return;
+
+        collectedBombotellas++;
+        RefreshGatePrompts();
+        CheckRoomUnlock();
+    }
+
+    public bool TryAssignTraitor()
+    {
+        if (artifactCollected)
+            return false;
+
+        artifactCollected = true;
+        players.RemoveAll(player => player == null || !player.isActiveAndEnabled);
+
+        if (players.Count == 0)
+        {
+            Debug.LogWarning("No hay jugadores registrados para elegir al traidor.", this);
+            return false;
+        }
+
+        PlayerMovement selectedPlayer = players[Random.Range(0, players.Count)];
+        TraitorPlayer traitor = selectedPlayer.GetComponent<TraitorPlayer>();
+        if (traitor == null)
+            traitor = selectedPlayer.gameObject.AddComponent<TraitorPlayer>();
+
+        traitor.Activate();
+        Debug.Log($"[TRAITOR] {selectedPlayer.name} fue elegido como el traidor.", selectedPlayer);
+        return true;
+    }
+
+    private void CheckRoomUnlock()
+    {
+        if (roomUnlocked)
+            return;
+
+        if (HasRequiredBombotellas)
+        {
+            roomUnlocked = true;
+            foreach (TraitorRoomGate gate in roomGates)
+            {
+                if (gate != null)
+                    gate.SetOpen(true);
+            }
+
+            Debug.Log("[TRAITOR] La entrada a la sala del elemento fue desbloqueada.", this);
+        }
+    }
+
+    private void RefreshGatePrompts()
+    {
+        foreach (TraitorRoomGate gate in roomGates)
+        {
+            if (gate != null)
+                gate.RefreshRequirement();
+        }
+    }
+}
