@@ -18,7 +18,7 @@ public class NetworkMovementAnimation : MonoBehaviourPun
 
     private void Start()
     {
-        if(photonView.IsMine || movement == null)
+        if (!PhotonNetwork.InRoom || photonView.IsMine || movement == null)
         {
             enabled = false;
             return;

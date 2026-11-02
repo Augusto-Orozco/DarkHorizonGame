@@ -13,7 +13,7 @@ public class PlayerNetworkSetup : MonoBehaviourPun
 
     private void Awake()
     {
-        if (photonView.IsMine) return;
+        if (!PhotonNetwork.InRoom || photonView.IsMine) return;
 
         if (TryGetComponent(out Rigidbody body)) body.isKinematic = true;
 

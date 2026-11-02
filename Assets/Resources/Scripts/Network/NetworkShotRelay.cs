@@ -7,7 +7,7 @@ public class NetworkShotRelay : MonoBehaviourPun
 {
     public void SendShot(Vector3 origin, Vector3 direction)
     {
-        if (!photonView.IsMine) return;
+        if (!PhotonNetwork.InRoom || !photonView.IsMine) return;
         photonView.RPC(nameof(RPC_Shot), RpcTarget.Others, origin, direction);
     }
 

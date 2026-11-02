@@ -15,8 +15,8 @@ public class NetworkWeaponSync : MonoBehaviourPunCallbacks
 
     public override void OnEnable()
     {
-        base.OnEnable(); 
-        if (!photonView.IsMine || inventory == null) return;
+        base.OnEnable();
+        if (!PhotonNetwork.InRoom || !photonView.IsMine || inventory == null) return;
 
         inventory.OnWeaponChanged += HandleWeaponChanged;
         inventory.OnActiveSlotChanged += HandleActiveSlotChanged;
