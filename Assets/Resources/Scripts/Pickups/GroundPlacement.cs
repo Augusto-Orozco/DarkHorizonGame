@@ -46,17 +46,21 @@ public static class GroundPlacement
         if (!closestHit.HasValue)
             return;
 
-        float lowestPoint = GetLowestPoint(colliders);
+        float lowestPoint = GetLowestPoint(spawnedObject, colliders); 
         spawnedObject.transform.position +=
             Vector3.up * (closestHit.Value.point.y - lowestPoint);
     }
 
-    private static float GetLowestPoint(Collider[] colliders)
+ 
+    private static float GetLowestPoint(GameObject spawnedObject, Collider[] colliders)
     {
         float lowestPoint = float.PositiveInfinity;
 
         foreach (Collider collider in colliders)
             lowestPoint = Mathf.Min(lowestPoint, collider.bounds.min.y);
+
+        foreach (Renderer renderer in spawnedObject.GetComponentsInChildren<Renderer>())
+            lowestPoint = Mathf.Min(lowestPoint, renderer.bounds.min.y);
 
         return lowestPoint;
     }
