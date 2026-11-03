@@ -43,6 +43,7 @@ public class MariangulaMovement : MonoBehaviour
     [SerializeField] private float attackCooldown = 2f;
     [Range(0f, 1f)]
     [SerializeField] private float attackHitTime = 0.45f;
+    [SerializeField] private float attackDamage = 20f;
 
     [Header("Animador")]
     [SerializeField] private Animator animator;
@@ -201,6 +202,15 @@ public class MariangulaMovement : MonoBehaviour
             return;
 
         hasProcessedAttack = true;
+
+        if (player == null)
+            return;
+
+    
+        if (DistanceTo(player) > attackRange + attackRangeTolerance)
+            return;
+
+        DamageResolver.ApplyDamage(player.gameObject, attackDamage, gameObject);
     }
 
     private void DetectAnimations()
