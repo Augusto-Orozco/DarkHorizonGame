@@ -684,7 +684,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 30, y: 10, z: 4}
+  m_Size: {x: 30, y: 10, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &208286341
 Transform:
@@ -3262,6 +3262,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerNPC (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4986137427753821118, guid: 845b1e50bdaae7342bb654cce405419b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3338,7 +3342,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2832663803432594249, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.2
+      value: 3.34
       objectReference: {fileID: 0}
     - target: {fileID: 2832663803432594249, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3498,6 +3502,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerNPC
       objectReference: {fileID: 0}
+    - target: {fileID: 5786390697568525393, guid: 0c0b12fe82bfcdc498f2483f2d893c99, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3514,6 +3522,10 @@ PrefabInstance:
     - target: {fileID: 2051544464086085700, guid: 0092529ec3a73994a913aaf90f243d93, type: 3}
       propertyPath: m_Name
       value: PlayerNPC (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2051544464086085700, guid: 0092529ec3a73994a913aaf90f243d93, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4607903794423426795, guid: 0092529ec3a73994a913aaf90f243d93, type: 3}
       propertyPath: m_LocalPosition.x

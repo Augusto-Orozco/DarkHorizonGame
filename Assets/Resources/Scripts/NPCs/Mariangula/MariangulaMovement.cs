@@ -31,7 +31,8 @@ public class MariangulaMovement : MonoBehaviour
     [SerializeField] private float patrolTargetTolerance = 0.75f;
 
     [Header("Persecución")]
-
+    [Tooltip("Capas que la frenan (paredes, piso, props). Quita aquí la capa de los enemigos si se atoran entre ellos.")]
+    [SerializeField] private LayerMask obstacleMask = ~0;
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private float losePlayerRange = 28f;
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -44,6 +45,17 @@ public class MariangulaMovement : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float attackHitTime = 0.45f;
     [SerializeField] private float attackDamage = 20f;
+
+    [Header("Reacción a la luz")]
+    [Tooltip("Segundos que retrocede cuando la luz la toca")]
+    [SerializeField] private float fleeDuration = 0.8f;
+    [SerializeField] private float fleeSpeed = 10f;
+    [Tooltip("Segundos después de retroceder en los que la luz ya no la hace huir (solo la debilita)")]
+    [SerializeField] private float fleeCooldown = 3f;
+    [Tooltip("Daño extra si la ilumina un jugador solo (1.2 = +20%)")]
+    [SerializeField] private float soloLightDamageMultiplier = 1.2f;
+    [Tooltip("Daño extra si la ilumina una linterna de 2+ jugadores juntos (1.5 = +50%)")]
+    [SerializeField] private float groupLightDamageMultiplier = 1.5f;
 
     [Header("Animador")]
     [SerializeField] private Animator animator;
@@ -65,15 +77,29 @@ public class MariangulaMovement : MonoBehaviour
     private string attackAnimation;
     private bool hasPatrolTarget;
     private bool hasProcessedAttack;
-    private bool playerTagErrorLogged;
     private bool hasAnimationSetup;
+
     private EnemyTargeting targeting;
+    private Collider bodyCollider;
+    private LightExposure lightExposure;
+    private EnemyHealth health;
+    private float fleeUntilTime;
+    private float nextFleeAllowedTime;
+    private int lastLightLevel;
 
     private void Awake()
     {
+        bodyCollider = GetComponent<Collider>();
+        health = GetComponent<EnemyHealth>();
+
+        lightExposure = GetComponent<LightExposure>();
+        if (lightExposure == null)
+            lightExposure = gameObject.AddComponent<LightExposure>();
+
         targeting = GetComponent<EnemyTargeting>();
         if (targeting == null)
             targeting = gameObject.AddComponent<EnemyTargeting>();
+
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
@@ -88,11 +114,29 @@ public class MariangulaMovement : MonoBehaviour
         SetAnimationState(AnimationState.Idle);
     }
 
+    private void OnEnable()
+    {
+        lightExposure.OnLightLevelChanged += HandleLightLevelChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (lightExposure != null)
+            lightExposure.OnLightLevelChanged -= HandleLightLevelChanged;
+    }
+
     private void Update()
     {
         if (state == MariangulaState.Attacking)
         {
             UpdateAttacking();
+            return;
+        }
+
+
+        if (Time.time < fleeUntilTime)
+        {
+            UpdateFleeing();
             return;
         }
 
@@ -116,6 +160,43 @@ public class MariangulaMovement : MonoBehaviour
 
    
     private void OnAnimatorMove() { }
+
+    private void HandleLightLevelChanged(int level)
+    {
+        if (health != null)
+        {
+            if (level <= 0)
+                health.DamageTakenMultiplier = 1f;
+            else if (level == 1)
+                health.DamageTakenMultiplier = soloLightDamageMultiplier;
+            else
+                health.DamageTakenMultiplier = groupLightDamageMultiplier;
+        }
+
+   
+        bool justGotLit = lastLightLevel == 0 && level > 0;
+        if (justGotLit && Time.time >= nextFleeAllowedTime)
+        {
+            fleeUntilTime = Time.time + fleeDuration;
+            nextFleeAllowedTime = fleeUntilTime + fleeCooldown;
+        }
+
+        lastLightLevel = level;
+    }
+
+    private void UpdateFleeing()
+    {
+        Vector3 away = transform.position - lightExposure.LightSourcePosition;
+        away.y = 0f;
+        if (away.sqrMagnitude < 0.001f)
+            away = -transform.forward;
+
+        MoveTowards(transform.position + away.normalized * 10f, fleeSpeed, false);
+        UpdateMovementAnimation(true);
+    }
+
+
+
     private void UpdatePatrolling()
     {
         if (!hasPatrolTarget || IsOutsidePatrolArea() ||
@@ -183,6 +264,7 @@ public class MariangulaMovement : MonoBehaviour
         if (player == null)
         {
             state = MariangulaState.Patrolling;
+            SetAnimationState(AnimationState.Idle);
             return;
         }
 
@@ -198,7 +280,7 @@ public class MariangulaMovement : MonoBehaviour
         if (attackTimer >= attackAnimationDuration)
         {
             state = MariangulaState.Chasing;
-            animationState = (AnimationState)(-1);
+            SetAnimationState(AnimationState.Idle);  
         }
     }
 
@@ -212,12 +294,14 @@ public class MariangulaMovement : MonoBehaviour
         if (player == null)
             return;
 
-    
+ 
         if (DistanceTo(player) > attackRange + attackRangeTolerance)
             return;
 
         DamageResolver.ApplyDamage(player.gameObject, attackDamage, gameObject);
     }
+
+
 
     private void DetectAnimations()
     {
@@ -230,13 +314,10 @@ public class MariangulaMovement : MonoBehaviour
         postMoveAnimation = PostMoveStateName;
         attackAnimation = AttackStateName;
 
-        if (string.IsNullOrEmpty(idleAnimation) ||
-            !HasAnimatorState(idleAnimation) ||
+        if (!HasAnimatorState(idleAnimation) ||
             !HasAnimatorState(preMoveAnimation) ||
-            string.IsNullOrEmpty(moveAnimation) ||
             !HasAnimatorState(moveAnimation) ||
             !HasAnimatorState(postMoveAnimation) ||
-            string.IsNullOrEmpty(attackAnimation) ||
             !HasAnimatorState(attackAnimation))
         {
             Debug.LogWarning(
@@ -299,9 +380,6 @@ public class MariangulaMovement : MonoBehaviour
                 break;
         }
 
-        animator.speed = 1f;
-        animator.applyRootMotion = true;   
-        int stateHash = GetAnimatorStateHash(animationName);
         if (!HasAnimatorState(animationName))
         {
             Debug.LogWarning(
@@ -310,7 +388,9 @@ public class MariangulaMovement : MonoBehaviour
             return;
         }
 
-        animator.Play(stateHash, 0, 0f);
+        animator.speed = 1f;
+        animator.applyRootMotion = true;  
+        animator.Play(GetAnimatorStateHash(animationName), 0, 0f);
         animationState = newState;
     }
 
@@ -357,6 +437,8 @@ public class MariangulaMovement : MonoBehaviour
         }
     }
 
+
+
     private Transform FindClosestPlayer()
     {
         return targeting.FindClosestPlayer(detectionRange);
@@ -384,9 +466,11 @@ public class MariangulaMovement : MonoBehaviour
 
         FaceTarget(transform.position + offset);
         Vector3 nextPosition = transform.position + offset.normalized * speed * Time.deltaTime;
-        transform.position = constrainToPatrolArea
-            ? ClampToPatrolArea(nextPosition)
-            : nextPosition;
+        if (constrainToPatrolArea)
+            nextPosition = ClampToPatrolArea(nextPosition);
+
+
+        EnemyMover.Move(transform, bodyCollider, nextPosition - transform.position, obstacleMask);
     }
 
     private void FaceTarget(Vector3 target)
@@ -433,14 +517,8 @@ public class MariangulaMovement : MonoBehaviour
             return position;
 
         Vector3 center = patrolCenter.position;
-        position.x = Mathf.Clamp(
-            position.x,
-            center.x - patrolHalfExtents.x,
-            center.x + patrolHalfExtents.x);
-        position.z = Mathf.Clamp(
-            position.z,
-            center.z - patrolHalfExtents.y,
-            center.z + patrolHalfExtents.y);
+        position.x = Mathf.Clamp(position.x, center.x - patrolHalfExtents.x, center.x + patrolHalfExtents.x);
+        position.z = Mathf.Clamp(position.z, center.z - patrolHalfExtents.y, center.z + patrolHalfExtents.y);
         return position;
     }
 

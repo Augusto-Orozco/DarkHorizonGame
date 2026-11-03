@@ -20,8 +20,31 @@ public class LightExposure : MonoBehaviour
 
     private float nextCheckTime;
 
-    private Vector3 CheckPosition =>
-        checkPoint != null ? checkPoint.position : transform.position + Vector3.up * checkHeight;
+    private Collider bodyCollider;
+
+    private void Awake()
+    {
+
+        foreach (Collider candidate in GetComponentsInChildren<Collider>())
+        {
+            if (!candidate.isTrigger)
+            {
+                bodyCollider = candidate;
+                break;
+            }
+        }
+    }
+
+   
+    private Vector3 CheckPosition
+    {
+        get
+        {
+            if (checkPoint != null) return checkPoint.position;
+            if (bodyCollider != null) return bodyCollider.bounds.center;
+            return transform.position + Vector3.up * checkHeight;
+        }
+    }
 
     private void Update()
     {

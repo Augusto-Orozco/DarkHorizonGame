@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.2
+      value: 3.34
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -436,6 +436,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7668719778717070667}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8955522976656430286}
   m_SourcePrefab: {fileID: 100100000, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
 --- !u!1 &3171787666840924659 stripped
 GameObject:
@@ -480,6 +483,9 @@ MonoBehaviour:
   patrolHalfExtents: {x: 95, y: 95}
   patrolSpeed: 8
   patrolTargetTolerance: 0.75
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   detectionRange: 100
   losePlayerRange: 120
   chaseSpeed: 18
@@ -489,6 +495,11 @@ MonoBehaviour:
   attackCooldown: 1
   attackHitTime: 0.2
   attackDamage: 20
+  fleeDuration: 0.8
+  fleeSpeed: 10
+  fleeCooldown: 3
+  soloLightDamageMultiplier: 1.2
+  groupLightDamageMultiplier: 1.5
   animator: {fileID: 7002133797759559856}
 --- !u!114 &8330648569914394587
 MonoBehaviour:
@@ -538,3 +549,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.963623, y: 5.856526, z: 3.825632}
   m_Center: {x: 0.58379364, y: 2.8333337, z: -0.11302638}
+--- !u!114 &8955522976656430286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightExposure
+  checkPoint: {fileID: 0}
+  checkHeight: 1
+  checkInterval: 0.2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugLog: 1

@@ -1,10 +1,4 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 28-10-2026 |
-|                                                                         |
-| EnemyHealth.cs | This component manages NPC life value and general      |
-| health.                                                                 |
-|                                                                         |
-\*=======================================================================*/
+
 
 using System;
 using UnityEngine;
@@ -18,6 +12,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public float CurrentHealth { get; private set; }
     public float MaxHealth => maxHealth;
     public bool IsDead => CurrentHealth <= 0f;
+    public float DamageTakenMultiplier { get; set; } = 1f;
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
@@ -42,16 +37,15 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         if (IsDead || amount <= 0f)
             return;
 
+        amount *= DamageTakenMultiplier;
+
         SetHealth(CurrentHealth - amount);
 
-        Debug.Log(
-            $"[KHARVEK] Recibió {amount} de daño. " +
-            $"Vida: {CurrentHealth}/{maxHealth}"
-        );
+        Debug.Log($"[{name}] Recibió {amount} de daño. Vida: {CurrentHealth}/{maxHealth}");
 
         if (IsDead)
         {
-            Debug.Log("[KHARVEK] Ha sido derrotado.");
+            Debug.Log($"[{name}] Ha sido derrotado.");
             OnDied?.Invoke();
         }
     }
