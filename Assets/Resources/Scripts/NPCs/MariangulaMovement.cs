@@ -114,6 +114,8 @@ public class MariangulaMovement : MonoBehaviour
             UpdatePatrolling();
     }
 
+   
+    private void OnAnimatorMove() { }
     private void UpdatePatrolling()
     {
         if (!hasPatrolTarget || IsOutsidePatrolArea() ||
@@ -298,7 +300,7 @@ public class MariangulaMovement : MonoBehaviour
         }
 
         animator.speed = 1f;
-        animator.applyRootMotion = false;
+        animator.applyRootMotion = true;   
         int stateHash = GetAnimatorStateHash(animationName);
         if (!HasAnimatorState(animationName))
         {

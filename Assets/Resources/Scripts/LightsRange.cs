@@ -10,6 +10,12 @@ public class LightsRange : MonoBehaviour
 
     public Light myLight;
 
+
+    public static readonly List<LightsRange> Active = new List<LightsRange>();
+
+    private void OnEnable() => Active.Add(this);
+    private void OnDisable() => Active.Remove(this);
+
     [Header("Grupo")]
     public float Radio = 7f; 
     public Vector3 UbicacionRango = Vector3.zero;

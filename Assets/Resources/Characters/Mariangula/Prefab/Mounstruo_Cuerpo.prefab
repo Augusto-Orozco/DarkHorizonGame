@@ -46,15 +46,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -478,15 +478,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MariangulaMovement
   patrolCenter: {fileID: 0}
   patrolHalfExtents: {x: 95, y: 95}
-  patrolSpeed: 5
+  patrolSpeed: 8
   patrolTargetTolerance: 0.75
-  playerTag: Player
   detectionRange: 100
-  losePlayerRange: 50
-  chaseSpeed: 3.5
+  losePlayerRange: 120
+  chaseSpeed: 18
   rotationSpeed: 6
-  attackRange: 30
-  attackRangeTolerance: 0.5
+  attackRange: 10
+  attackRangeTolerance: 1.5
   attackCooldown: 1
   attackHitTime: 0.2
   attackDamage: 20
@@ -537,5 +536,5 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 7.641108, y: 6.2615967, z: 3.8256319}
-  m_Center: {x: 0.46605873, y: 2.6307983, z: -0.11302643}
+  m_Size: {x: 1.963623, y: 5.856526, z: 3.825632}
+  m_Center: {x: 0.58379364, y: 2.8333337, z: -0.11302638}
