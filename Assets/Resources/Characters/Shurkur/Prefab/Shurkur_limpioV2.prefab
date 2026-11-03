@@ -121,6 +121,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 736126156099175989}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7103275567984899213}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2099117951299727344}
   m_SourcePrefab: {fileID: 100100000, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
 --- !u!1 &4627777800499569190 stripped
 GameObject:
@@ -188,10 +194,14 @@ MonoBehaviour:
   patrolHalfExtents: {x: 70, y: 70}
   patrolSpeed: 8
   patrolTargetTolerance: 1
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   detectionRange: 90
   losePlayerRange: 120
   chaseSpeed: 15
   rotationSpeed: 6
+  aimHeight: 1.6
   spitPrefab: {fileID: 8541896682611892029, guid: 5072b7669e44cb740bc3b508826bcdbe, type: 3}
   spitSpawnPoint: {fileID: 6519614711721340317}
   spitProjectileSpeed: 35
@@ -199,9 +209,13 @@ MonoBehaviour:
   spitProjectileDamage: 15
   spitDistance: 40
   spitDistanceTolerance: 0.75
-  spitCooldown: 1.5
+  spitCooldown: 2.5
   spitAnimationDuration: 1
   spitSpawnTime: 0.2
+  darkCooldownMultiplier: 0.7
+  soloLightCooldownMultiplier: 1
+  pairLightCooldownMultiplier: 1.5
+  groupLightCooldownMultiplier: 2
   animator: {fileID: 3303988849713983185}
   idleAnimation: Rig_Shurkur|Idle_Hover
   moveAnimation: Rig_Shurkur|Fly
@@ -233,6 +247,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
   bombPrefab: {fileID: 8537393960515256092, guid: a6422c44359e1894caffab30449bd2fb, type: 3}
   destroyEnemyOnDeath: 1
+--- !u!114 &-7103275567984899213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4627777800499569190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightExposure
+  checkPoint: {fileID: 0}
+  checkHeight: 1
+  checkInterval: 0.2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugLog: 1
+--- !u!114 &-2099117951299727344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4627777800499569190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 054ac6ff47cae8a49889aaa42b83ee6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTargeting
+  playerTag: Player
+  refreshInterval: 0.5
 --- !u!4 &5436684568285903004 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}

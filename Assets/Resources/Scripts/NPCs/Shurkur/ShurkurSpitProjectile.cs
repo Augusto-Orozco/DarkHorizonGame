@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class ShurkurSpitProjectile : MonoBehaviour
@@ -12,6 +11,10 @@ public class ShurkurSpitProjectile : MonoBehaviour
     private float projectileSpeed;
     private float projectileLifetime;
 
+    // Destroy() no es inmediato (ocurre al final del frame): sin esto,
+    // si toca 2 colliders del jugador en el mismo frame, pega 2 veces.
+    private bool hasHit;
+
     private void Awake()
     {
         if (!TryGetComponent(out Rigidbody body))
@@ -20,6 +23,7 @@ public class ShurkurSpitProjectile : MonoBehaviour
         body.isKinematic = true;
         body.useGravity = false;
     }
+
     public void Initialize(
         Vector3 projectileDirection,
         float projectileSpeed,
@@ -48,15 +52,18 @@ public class ShurkurSpitProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (owner == null)
+        if (hasHit || owner == null)
             return;
 
         if (other.transform.root == owner.transform.root)
-            return; 
+            return;
 
         bool hit = DamageResolver.ApplyDamage(other.gameObject, projectileDamage, owner);
 
         if (hit || !other.isTrigger)
+        {
+            hasHit = true;
             Destroy(gameObject);
+        }
     }
 }

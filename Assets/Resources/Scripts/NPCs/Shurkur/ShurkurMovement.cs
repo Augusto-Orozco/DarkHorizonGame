@@ -16,7 +16,8 @@ public class ShurkurMovement : MonoBehaviour
     [SerializeField] private float patrolTargetTolerance = 0.75f;
 
     [Header("Persecución")]
-
+    [Tooltip("Capas que lo frenan (paredes, piso, props). Quita aquí la capa de los enemigos si se atoran entre ellos.")]
+    [SerializeField] private LayerMask obstacleMask = ~0;
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private float losePlayerRange = 28f;
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -38,6 +39,16 @@ public class ShurkurMovement : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float spitSpawnTime = 0.35f;
 
+    [Header("Reacción a la luz (multiplica el cooldown)")]
+    [Tooltip("A oscuras: menor = escupe más seguido (0.7 = 30% más rápido)")]
+    [SerializeField] private float darkCooldownMultiplier = 0.7f;
+    [Tooltip("Iluminado por un jugador solo")]
+    [SerializeField] private float soloLightCooldownMultiplier = 1f;
+    [Tooltip("Iluminado por 2 jugadores juntos")]
+    [SerializeField] private float pairLightCooldownMultiplier = 1.5f;
+    [Tooltip("Iluminado por 3 o más jugadores juntos")]
+    [SerializeField] private float groupLightCooldownMultiplier = 2f;
+
     [Header("Animaciones")]
     [SerializeField] private Animator animator;
     [SerializeField] private string idleAnimation = "Rig_Shurkur|Idle_Hover";
@@ -47,6 +58,8 @@ public class ShurkurMovement : MonoBehaviour
     private ShurkurState state;
     private Transform player;
     private EnemyTargeting targeting;
+    private LightExposure lightExposure;
+    private Collider bodyCollider;
     private Vector3 patrolTarget;
     private float nextSpitTime;
     private float spitTimer;
@@ -55,11 +68,16 @@ public class ShurkurMovement : MonoBehaviour
 
     private void Awake()
     {
-
+        bodyCollider = GetComponent<Collider>();
 
         targeting = GetComponent<EnemyTargeting>();
         if (targeting == null)
             targeting = gameObject.AddComponent<EnemyTargeting>();
+
+        lightExposure = GetComponent<LightExposure>();
+        if (lightExposure == null)
+            lightExposure = gameObject.AddComponent<LightExposure>();
+
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
@@ -95,6 +113,23 @@ public class ShurkurMovement : MonoBehaviour
         else
             UpdatePatrolling();
     }
+
+
+
+    private float GetCooldownMultiplier()
+    {
+        int level = lightExposure.LightLevel;
+
+        if (level <= 0)
+            return darkCooldownMultiplier;
+        if (level == 1)
+            return soloLightCooldownMultiplier;
+        if (level == 2)
+            return pairLightCooldownMultiplier;
+        return groupLightCooldownMultiplier;
+    }
+
+
 
     private void UpdatePatrolling()
     {
@@ -146,7 +181,10 @@ public class ShurkurMovement : MonoBehaviour
         state = ShurkurState.Spitting;
         spitTimer = 0f;
         spitProjectileSpawned = false;
-        nextSpitTime = Time.time + spitCooldown;
+        nextSpitTime = Time.time + spitCooldown * GetCooldownMultiplier();
+
+        Debug.Log($"[{name}] Escupe. Luz = {lightExposure.LightLevel}, siguiente en {spitCooldown * GetCooldownMultiplier():0.00} s");
+
         FaceTarget(player.position);
         PlayAnimation(spitAnimation);
     }
@@ -199,9 +237,7 @@ public class ShurkurMovement : MonoBehaviour
 
         ShurkurSpitProjectile spit = projectile.GetComponent<ShurkurSpitProjectile>();
         if (spit == null)
-        {
             spit = projectile.AddComponent<ShurkurSpitProjectile>();
-        }
 
         spit.Initialize(direction,
             spitProjectileSpeed,
@@ -209,6 +245,8 @@ public class ShurkurMovement : MonoBehaviour
             spitProjectileDamage,
             gameObject);
     }
+
+
 
     private Transform FindClosestPlayer()
     {
@@ -237,9 +275,11 @@ public class ShurkurMovement : MonoBehaviour
 
         FaceTarget(transform.position + offset);
         Vector3 nextPosition = transform.position + offset.normalized * speed * Time.deltaTime;
-        transform.position = constrainToPatrolArea
-            ? ClampToPatrolArea(nextPosition)
-            : nextPosition;
+        if (constrainToPatrolArea)
+            nextPosition = ClampToPatrolArea(nextPosition);
+
+  
+        EnemyMover.Move(transform, bodyCollider, nextPosition - transform.position, obstacleMask);
     }
 
     private void FaceTarget(Vector3 target)
@@ -284,14 +324,8 @@ public class ShurkurMovement : MonoBehaviour
             return position;
 
         Vector3 center = patrolCenter.position;
-        position.x = Mathf.Clamp(
-            position.x,
-            center.x - patrolHalfExtents.x,
-            center.x + patrolHalfExtents.x);
-        position.z = Mathf.Clamp(
-            position.z,
-            center.z - patrolHalfExtents.y,
-            center.z + patrolHalfExtents.y);
+        position.x = Mathf.Clamp(position.x, center.x - patrolHalfExtents.x, center.x + patrolHalfExtents.x);
+        position.z = Mathf.Clamp(position.z, center.z - patrolHalfExtents.y, center.z + patrolHalfExtents.y);
         return position;
     }
 
