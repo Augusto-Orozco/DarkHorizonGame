@@ -489,6 +489,7 @@ MonoBehaviour:
   attackRangeTolerance: 0.5
   attackCooldown: 1
   attackHitTime: 0.2
+  attackDamage: 20
   animator: {fileID: 7002133797759559856}
 --- !u!114 &8330648569914394587
 MonoBehaviour:
@@ -502,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
+  maxHealth: 200
 --- !u!114 &4125207925409290850
 MonoBehaviour:
   m_ObjectHideFlags: 0

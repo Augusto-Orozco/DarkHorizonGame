@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d4d87ba540d7e46baf87e4b20a8782, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BubbleGunWeapon
+  damage: 4
   muzzle: {fileID: 3776265760399061394}
   bubblePrefab: {fileID: 8062035043957973308, guid: e67210025610d774ba0b283dfacb3a50, type: 3}
   bubbleSpeed: 40

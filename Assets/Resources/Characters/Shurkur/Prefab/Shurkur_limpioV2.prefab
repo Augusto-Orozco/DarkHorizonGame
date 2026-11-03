@@ -197,6 +197,7 @@ MonoBehaviour:
   spitSpawnPoint: {fileID: 6519614711721340317}
   spitProjectileSpeed: 20
   spitProjectileLifetime: 3
+  spitProjectileDamage: 15
   spitDistance: 70
   spitDistanceTolerance: 0.75
   spitCooldown: 1.5
@@ -218,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
+  maxHealth: 120
 --- !u!114 &736126156099175989
 MonoBehaviour:
   m_ObjectHideFlags: 0

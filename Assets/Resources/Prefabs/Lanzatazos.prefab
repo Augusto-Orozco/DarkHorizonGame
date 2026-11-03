@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1129863b49638c34ba4a5a7f9c0771ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanzaTazosWeapon
+  tazoDamage: 15
   muzzle: {fileID: 5357741554708309479}
   tazoPrefab: {fileID: 8062035043957973308, guid: e67210025610d774ba0b283dfacb3a50, type: 3}
   tazoSpeed: 40
