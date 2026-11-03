@@ -12,6 +12,14 @@ public class ShurkurSpitProjectile : MonoBehaviour
     private float projectileSpeed;
     private float projectileLifetime;
 
+    private void Awake()
+    {
+        if (!TryGetComponent(out Rigidbody body))
+            body = gameObject.AddComponent<Rigidbody>();
+
+        body.isKinematic = true;
+        body.useGravity = false;
+    }
     public void Initialize(
         Vector3 projectileDirection,
         float projectileSpeed,
@@ -44,20 +52,11 @@ public class ShurkurSpitProjectile : MonoBehaviour
             return;
 
         if (other.transform.root == owner.transform.root)
-            return;
+            return; 
 
-        Debug.Log($"[SHURKUR] Impacto detectado: {other.name}");
+        bool hit = DamageResolver.ApplyDamage(other.gameObject, projectileDamage, owner);
 
-        bool hit = DamageResolver.ApplyDamage(
-            other.gameObject,
-            projectileDamage,
-            owner
-        );
-
-        if (hit)
-        {
-            Debug.Log($"[SHURKUR] Daño aplicado: {projectileDamage}");
+        if (hit || !other.isTrigger)
             Destroy(gameObject);
-        }
     }
 }

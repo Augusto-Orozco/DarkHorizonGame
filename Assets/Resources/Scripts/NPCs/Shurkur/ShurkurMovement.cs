@@ -23,6 +23,8 @@ public class ShurkurMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed = 6f;
 
     [Header("Ataque")]
+    [Tooltip("Altura sobre los pies del jugador a la que apunta (pecho)")]
+    [SerializeField] private float aimHeight = 1.6f;
     [SerializeField] private GameObject spitPrefab;
     [SerializeField] private Transform spitSpawnPoint;
     [SerializeField] private float spitProjectileSpeed = 12f;
@@ -53,6 +55,8 @@ public class ShurkurMovement : MonoBehaviour
 
     private void Awake()
     {
+
+
         targeting = GetComponent<EnemyTargeting>();
         if (targeting == null)
             targeting = gameObject.AddComponent<EnemyTargeting>();
@@ -183,7 +187,8 @@ public class ShurkurMovement : MonoBehaviour
             return;
         }
 
-        Vector3 direction = player.position - spitSpawnPoint.position;
+        Vector3 aimPoint = player.position + Vector3.up * aimHeight;
+        Vector3 direction = aimPoint - spitSpawnPoint.position;
         if (direction.sqrMagnitude <= 0.001f)
             return;
 
