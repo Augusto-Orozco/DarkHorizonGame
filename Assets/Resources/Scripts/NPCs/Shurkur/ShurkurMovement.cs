@@ -16,7 +16,7 @@ public class ShurkurMovement : MonoBehaviour
     [SerializeField] private float patrolTargetTolerance = 0.75f;
 
     [Header("Persecución")]
-    [SerializeField] private string playerTag = "Player";
+
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private float losePlayerRange = 28f;
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -44,6 +44,7 @@ public class ShurkurMovement : MonoBehaviour
 
     private ShurkurState state;
     private Transform player;
+    private EnemyTargeting targeting;
     private Vector3 patrolTarget;
     private float nextSpitTime;
     private float spitTimer;
@@ -52,6 +53,9 @@ public class ShurkurMovement : MonoBehaviour
 
     private void Awake()
     {
+        targeting = GetComponent<EnemyTargeting>();
+        if (targeting == null)
+            targeting = gameObject.AddComponent<EnemyTargeting>();
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
@@ -203,37 +207,7 @@ public class ShurkurMovement : MonoBehaviour
 
     private Transform FindClosestPlayer()
     {
-        if (string.IsNullOrWhiteSpace(playerTag) || detectionRange <= 0f)
-            return null;
-
-        GameObject[] players;
-        try
-        {
-            players = GameObject.FindGameObjectsWithTag(playerTag);
-        }
-        catch (UnityException exception)
-        {
-            Debug.LogError($"ShurkurMovement: el tag '{playerTag}' no existe.", this);
-            Debug.LogException(exception, this);
-            return null;
-        }
-
-        Transform closest = null;
-        float closestDistanceSqr = detectionRange * detectionRange;
-
-        foreach (GameObject candidate in players)
-        {
-            Vector3 offset = candidate.transform.position - transform.position;
-            offset.y = 0f;
-            float distanceSqr = offset.sqrMagnitude;
-            if (distanceSqr < closestDistanceSqr)
-            {
-                closestDistanceSqr = distanceSqr;
-                closest = candidate.transform;
-            }
-        }
-
-        return closest;
+        return targeting.FindClosestPlayer(detectionRange);
     }
 
     private void SelectPatrolTarget()

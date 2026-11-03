@@ -9,7 +9,6 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [SerializeField] private float rotationSpeed = 0.8f;
 
     [Header("Persecution")]
-    [SerializeField] private string playerTag = "Player";
     [SerializeField] private float detectionRange = 30f;
 
     [Header("Ground")]
@@ -53,10 +52,13 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private float bodyBobPhase;
     private float currentSpeed;
     private Vector3 lastMoveDirection = Vector3.forward;
+    private EnemyTargeting targeting;
 
     private void Awake()
     {
-
+        targeting = GetComponent<EnemyTargeting>();
+        if (targeting == null)
+            targeting = gameObject.AddComponent<EnemyTargeting>();
         if (autoCalculateBodyHeight)
             CalculateBodyHeightFromStartPosition();
 
@@ -133,27 +135,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         chaseDirection = Vector3.zero;
 
-        if (detectionRange <= 0f || string.IsNullOrWhiteSpace(playerTag))
-            return false;
-
-        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(playerTag);
-        float detectionRangeSqr = detectionRange * detectionRange;
-        float closestDistanceSqr = detectionRangeSqr;
-        Transform closestPlayer = null;
-
-        for (int i = 0; i < taggedObjects.Length; i++)
-        {
-            Vector3 offset = taggedObjects[i].transform.position - transform.position;
-            offset.y = 0f;
-            float distanceSqr = offset.sqrMagnitude;
-
-            if (distanceSqr <= 0.001f || distanceSqr > closestDistanceSqr)
-                continue;
-
-            closestDistanceSqr = distanceSqr;
-            closestPlayer = taggedObjects[i].transform;
-        }
-
+        Transform closestPlayer = targeting.FindClosestPlayer(detectionRange);
         if (closestPlayer == null)
             return false;
 

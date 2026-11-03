@@ -31,7 +31,7 @@ public class MariangulaMovement : MonoBehaviour
     [SerializeField] private float patrolTargetTolerance = 0.75f;
 
     [Header("Persecución")]
-    [SerializeField] private string playerTag = "Player";
+
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private float losePlayerRange = 28f;
     [SerializeField] private float chaseSpeed = 3.5f;
@@ -67,9 +67,13 @@ public class MariangulaMovement : MonoBehaviour
     private bool hasProcessedAttack;
     private bool playerTagErrorLogged;
     private bool hasAnimationSetup;
+    private EnemyTargeting targeting;
 
     private void Awake()
     {
+        targeting = GetComponent<EnemyTargeting>();
+        if (targeting == null)
+            targeting = gameObject.AddComponent<EnemyTargeting>();
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
 
@@ -353,42 +357,7 @@ public class MariangulaMovement : MonoBehaviour
 
     private Transform FindClosestPlayer()
     {
-        if (string.IsNullOrWhiteSpace(playerTag) || detectionRange <= 0f)
-            return null;
-
-        GameObject[] players;
-        try
-        {
-            players = GameObject.FindGameObjectsWithTag(playerTag);
-        }
-        catch (UnityException exception)
-        {
-            if (!playerTagErrorLogged)
-            {
-                Debug.LogError($"MariangulaMovement: el tag '{playerTag}' no existe.", this);
-                Debug.LogException(exception, this);
-                playerTagErrorLogged = true;
-            }
-
-            return null;
-        }
-
-        Transform closest = null;
-        float closestDistanceSqr = detectionRange * detectionRange;
-
-        foreach (GameObject candidate in players)
-        {
-            Vector3 offset = candidate.transform.position - transform.position;
-            offset.y = 0f;
-            float distanceSqr = offset.sqrMagnitude;
-            if (distanceSqr < closestDistanceSqr)
-            {
-                closestDistanceSqr = distanceSqr;
-                closest = candidate.transform;
-            }
-        }
-
-        return closest;
+        return targeting.FindClosestPlayer(detectionRange);
     }
 
     private void SelectPatrolTarget()
