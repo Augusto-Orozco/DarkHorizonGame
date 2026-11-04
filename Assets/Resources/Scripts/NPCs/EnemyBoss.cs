@@ -7,8 +7,13 @@ public class EnemyBoss : MonoBehaviour
 {
     private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
 
+
+    public static readonly List<EnemyBoss> Active = new List<EnemyBoss>();
+
     [Header("Jefe")]
     [SerializeField] private float healthMultiplier = 2.5f;
+    [Tooltip("Nombre en la barra del HUD. Vacío = usa el nombre del objeto")]
+    [SerializeField] private string bossName = "";
 
     [Header("Aura")]
     [SerializeField] private Color auraColor = new Color(1f, 0.15f, 0.1f);
@@ -16,12 +21,16 @@ public class EnemyBoss : MonoBehaviour
     [SerializeField] private float glowIntensity = 1f;
     [Tooltip("0 = se calcula solo según el tamaño del enemigo")]
     [SerializeField] private float auraRange = 0f;
-    [SerializeField] private float auraIntensity = 20f;
+    [SerializeField] private float auraIntensity = 6f;
     [SerializeField] private float pulseSpeed = 2f;
     [Range(0f, 1f)]
     [SerializeField] private float pulseAmount = 0.4f;
 
     public EnemyHealth Health { get; private set; }
+
+    public string BossName => string.IsNullOrEmpty(bossName)
+        ? name.Replace("(Clone)", "").Trim()
+        : bossName;
 
     private Light auraLight;
     private Collider bodyCollider;
@@ -45,6 +54,9 @@ public class EnemyBoss : MonoBehaviour
         CreateAuraLight();
     }
 
+    private void OnEnable() => Active.Add(this);
+    private void OnDisable() => Active.Remove(this);
+
 
     private void SetupGlow()
     {
@@ -53,6 +65,7 @@ public class EnemyBoss : MonoBehaviour
             if (rend is ParticleSystemRenderer)
                 continue;
 
+      
             foreach (Material mat in rend.materials)
             {
                 if (!mat.HasProperty(EmissionColorId))
@@ -73,11 +86,11 @@ public class EnemyBoss : MonoBehaviour
         auraLight = auraObject.AddComponent<Light>();
         auraLight.type = LightType.Point;
         auraLight.color = auraColor;
-        auraLight.shadows = LightShadows.None;  
+        auraLight.shadows = LightShadows.None; 
 
         if (auraRange <= 0f)
         {
-      
+ 
             float size = bodyCollider != null ? bodyCollider.bounds.extents.magnitude : 5f;
             auraRange = size * 4f;
         }
@@ -97,13 +110,13 @@ public class EnemyBoss : MonoBehaviour
         {
             auraLight.intensity = auraIntensity * pulse;
 
-       
+    
             if (bodyCollider != null)
                 auraLight.transform.position = bodyCollider.bounds.center + Vector3.up * bodyCollider.bounds.extents.y;
         }
     }
 
- 
+
     private void OnDestroy()
     {
         foreach (Material mat in glowMaterials)
