@@ -153,6 +153,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: stepForwardOffset
       value: 10
       objectReference: {fileID: 0}

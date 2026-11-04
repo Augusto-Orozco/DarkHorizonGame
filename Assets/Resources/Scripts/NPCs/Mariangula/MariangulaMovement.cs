@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MariangulaMovement : MonoBehaviour
+public class MariangulaMovement : MonoBehaviour, IPatrolArea
 {
     private const string IdleStateName = "idle";
     private const string PreMoveStateName = "premov";
@@ -542,6 +542,17 @@ public class MariangulaMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    public void SetPatrolArea(Transform center, Vector2 halfExtents)
+    {
+        if (ownsPatrolCenter && patrolCenter != null)
+            Destroy(patrolCenter.gameObject);
+
+        ownsPatrolCenter = false;
+        patrolCenter = center;
+        patrolHalfExtents = halfExtents;
+        hasPatrolTarget = false;   
     }
 
     private void OnDestroy()

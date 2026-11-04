@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class EnemySpawner : MonoBehaviour
 {
     [System.Serializable]
@@ -38,6 +37,20 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private EnemyEntry bossEnemy;
     [SerializeField] private BossSlot[] bossSlots;
 
+    [Header("Escoltas (alrededor de cada jefe, salen de la lista de enemigos normales)")]
+    [SerializeField] private int escortsPerBoss = 3;
+    [Tooltip("Distancia del jefe a la que aparecen (en círculo)")]
+    [SerializeField] private float escortRadius = 25f;
+    [Tooltip("Tamaño de las escoltas (0.6 = 60% del normal)")]
+    [SerializeField] private float escortScale = 0.6f;
+    [SerializeField] private float escortHealthMultiplier = 0.5f;
+    [Tooltip("Qué tanto se alejan del jefe al patrullar")]
+    [SerializeField] private Vector2 escortPatrolHalfExtents = new Vector2(20f, 20f);
+    [Tooltip("Segundos de alerta cuando alguien le pega al jefe")]
+    [SerializeField] private float escortAlertDuration = 8f;
+    [Tooltip("Rango de detección durante la alerta. Que sea MENOR que su Lose Player Range (120)")]
+    [SerializeField] private float escortAlertRange = 110f;
+
     [Header("Piso")]
     [SerializeField] private LayerMask groundMask = ~0;
     [Tooltip("Desde qué altura sobre el punto se busca el piso hacia abajo")]
@@ -57,15 +70,18 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnAll()
     {
-        int bosses = SpawnBosses();
+        int escorts;
+        int bosses = SpawnBosses(out escorts);
         int normals = SpawnNormalEnemies();
-        Debug.Log($"[SPAWNER] {normals} enemigos normales, {bosses} jefes.", this);
+        Debug.Log($"[SPAWNER] {normals} enemigos normales, {bosses} jefes, {escorts} escoltas.", this);
     }
 
 
 
-    private int SpawnBosses()
+    private int SpawnBosses(out int escortCount)
     {
+        escortCount = 0;
+
         if (bossSlots == null || bossSlots.Length == 0)
             return 0;
 
@@ -81,7 +97,8 @@ public class EnemySpawner : MonoBehaviour
             if (slot == null || slot.point == null)
                 continue;
 
-            GameObject enemy = SpawnAt(bossEnemy, slot.point.position);
+            GameObject enemy = SpawnAt(bossEnemy, slot.point.position, 1f);
+
 
             EnemyHealth health = enemy.GetComponentInChildren<EnemyHealth>();
             if (health == null)
@@ -94,7 +111,42 @@ public class EnemySpawner : MonoBehaviour
             boss.SetAppearance(slot.color, slot.displayName);
             count++;
 
+            escortCount += SpawnEscorts(health, slot.point.position);
+
             Debug.Log($"[SPAWNER] Jefe '{slot.displayName}' en {slot.point.name}", enemy);
+        }
+
+        return count;
+    }
+
+    private int SpawnEscorts(EnemyHealth bossHealth, Vector3 center)
+    {
+        if (escortsPerBoss <= 0 || enemies == null || enemies.Length == 0)
+            return 0;
+
+        int count = 0;
+        float startAngle = Random.Range(0f, 360f);
+
+        for (int i = 0; i < escortsPerBoss; i++)
+        {
+            EnemyEntry entry = PickRandomEntry();
+            if (entry == null || entry.prefab == null)
+                continue;
+
+
+            float angle = (startAngle + i * 360f / escortsPerBoss) * Mathf.Deg2Rad;
+            Vector3 point = center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * escortRadius;
+
+            GameObject escort = SpawnAt(entry, point, escortScale);
+
+            EnemyHealth health = escort.GetComponentInChildren<EnemyHealth>();
+            if (health != null)
+                health.ScaleMaxHealth(escortHealthMultiplier);
+
+            EnemyEscort escortComponent = escort.AddComponent<EnemyEscort>();
+            escortComponent.Init(bossHealth, escortPatrolHalfExtents, escortAlertDuration, escortAlertRange);
+
+            count++;
         }
 
         return count;
@@ -123,7 +175,7 @@ public class EnemySpawner : MonoBehaviour
             if (entry == null || entry.prefab == null)
                 continue;
 
-            GameObject enemy = SpawnAt(entry, points[i].position);
+            GameObject enemy = SpawnAt(entry, points[i].position, 1f);
             spawnedCount++;
 
             Debug.Log($"[SPAWNER] {entry.prefab.name} en {points[i].name}: " +
@@ -134,15 +186,22 @@ public class EnemySpawner : MonoBehaviour
     }
 
 
-    private GameObject SpawnAt(EnemyEntry entry, Vector3 point)
+
+
+    private GameObject SpawnAt(EnemyEntry entry, Vector3 point, float scale)
     {
         Vector3 ground = FindGround(point);
         Vector3 position = ground + Vector3.up * entry.heightOffset;
         Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
 
         GameObject enemy = SpawnEnemy(entry.prefab, position, rotation);
+
+
+        if (!Mathf.Approximately(scale, 1f))
+            enemy.transform.localScale *= scale;
+
         if (entry.alignToGround)
-            AlignToGround(enemy, ground.y + entry.heightOffset);
+            AlignToGround(enemy, ground.y + entry.heightOffset * scale);
 
         spawned.Add(enemy);
         return enemy;
@@ -166,14 +225,14 @@ public class EnemySpawner : MonoBehaviour
             return Vector3.zero;
 
         Vector3 offset = body.transform.position - prefab.transform.position;
-        offset.y = 0f;   
+        offset.y = 0f; 
         return offset;
     }
 
-
+ 
     private static void AlignToGround(GameObject enemy, float targetY)
     {
-      
+
         Physics.SyncTransforms();
 
         float lowest = float.PositiveInfinity;
@@ -186,12 +245,10 @@ public class EnemySpawner : MonoBehaviour
         }
 
         if (float.IsInfinity(lowest))
-            return;   
+            return; 
 
         enemy.transform.position += Vector3.up * (targetY - lowest);
     }
-
-
 
 
     private EnemyEntry PickRandomEntry()
@@ -208,7 +265,7 @@ public class EnemySpawner : MonoBehaviour
         {
             float weight = Mathf.Max(0f, entry.weight);
             if (weight <= 0f)
-                continue;  
+                continue; 
 
             roll -= weight;
             if (roll <= 0f)
@@ -236,7 +293,7 @@ public class EnemySpawner : MonoBehaviour
                 break;
 
             if (hit.point.y <= point.y)
-                return hit.point;  
+                return hit.point; 
 
             float step = hit.distance + 0.05f;
             origin += Vector3.down * step;
@@ -278,7 +335,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // Puntos normales: morado
         Gizmos.color = Color.magenta;
         foreach (Transform point in GetSpawnPoints())
         {
@@ -286,7 +342,6 @@ public class EnemySpawner : MonoBehaviour
             Gizmos.DrawLine(point.position, point.position + Vector3.up * 10f);
         }
 
-        // Puntos de jefe: esfera grande del color de cada jefe
         if (bossSlots == null)
             return;
 
@@ -295,9 +350,14 @@ public class EnemySpawner : MonoBehaviour
             if (slot == null || slot.point == null)
                 continue;
 
+
             Gizmos.color = slot.color;
             Gizmos.DrawWireSphere(slot.point.position, 10f);
             Gizmos.DrawLine(slot.point.position, slot.point.position + Vector3.up * 30f);
+
+
+            Gizmos.color = new Color(slot.color.r, slot.color.g, slot.color.b, 0.4f);
+            Gizmos.DrawWireSphere(slot.point.position, escortRadius);
         }
     }
 }

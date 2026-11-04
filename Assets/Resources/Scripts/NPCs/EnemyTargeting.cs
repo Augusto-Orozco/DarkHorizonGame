@@ -12,8 +12,23 @@ public class EnemyTargeting : MonoBehaviour
     private float nextRefreshTime;
     private bool tagErrorLogged;
 
+    private float alertUntilTime;
+    private float alertRange;
+
+    public bool IsAlerted => Time.time < alertUntilTime;
+
+    public void Alert(float duration, float range)
+    {
+        alertUntilTime = Mathf.Max(alertUntilTime, Time.time + duration);
+        alertRange = range;
+    }
+
     public Transform FindClosestPlayer(float range)
     {
+
+        if (IsAlerted)
+            range = Mathf.Max(range, alertRange);
+
         if (range <= 0f)
             return null;
 

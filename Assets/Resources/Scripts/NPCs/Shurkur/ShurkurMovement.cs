@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ShurkurMovement : MonoBehaviour
+public class ShurkurMovement : MonoBehaviour, IPatrolArea
 {
     private enum ShurkurState
     {
@@ -372,6 +372,19 @@ public class ShurkurMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+
+    public void SetPatrolArea(Transform center, Vector2 halfExtents)
+    {
+
+        if (ownsPatrolCenter && patrolCenter != null)
+            Destroy(patrolCenter.gameObject);
+
+        ownsPatrolCenter = false;
+        patrolCenter = center;
+        patrolHalfExtents = halfExtents;
+        hasPatrolTarget = false;  
     }
     private void OnDestroy()
     {

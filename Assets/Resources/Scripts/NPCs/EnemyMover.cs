@@ -5,7 +5,9 @@ public static class EnemyMover
 {
     private const float Skin = 0.05f;
 
+
     private static readonly Collider[] OverlapBuffer = new Collider[16];
+    private static readonly RaycastHit[] CastBuffer = new RaycastHit[16];
 
     public static void Move(Transform body, Collider bodyCollider, Vector3 delta, LayerMask obstacles)
     {
@@ -24,7 +26,7 @@ public static class EnemyMover
         radius = Mathf.Min(radius, bounds.extents.y * 0.8f);
         Vector3 origin = bounds.center;
 
-        Vector3 allowed = CastMove(origin, radius, delta, obstacles, out Vector3 wallNormal);
+        Vector3 allowed = CastMove(body, origin, radius, delta, obstacles, out Vector3 wallNormal);
 
 
         Vector3 remaining = delta - allowed;
@@ -32,7 +34,7 @@ public static class EnemyMover
         {
             Vector3 slide = Vector3.ProjectOnPlane(remaining, wallNormal);
             slide.y = 0f;
-            allowed += CastMove(origin + allowed, radius, slide, obstacles, out _);
+            allowed += CastMove(body, origin + allowed, radius, slide, obstacles, out _);
         }
 
         body.position += allowed;
@@ -40,7 +42,7 @@ public static class EnemyMover
         Depenetrate(body, bodyCollider, obstacles);
     }
 
-    private static Vector3 CastMove(Vector3 origin, float radius, Vector3 delta,
+    private static Vector3 CastMove(Transform body, Vector3 origin, float radius, Vector3 delta,
                                     LayerMask obstacles, out Vector3 wallNormal)
     {
         wallNormal = Vector3.zero;
@@ -49,20 +51,43 @@ public static class EnemyMover
             return Vector3.zero;
 
         Vector3 direction = delta / distance;
-        if (Physics.SphereCast(origin, radius, direction, out RaycastHit hit, distance + Skin,
-                               obstacles, QueryTriggerInteraction.Ignore))
+        int count = Physics.SphereCastNonAlloc(origin, radius, direction, CastBuffer, distance + Skin,
+                                               obstacles, QueryTriggerInteraction.Ignore);
+
+
+        float closest = float.PositiveInfinity;
+        Vector3 closestNormal = Vector3.zero;
+
+        for (int i = 0; i < count; i++)
         {
-            wallNormal = hit.normal;
-            wallNormal.y = 0f;
-            wallNormal.Normalize();
-            return direction * Mathf.Max(0f, hit.distance - Skin);
+            RaycastHit hit = CastBuffer[i];
+
+
+            if (hit.distance <= 0f)
+                continue;
+
+            if (IsIgnored(body, hit.collider))
+                continue;
+
+            if (hit.distance < closest)
+            {
+                closest = hit.distance;
+                closestNormal = hit.normal;
+            }
         }
 
-        return delta;
+        if (float.IsInfinity(closest))
+            return delta; 
+
+        wallNormal = closestNormal;
+        wallNormal.y = 0f;
+        wallNormal.Normalize();
+        return direction * Mathf.Max(0f, closest - Skin);
     }
 
     private static void Depenetrate(Transform body, Collider bodyCollider, LayerMask obstacles)
     {
+
         Physics.SyncTransforms();
 
         Bounds bounds = bodyCollider.bounds;
@@ -74,10 +99,7 @@ public static class EnemyMover
         for (int i = 0; i < count; i++)
         {
             Collider other = OverlapBuffer[i];
-            if (other == null || other == bodyCollider)
-                continue;
-
-            if (other.transform.IsChildOf(body))
+            if (other == null || other == bodyCollider || IsIgnored(body, other))
                 continue;
 
             if (!Physics.ComputePenetration(
@@ -86,11 +108,20 @@ public static class EnemyMover
                     out Vector3 direction, out float distance))
                 continue;
 
+
             if (Mathf.Abs(direction.y) > 0.7f)
                 continue;
 
-            Vector3 push = new Vector3(direction.x, 0f, direction.z) * distance;
-            body.position += push;
+            body.position += new Vector3(direction.x, 0f, direction.z) * distance;
         }
+    }
+
+
+    private static bool IsIgnored(Transform body, Collider other)
+    {
+        if (other.transform.IsChildOf(body))
+            return true;
+
+        return other.GetComponentInParent<PlayerHealth>() != null;
     }
 }
