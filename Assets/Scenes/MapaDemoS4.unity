@@ -387,14 +387,31 @@ MonoBehaviour:
   - prefab: {fileID: 3171787666840924659, guid: c7418d46d760e0a43a78c14fe2a03612, type: 3}
     heightOffset: 0
     alignToGround: 1
-    weight: 0
+    weight: 1
   - prefab: {fileID: 4627777800499569190, guid: 9a6b6af6d22d7ce4abab48ad61f72e91, type: 3}
     heightOffset: 3
     alignToGround: 1
     weight: 1
   enemyCount: 12
-  bossCount: 4
   spawnPoints: []
+  bossEnemy:
+    prefab: {fileID: 848716244662350377, guid: a8786bceadce1c84f9363741f60d7208, type: 3}
+    heightOffset: 16.7
+    alignToGround: 0
+    weight: 1
+  bossSlots:
+  - point: {fileID: 1662145069}
+    color: {r: 0.81761, g: 0.059135247, b: 0.059135247, a: 0}
+    displayName: "Kharvek Carmes\xED"
+  - point: {fileID: 1914178475}
+    color: {r: 0.03320671, g: 0.45911938, b: 0.08273745, a: 0}
+    displayName: Kharvek Venenoso
+  - point: {fileID: 106204776}
+    color: {r: 0.26070014, g: 0.062991895, b: 0.57232696, a: 0}
+    displayName: "Kharvek Sombr\xEDo"
+  - point: {fileID: 332106181}
+    color: {r: 0.7987421, g: 0.31847343, b: 0.017582241, a: 0}
+    displayName: "Kharvek \xCDgneo"
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -686,6 +703,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1486241319}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &106204775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 106204776}
+  m_Layer: 0
+  m_Name: BossPoint_03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &106204776
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106204775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -511.3829, y: 3.3, z: 208.735}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1765737610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &150863159
 GameObject:
   m_ObjectHideFlags: 0
@@ -924,6 +972,37 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
+--- !u!1 &332106180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 332106181}
+  m_Layer: 0
+  m_Name: BossPoint_04
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &332106181
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332106180}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -517.63, y: 3.3, z: 208.735}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1765737610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &439230059
 GameObject:
   m_ObjectHideFlags: 0
@@ -2836,6 +2915,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 36113652}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1662145068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1662145069}
+  m_Layer: 0
+  m_Name: BossPoint_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1662145069
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662145068}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -73.62, y: 3.15, z: 137.84317}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1765737610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1667388727
 GameObject:
   m_ObjectHideFlags: 0
@@ -3211,6 +3321,41 @@ Transform:
   - {fileID: 1486241319}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1765737609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1765737610}
+  m_Layer: 0
+  m_Name: BossSpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1765737610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765737609}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1662145069}
+  - {fileID: 1914178475}
+  - {fileID: 106204776}
+  - {fileID: 332106181}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1771345693
 GameObject:
   m_ObjectHideFlags: 0
@@ -3526,6 +3671,37 @@ RectTransform:
   m_AnchoredPosition: {x: 189.5, y: -3}
   m_SizeDelta: {x: 221, y: 221}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1914178474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1914178475}
+  m_Layer: 0
+  m_Name: BossPoint_02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1914178475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1914178474}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 293.10092, y: 4.1, z: -630.5333}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1765737610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1963514673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4379,3 +4555,4 @@ SceneRoots:
   - {fileID: 30008361}
   - {fileID: 208286341}
   - {fileID: 36113652}
+  - {fileID: 1765737610}

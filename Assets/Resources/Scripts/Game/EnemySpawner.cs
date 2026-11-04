@@ -16,15 +16,29 @@ public class EnemySpawner : MonoBehaviour
         public float weight = 1f;
     }
 
-    [Header("Enemigos")]
+    [System.Serializable]
+    public class BossSlot
+    {
+        [Tooltip("Dónde aparece este jefe (en una sala grande). NO lo pongas como hijo del spawner.")]
+        public Transform point;
+        public Color color = new Color(1f, 0.15f, 0.1f);
+        [Tooltip("Nombre en la barra del HUD")]
+        public string displayName = "Kharvek";
+    }
+
+    [Header("Enemigos normales (al azar)")]
     [SerializeField] private EnemyEntry[] enemies;
     [SerializeField] private int enemyCount = 12;
-    [Tooltip("Cuántos de los enemigos serán jefes (los que sueltan bombotella)")]
-    [SerializeField] private int bossCount = 4;
 
-    [Header("Puntos de spawn")]
+    [Header("Puntos normales")]
     [Tooltip("Vacío = usa los hijos de este objeto")]
     [SerializeField] private Transform[] spawnPoints;
+
+    [Header("Jefes (fijos)")]
+    [SerializeField] private EnemyEntry bossEnemy;
+    [SerializeField] private BossSlot[] bossSlots;
+
+    [Header("Piso")]
     [SerializeField] private LayerMask groundMask = ~0;
     [Tooltip("Desde qué altura sobre el punto se busca el piso hacia abajo")]
     [SerializeField] private float groundProbeHeight = 1f;
@@ -43,11 +57,58 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnAll()
     {
+        int bosses = SpawnBosses();
+        int normals = SpawnNormalEnemies();
+        Debug.Log($"[SPAWNER] {normals} enemigos normales, {bosses} jefes.", this);
+    }
+
+
+
+    private int SpawnBosses()
+    {
+        if (bossSlots == null || bossSlots.Length == 0)
+            return 0;
+
+        if (bossEnemy == null || bossEnemy.prefab == null)
+        {
+            Debug.LogWarning("[SPAWNER] Hay Boss Slots pero falta el prefab del jefe.", this);
+            return 0;
+        }
+
+        int count = 0;
+        foreach (BossSlot slot in bossSlots)
+        {
+            if (slot == null || slot.point == null)
+                continue;
+
+            GameObject enemy = SpawnAt(bossEnemy, slot.point.position);
+
+            EnemyHealth health = enemy.GetComponentInChildren<EnemyHealth>();
+            if (health == null)
+            {
+                Debug.LogWarning($"[SPAWNER] {enemy.name} no tiene EnemyHealth: no puede ser jefe.", enemy);
+                continue;
+            }
+
+            EnemyBoss boss = health.gameObject.AddComponent<EnemyBoss>();
+            boss.SetAppearance(slot.color, slot.displayName);
+            count++;
+
+            Debug.Log($"[SPAWNER] Jefe '{slot.displayName}' en {slot.point.name}", enemy);
+        }
+
+        return count;
+    }
+
+
+
+    private int SpawnNormalEnemies()
+    {
         List<Transform> points = GetSpawnPoints();
         if (points.Count == 0 || enemies == null || enemies.Length == 0)
         {
             Debug.LogWarning("[SPAWNER] Faltan puntos de spawn o enemigos en la lista.", this);
-            return;
+            return 0;
         }
 
         Shuffle(points);
@@ -55,28 +116,36 @@ public class EnemySpawner : MonoBehaviour
         if (count < enemyCount)
             Debug.LogWarning($"[SPAWNER] Pediste {enemyCount} enemigos pero solo hay {points.Count} puntos.", this);
 
+        int spawnedCount = 0;
         for (int i = 0; i < count; i++)
         {
             EnemyEntry entry = PickRandomEntry();
             if (entry == null || entry.prefab == null)
                 continue;
 
-            Vector3 ground = FindGround(points[i].position);
-            Vector3 position = ground + Vector3.up * entry.heightOffset;
-            Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-
-            GameObject enemy = SpawnEnemy(entry.prefab, position, rotation);
-            if (entry.alignToGround)
-                AlignToGround(enemy, ground.y + entry.heightOffset);
-
-            spawned.Add(enemy);
+            GameObject enemy = SpawnAt(entry, points[i].position);
+            spawnedCount++;
 
             Debug.Log($"[SPAWNER] {entry.prefab.name} en {points[i].name}: " +
-                      $"piso y={ground.y:0.0}, quedó en y={enemy.transform.position.y:0.0}", enemy);
+                      $"quedó en y={enemy.transform.position.y:0.0}", enemy);
         }
 
-        ChooseBosses();
-        Debug.Log($"[SPAWNER] {spawned.Count} enemigos, {Mathf.Min(bossCount, spawned.Count)} jefes.", this);
+        return spawnedCount;
+    }
+
+
+    private GameObject SpawnAt(EnemyEntry entry, Vector3 point)
+    {
+        Vector3 ground = FindGround(point);
+        Vector3 position = ground + Vector3.up * entry.heightOffset;
+        Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+
+        GameObject enemy = SpawnEnemy(entry.prefab, position, rotation);
+        if (entry.alignToGround)
+            AlignToGround(enemy, ground.y + entry.heightOffset);
+
+        spawned.Add(enemy);
+        return enemy;
     }
 
 
@@ -89,7 +158,7 @@ public class EnemySpawner : MonoBehaviour
         return Instantiate(prefab, position - rotatedOffset, rotation);
     }
 
-  
+
     private static Vector3 GetBodyOffset(GameObject prefab)
     {
         EnemyHealth body = prefab.GetComponentInChildren<EnemyHealth>(true);
@@ -97,14 +166,14 @@ public class EnemySpawner : MonoBehaviour
             return Vector3.zero;
 
         Vector3 offset = body.transform.position - prefab.transform.position;
-        offset.y = 0f;  
+        offset.y = 0f;   
         return offset;
     }
 
-  
+
     private static void AlignToGround(GameObject enemy, float targetY)
     {
-        
+      
         Physics.SyncTransforms();
 
         float lowest = float.PositiveInfinity;
@@ -117,28 +186,12 @@ public class EnemySpawner : MonoBehaviour
         }
 
         if (float.IsInfinity(lowest))
-            return;  
+            return;   
 
         enemy.transform.position += Vector3.up * (targetY - lowest);
     }
 
-    private void ChooseBosses()
-    {
-        List<GameObject> candidates = new List<GameObject>(spawned);
-        Shuffle(candidates);
 
-        int bosses = Mathf.Min(bossCount, candidates.Count);
-        if (bosses < bossCount)
-            Debug.LogWarning($"[SPAWNER] Solo hay {candidates.Count} enemigos: no alcanzan para {bossCount} jefes.", this);
-
-        for (int i = 0; i < bosses; i++)
-        {
-
-            EnemyHealth health = candidates[i].GetComponentInChildren<EnemyHealth>();
-            if (health != null)
-                health.gameObject.AddComponent<EnemyBoss>();
-        }
-    }
 
 
     private EnemyEntry PickRandomEntry()
@@ -213,7 +266,7 @@ public class EnemySpawner : MonoBehaviour
         return points;
     }
 
-   
+
     private static void Shuffle<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -225,11 +278,26 @@ public class EnemySpawner : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Puntos normales: morado
         Gizmos.color = Color.magenta;
         foreach (Transform point in GetSpawnPoints())
         {
             Gizmos.DrawWireSphere(point.position, 3f);
             Gizmos.DrawLine(point.position, point.position + Vector3.up * 10f);
+        }
+
+        // Puntos de jefe: esfera grande del color de cada jefe
+        if (bossSlots == null)
+            return;
+
+        foreach (BossSlot slot in bossSlots)
+        {
+            if (slot == null || slot.point == null)
+                continue;
+
+            Gizmos.color = slot.color;
+            Gizmos.DrawWireSphere(slot.point.position, 10f);
+            Gizmos.DrawLine(slot.point.position, slot.point.position + Vector3.up * 30f);
         }
     }
 }

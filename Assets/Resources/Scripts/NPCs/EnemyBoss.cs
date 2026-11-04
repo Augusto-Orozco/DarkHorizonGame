@@ -57,6 +57,17 @@ public class EnemyBoss : MonoBehaviour
     private void OnEnable() => Active.Add(this);
     private void OnDisable() => Active.Remove(this);
 
+  
+    public void SetAppearance(Color color, string displayName)
+    {
+        auraColor = color;   
+        if (auraLight != null)
+            auraLight.color = color;
+
+        if (!string.IsNullOrEmpty(displayName))
+            bossName = displayName;
+    }
+
 
     private void SetupGlow()
     {
