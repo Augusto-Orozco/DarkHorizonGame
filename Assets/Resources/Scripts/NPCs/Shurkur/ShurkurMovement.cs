@@ -65,6 +65,7 @@ public class ShurkurMovement : MonoBehaviour
     private float spitTimer;
     private bool hasPatrolTarget;
     private bool spitProjectileSpawned;
+    private bool ownsPatrolCenter;
 
     private void Awake()
     {
@@ -82,7 +83,12 @@ public class ShurkurMovement : MonoBehaviour
             animator = GetComponentInChildren<Animator>();
 
         if (patrolCenter == null)
-            patrolCenter = transform;
+        {
+
+            patrolCenter = new GameObject($"{name}_PatrolCenter").transform;
+            patrolCenter.position = transform.position;
+            ownsPatrolCenter = true;
+        }
 
         SelectPatrolTarget();
         PlayAnimation(idleAnimation);
@@ -366,5 +372,10 @@ public class ShurkurMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+    private void OnDestroy()
+    {
+        if (ownsPatrolCenter && patrolCenter != null)
+            Destroy(patrolCenter.gameObject);
     }
 }

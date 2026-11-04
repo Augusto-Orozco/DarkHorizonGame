@@ -86,6 +86,7 @@ public class MariangulaMovement : MonoBehaviour
     private float fleeUntilTime;
     private float nextFleeAllowedTime;
     private int lastLightLevel;
+    private bool ownsPatrolCenter;
 
     private void Awake()
     {
@@ -104,7 +105,12 @@ public class MariangulaMovement : MonoBehaviour
             animator = GetComponentInChildren<Animator>();
 
         if (patrolCenter == null)
-            patrolCenter = transform;
+        {
+
+            patrolCenter = new GameObject($"{name}_PatrolCenter").transform;
+            patrolCenter.position = transform.position;
+            ownsPatrolCenter = true;
+        }
 
         if (animator != null)
             animator.SetLayerWeight(0, 1f);
@@ -536,5 +542,11 @@ public class MariangulaMovement : MonoBehaviour
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    private void OnDestroy()
+    {
+        if (ownsPatrolCenter && patrolCenter != null)
+            Destroy(patrolCenter.gameObject);
     }
 }
