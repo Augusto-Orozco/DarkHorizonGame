@@ -265,7 +265,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  debugLog: 1
+  debugLog: 0
 --- !u!114 &-2099117951299727344
 MonoBehaviour:
   m_ObjectHideFlags: 0

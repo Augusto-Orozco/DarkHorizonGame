@@ -1,10 +1,4 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 31-10-2026 | 
-|                                                                         |
-| KharvekContactDamage.cs | Detects a player contact or collision and     |
-| applies damage to the player at certain set intervals.                  |
-|                                                                         |
-\*=======================================================================*/
+
 
 using UnityEngine;
 
@@ -18,6 +12,7 @@ public class KharvekContactDamage : MonoBehaviour
     private float nextDamageTime;
 
     private EnemyHealth enemyHealth;
+    public float IntervalMultiplier { get; set; } = 1f;
 
     private void Awake()
     {
@@ -69,7 +64,7 @@ public class KharvekContactDamage : MonoBehaviour
 
         if (damageApplied)
         {
-            nextDamageTime = Time.time + damageInterval;
+            nextDamageTime = Time.time + damageInterval * IntervalMultiplier;
 
             Debug.Log(
                 $"[KHARVEK] Contacto con jugador. " +

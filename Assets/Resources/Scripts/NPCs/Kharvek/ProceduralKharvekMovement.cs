@@ -11,6 +11,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [Header("Persecution")]
     [SerializeField] private float detectionRange = 30f;
 
+    [Tooltip("Ya persiguiéndote, no te suelta hasta que pases esta distancia")]
+    [SerializeField] private float losePlayerRange = 120f;
+
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask = ~0;
     [SerializeField] private float bodyProbeHeight = 15f;
@@ -53,6 +56,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private float currentSpeed;
     private Vector3 lastMoveDirection = Vector3.forward;
     private EnemyTargeting targeting;
+
+    public float SpeedMultiplier { get; set; } = 1f;
+    private Transform chaseTarget;
 
     private void Awake()
     {
@@ -121,8 +127,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
             }
         }
 
-        float targetSpeed = isChasing ? moveSpeed : 0f;
-        float speedChange = (isChasing ? acceleration : deceleration) * moveSpeed * Time.deltaTime;
+        float speed = moveSpeed * SpeedMultiplier;
+        float targetSpeed = isChasing ? speed : 0f;
+        float speedChange = (isChasing ? acceleration : deceleration) * speed * Time.deltaTime;
         currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, speedChange);
         isMoving = currentSpeed > moveSpeed * 0.05f;
 
@@ -135,11 +142,29 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         chaseDirection = Vector3.zero;
 
+
         Transform closestPlayer = targeting.FindClosestPlayer(detectionRange);
-        if (closestPlayer == null)
+        if (closestPlayer != null)
+        {
+            chaseTarget = closestPlayer;
+        }
+        else if (chaseTarget != null)
+        {
+        
+            PlayerHealth targetHealth = chaseTarget.GetComponentInParent<PlayerHealth>();
+            bool targetDead = targetHealth != null && targetHealth.IsDead;
+
+            Vector3 offset = chaseTarget.position - transform.position;
+            offset.y = 0f;
+
+            if (targetDead || offset.magnitude > losePlayerRange)
+                chaseTarget = null;
+        }
+
+        if (chaseTarget == null)
             return false;
 
-        Vector3 chaseOffset = closestPlayer.position - transform.position;
+        Vector3 chaseOffset = chaseTarget.position - transform.position;
         chaseOffset.y = 0f;
         chaseDirection = chaseOffset.normalized;
         return true;

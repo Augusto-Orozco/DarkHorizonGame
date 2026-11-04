@@ -26,7 +26,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.42835, y: 0, z: -241.60654}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6836775992654558950}
@@ -138,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: detectionRange
-      value: 65
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: footFollowSpeed
@@ -183,6 +183,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1178287621652447418}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7770392935239869111}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2374622120215453224}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
 --- !u!1 &6172969605374913628 stripped
 GameObject:
@@ -273,6 +279,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KharvekContactDamage
   damagePerHit: 15
   damageInterval: 1.5
+--- !u!114 &7770392935239869111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightExposure
+  checkPoint: {fileID: 0}
+  checkHeight: 1
+  checkInterval: 0.2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugLog: 0
+--- !u!114 &2374622120215453224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7256814d2c297f14fb9a260d40c2d386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KharvekRage
+  rageSpeedMultiplier: 1.5
+  rageDamageIntervalMultiplier: 0.5
+  calmDownDelay: 3
+  debugLog: 0
 --- !u!4 &6836775992654558950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
