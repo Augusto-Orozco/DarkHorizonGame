@@ -7,6 +7,8 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private bool destroyEnemyOnDeath = true;
+    [Tooltip("Si está activo, solo suelta la bombotella si este enemigo es jefe (tiene EnemyBoss)")]
+    [SerializeField] private bool dropOnlyIfBoss = true;
 
     private EnemyHealth enemyHealth;
     private bool deathHandled;
@@ -46,7 +48,10 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
         deathHandled = true;
 
-        if (bombPrefab != null)
+        bool isBoss = TryGetComponent(out EnemyBoss _);
+        bool shouldDrop = !dropOnlyIfBoss || isBoss;
+
+        if (bombPrefab != null && shouldDrop)
         {
             GameObject spawnedBomb = Instantiate(bombPrefab, transform.position, transform.rotation);
             GroundPlacement.PlaceOnGround(spawnedBomb, transform.position, transform);

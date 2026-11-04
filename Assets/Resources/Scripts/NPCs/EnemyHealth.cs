@@ -32,6 +32,13 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         SetHealth(maxHealth);
     }
 
+
+    public void ScaleMaxHealth(float multiplier)
+    {
+        maxHealth *= multiplier;
+        SetHealth(maxHealth);
+    }
+
     public void TakeDamage(float amount)
     {
         if (IsDead || amount <= 0f)
