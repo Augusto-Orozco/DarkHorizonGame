@@ -3501,6 +3501,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
+      propertyPath: bossEnemy.resourcePath
+      value: Characters/Karvek/PreFab/Kharvek
+      objectReference: {fileID: 0}
+    - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
+      propertyPath: enemies.Array.data[2].weight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
       propertyPath: bossSlots.Array.data[0].point
       value: 
       objectReference: {fileID: 1662145069}
@@ -3516,6 +3524,18 @@ PrefabInstance:
       propertyPath: bossSlots.Array.data[3].point
       value: 
       objectReference: {fileID: 332106181}
+    - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
+      propertyPath: enemies.Array.data[0].resourcePath
+      value: Characters/Karvek/PreFab/Kharvek
+      objectReference: {fileID: 0}
+    - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
+      propertyPath: enemies.Array.data[1].resourcePath
+      value: Characters/Mariangula/Prefab/Mariangula
+      objectReference: {fileID: 0}
+    - target: {fileID: 2996270085985879144, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
+      propertyPath: enemies.Array.data[2].resourcePath
+      value: Characters/Shurkur/Prefab/Shurkur
+      objectReference: {fileID: 0}
     - target: {fileID: 4369856182135885950, guid: 4c949e3a8eb16c6438291489277a34a8, type: 3}
       propertyPath: m_Name
       value: EnemySpawner

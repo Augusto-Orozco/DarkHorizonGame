@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemySpawner : MonoBehaviourPunCallbacks
 {
     [System.Serializable]
     public class EnemyEntry
     {
         public GameObject prefab;
+        [Tooltip("Ruta dentro de Resources, sin .prefab (ej: Characters/Mariangula/Prefab/Mariangula). Photon crea por ruta.")]
+        public string resourcePath;
         [Tooltip("Espacio entre los pies y el piso (Shurkur vuela). En Kharvek: altura de su raíz.")]
         public float heightOffset = 0f;
         [Tooltip("Bajar/subir al enemigo hasta que la parte más baja de su collider toque el piso (+ Height Offset). Apágalo en Kharvek: él se acomoda solo.")]
@@ -61,11 +64,30 @@ public class EnemySpawner : MonoBehaviour
 
     private readonly List<GameObject> spawned = new List<GameObject>();
     public IReadOnlyList<GameObject> Spawned => spawned;
+    private bool hasSpawned;
 
     private void Start()
     {
+        if (spawnOnStart && PhotonNetwork.InRoom)
+            TrySpawn();
+    }
+
+    public override void OnJoinedRoom()
+    {
         if (spawnOnStart)
-            SpawnAll();
+            TrySpawn();
+    }
+
+    private void TrySpawn()
+    {
+        if (hasSpawned)
+            return;
+
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        hasSpawned = true;
+        SpawnAll();
     }
 
     public void SpawnAll()
@@ -75,7 +97,6 @@ public class EnemySpawner : MonoBehaviour
         int normals = SpawnNormalEnemies();
         Debug.Log($"[SPAWNER] {normals} enemigos normales, {bosses} jefes, {escorts} escoltas.", this);
     }
-
 
 
     private int SpawnBosses(out int escortCount)
@@ -97,23 +118,18 @@ public class EnemySpawner : MonoBehaviour
             if (slot == null || slot.point == null)
                 continue;
 
-            GameObject enemy = SpawnAt(bossEnemy, slot.point.position, 1f);
-
-
-            EnemyHealth health = enemy.GetComponentInChildren<EnemyHealth>();
-            if (health == null)
-            {
-                Debug.LogWarning($"[SPAWNER] {enemy.name} no tiene EnemyHealth: no puede ser jefe.", enemy);
+            object[] data = NetworkEnemy.BuildData(NetworkEnemy.RoleBoss, 1f, 1f, slot.color, slot.displayName);
+            GameObject boss = SpawnAt(bossEnemy, slot.point.position, 1f, data);
+            if (boss == null)
                 continue;
-            }
 
-            EnemyBoss boss = health.gameObject.AddComponent<EnemyBoss>();
-            boss.SetAppearance(slot.color, slot.displayName);
             count++;
 
-            escortCount += SpawnEscorts(health, slot.point.position);
+            EnemyHealth bossHealth = boss.GetComponentInChildren<EnemyHealth>();
+            if (bossHealth != null)
+                escortCount += SpawnEscorts(bossHealth, slot.point.position);
 
-            Debug.Log($"[SPAWNER] Jefe '{slot.displayName}' en {slot.point.name}", enemy);
+            Debug.Log($"[SPAWNER] Jefe '{slot.displayName}' en {slot.point.name}", boss);
         }
 
         return count;
@@ -133,15 +149,14 @@ public class EnemySpawner : MonoBehaviour
             if (entry == null || entry.prefab == null)
                 continue;
 
-
             float angle = (startAngle + i * 360f / escortsPerBoss) * Mathf.Deg2Rad;
             Vector3 point = center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * escortRadius;
 
-            GameObject escort = SpawnAt(entry, point, escortScale);
-
-            EnemyHealth health = escort.GetComponentInChildren<EnemyHealth>();
-            if (health != null)
-                health.ScaleMaxHealth(escortHealthMultiplier);
+            object[] data = NetworkEnemy.BuildData(NetworkEnemy.RoleEscort, escortScale, escortHealthMultiplier,
+                                                   Color.white, "");
+            GameObject escort = SpawnAt(entry, point, escortScale, data);
+            if (escort == null)
+                continue;
 
             EnemyEscort escortComponent = escort.AddComponent<EnemyEscort>();
             escortComponent.Init(bossHealth, escortPatrolHalfExtents, escortAlertDuration, escortAlertRange);
@@ -151,7 +166,6 @@ public class EnemySpawner : MonoBehaviour
 
         return count;
     }
-
 
 
     private int SpawnNormalEnemies()
@@ -175,30 +189,26 @@ public class EnemySpawner : MonoBehaviour
             if (entry == null || entry.prefab == null)
                 continue;
 
-            GameObject enemy = SpawnAt(entry, points[i].position, 1f);
-            spawnedCount++;
+            object[] data = NetworkEnemy.BuildData(NetworkEnemy.RoleNormal, 1f, 1f, Color.white, "");
+            GameObject enemy = SpawnAt(entry, points[i].position, 1f, data);
+            if (enemy == null)
+                continue;
 
-            Debug.Log($"[SPAWNER] {entry.prefab.name} en {points[i].name}: " +
-                      $"quedó en y={enemy.transform.position.y:0.0}", enemy);
+            spawnedCount++;
         }
 
         return spawnedCount;
     }
 
-
-
-
-    private GameObject SpawnAt(EnemyEntry entry, Vector3 point, float scale)
+    private GameObject SpawnAt(EnemyEntry entry, Vector3 point, float scale, object[] data)
     {
         Vector3 ground = FindGround(point);
         Vector3 position = ground + Vector3.up * entry.heightOffset;
         Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
 
-        GameObject enemy = SpawnEnemy(entry.prefab, position, rotation);
-
-
-        if (!Mathf.Approximately(scale, 1f))
-            enemy.transform.localScale *= scale;
+        GameObject enemy = SpawnEnemy(entry, position, rotation, data);
+        if (enemy == null)
+            return null;
 
         if (entry.alignToGround)
             AlignToGround(enemy, ground.y + entry.heightOffset * scale);
@@ -207,16 +217,30 @@ public class EnemySpawner : MonoBehaviour
         return enemy;
     }
 
-
-    private GameObject SpawnEnemy(GameObject prefab, Vector3 position, Quaternion rotation)
+    private GameObject SpawnEnemy(EnemyEntry entry, Vector3 position, Quaternion rotation, object[] data)
     {
+        Vector3 offset = GetBodyOffset(entry.prefab);
+        Vector3 rotatedOffset = rotation * Quaternion.Inverse(entry.prefab.transform.rotation) * offset;
+        Vector3 spawnPosition = position - rotatedOffset;
 
-        Vector3 offset = GetBodyOffset(prefab);
-        Vector3 rotatedOffset = rotation * Quaternion.Inverse(prefab.transform.rotation) * offset;
+        if (PhotonNetwork.InRoom)
+        {
 
-        return Instantiate(prefab, position - rotatedOffset, rotation);
+            string path = entry.resourcePath != null ? entry.resourcePath.Trim() : "";
+            if (path.Length == 0)
+            {
+                Debug.LogWarning($"[SPAWNER] {entry.prefab.name} no tiene Resource Path: Photon no lo puede crear.", this);
+                return null;
+            }
+            return PhotonNetwork.InstantiateRoomObject(path, spawnPosition, rotation, 0, data);
+        }
+
+        GameObject enemy = Instantiate(entry.prefab, spawnPosition, rotation);
+        NetworkEnemy networkEnemy = enemy.GetComponent<NetworkEnemy>();
+        if (networkEnemy != null)
+            networkEnemy.Setup(data);
+        return enemy;
     }
-
 
     private static Vector3 GetBodyOffset(GameObject prefab)
     {
@@ -225,14 +249,12 @@ public class EnemySpawner : MonoBehaviour
             return Vector3.zero;
 
         Vector3 offset = body.transform.position - prefab.transform.position;
-        offset.y = 0f; 
+        offset.y = 0f;  
         return offset;
     }
 
- 
     private static void AlignToGround(GameObject enemy, float targetY)
     {
-
         Physics.SyncTransforms();
 
         float lowest = float.PositiveInfinity;
@@ -245,7 +267,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         if (float.IsInfinity(lowest))
-            return; 
+            return;
 
         enemy.transform.position += Vector3.up * (targetY - lowest);
     }
@@ -265,13 +287,12 @@ public class EnemySpawner : MonoBehaviour
         {
             float weight = Mathf.Max(0f, entry.weight);
             if (weight <= 0f)
-                continue; 
+                continue;
 
             roll -= weight;
             if (roll <= 0f)
                 return entry;
         }
-
 
         for (int i = enemies.Length - 1; i >= 0; i--)
             if (enemies[i].weight > 0f)
@@ -285,7 +306,6 @@ public class EnemySpawner : MonoBehaviour
         Vector3 origin = point + Vector3.up * groundProbeHeight;
         float remaining = groundProbeDistance + groundProbeHeight;
 
-
         for (int attempt = 0; attempt < 10 && remaining > 0f; attempt++)
         {
             if (!Physics.Raycast(origin, Vector3.down, out RaycastHit hit, remaining,
@@ -293,7 +313,7 @@ public class EnemySpawner : MonoBehaviour
                 break;
 
             if (hit.point.y <= point.y)
-                return hit.point; 
+                return hit.point;
 
             float step = hit.distance + 0.05f;
             origin += Vector3.down * step;
@@ -323,7 +343,6 @@ public class EnemySpawner : MonoBehaviour
         return points;
     }
 
-
     private static void Shuffle<T>(List<T> list)
     {
         for (int i = list.Count - 1; i > 0; i--)
@@ -350,11 +369,9 @@ public class EnemySpawner : MonoBehaviour
             if (slot == null || slot.point == null)
                 continue;
 
-
             Gizmos.color = slot.color;
             Gizmos.DrawWireSphere(slot.point.position, 10f);
             Gizmos.DrawLine(slot.point.position, slot.point.position + Vector3.up * 30f);
-
 
             Gizmos.color = new Color(slot.color.r, slot.color.g, slot.color.b, 0.4f);
             Gizmos.DrawWireSphere(slot.point.position, escortRadius);

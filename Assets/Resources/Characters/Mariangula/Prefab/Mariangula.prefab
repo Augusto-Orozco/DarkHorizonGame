@@ -439,6 +439,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8955522976656430286}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6667773367812130173}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 171058550548126739}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7916474631278998661}
   m_SourcePrefab: {fileID: 100100000, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
 --- !u!1 &3171787666840924659 stripped
 GameObject:
@@ -569,3 +578,58 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   debugLog: 0
+--- !u!114 &6667773367812130173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 171058550548126739}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &171058550548126739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &7916474631278998661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed9e806b04134243a1f0d0667d9a498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemy
+  masterOnly:
+  - {fileID: 5612321778953451212}
+  - {fileID: 8955522976656430286}
+  - {fileID: 4125207925409290850}

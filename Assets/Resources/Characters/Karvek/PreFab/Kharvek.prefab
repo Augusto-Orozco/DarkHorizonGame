@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4527887859435859719}
+  - component: {fileID: 7377388845905996529}
+  - component: {fileID: 5178795785910494178}
   m_Layer: 0
   m_Name: Kharvek
   m_TagString: Untagged
@@ -32,6 +34,47 @@ Transform:
   - {fileID: 6836775992654558950}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7377388845905996529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848716244662350377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7498220791913653986}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &5178795785910494178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848716244662350377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed9e806b04134243a1f0d0667d9a498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemy
+  masterOnly:
+  - {fileID: 7942166604093582617}
+  - {fileID: 2374622120215453224}
+  - {fileID: 1178287621652447418}
+  - {fileID: 7770392935239869111}
+  - {fileID: 1638222540464597461}
 --- !u!1001 &1039365672920964888
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -201,6 +244,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2374622120215453224}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7498220791913653986}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
 --- !u!1 &6172969605374913628 stripped
 GameObject:
@@ -327,8 +373,35 @@ MonoBehaviour:
   rageDamageIntervalMultiplier: 0.5
   calmDownDelay: 3
   debugLog: 0
+--- !u!114 &7498220791913653986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!4 &6836775992654558950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
   m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7942166604093582617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb30924bafaa5346946630ef5bb141c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProceduralKharvekMovement
