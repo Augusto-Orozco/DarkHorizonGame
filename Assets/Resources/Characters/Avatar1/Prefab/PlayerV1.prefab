@@ -763,8 +763,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 45
-  rotationSpeed: 150
   gravity: -20
+  cameraTransform: {fileID: 0}
+  mouseSensitivity: 15
+  minPitch: -35
+  maxPitch: 60
   readInput: 1
   bodyAnimator: {fileID: 883481202450960661}
   armAnimators:
@@ -915,6 +918,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
+  spawnPoint: {fileID: 0}
+  respawnDelay: 2
 --- !u!114 &-1995471051811677255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3039,6 +3044,8 @@ GameObject:
   - component: {fileID: 7886535012554090264}
   - component: {fileID: 6889756046185660231}
   - component: {fileID: 2322653812770342190}
+  - component: {fileID: 2401247629466119516}
+  - component: {fileID: 8891917579569641231}
   m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3185,6 +3192,45 @@ MonoBehaviour:
   minPitch: -20
   maxPitch: 50
   followSpeed: 15
+--- !u!114 &2401247629466119516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084959685136608753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 8891917579569641231}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &8891917579569641231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084959685136608753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!1001 &4469047451922787543
 PrefabInstance:
   m_ObjectHideFlags: 0
