@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth))]
@@ -53,11 +54,31 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
         if (bombPrefab != null && shouldDrop)
         {
-            GameObject spawnedBomb = Instantiate(bombPrefab, transform.position, transform.rotation);
-            GroundPlacement.PlaceOnGround(spawnedBomb, transform.position, transform);
+            Collider body = GetComponent<Collider>();
+            Vector3 dropPoint = body != null ? body.bounds.center : transform.position;
+
+            GameObject spawnedBomb = Instantiate(bombPrefab, dropPoint, transform.rotation);
+            GroundPlacement.PlaceOnGround(spawnedBomb, dropPoint, transform);
         }
 
         if (destroyEnemyOnDeath)
-            Destroy(gameObject);
+            DestroyEnemy();
+    }
+
+    private void DestroyEnemy()
+    {
+        GameObject root = transform.root.gameObject;
+
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonView rootView = root.GetComponent<PhotonView>();
+            if (rootView != null)
+            {
+                PhotonNetwork.Destroy(rootView.gameObject);
+                return;
+            }
+        }
+
+        Destroy(root);
     }
 }

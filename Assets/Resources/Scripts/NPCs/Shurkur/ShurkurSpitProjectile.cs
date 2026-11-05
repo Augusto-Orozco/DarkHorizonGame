@@ -58,6 +58,9 @@ public class ShurkurSpitProjectile : MonoBehaviour
         if (other.transform.root == owner.transform.root)
             return;
 
+        if (other.GetComponentInParent<EnemyHealth>() != null)
+            return;
+
         bool hit = DamageResolver.ApplyDamage(other.gameObject, projectileDamage, owner);
 
         if (hit || !other.isTrigger)

@@ -45,6 +45,8 @@ MonoBehaviour:
   - RPC_Shot
   - RpcPlay
   - RpcSpit
+  - RpcRequestDamage
+  - RpcSyncHealth
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

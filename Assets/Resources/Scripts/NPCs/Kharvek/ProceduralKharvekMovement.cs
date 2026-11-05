@@ -10,19 +10,17 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     [Header("Persecution")]
     [SerializeField] private float detectionRange = 30f;
+    [SerializeField] private float losePlayerRange = 120f;
 
     [Header("Walls")]
-    [Tooltip("Capas que lo frenan (paredes, props)")]
     [SerializeField] private LayerMask obstacleMask = ~0;
-    [Tooltip("Collider con el que choca contra paredes. Vacío = usa su Box Collider")]
     [SerializeField] private Collider wallCollider;
 
     [Header("Stop")]
-    [Tooltip("Deja de avanzar a esta distancia del jugador (desde su centro). 0 = se calcula con su Box Collider")]
     [SerializeField] private float stopDistance = 0f;
 
-    [Tooltip("Ya persiguiéndote, no te suelta hasta que pases esta distancia")]
-    [SerializeField] private float losePlayerRange = 120f;
+    [Header("Leash")]
+    [SerializeField] private float leashRadius = 200f;
 
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask = ~0;
@@ -49,6 +47,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [SerializeField] private float stepLeadFromSpeed = 0.05f;
     [SerializeField] private float gaitInterval = 2.5f;
 
+    public float SpeedMultiplier { get; set; } = 1f;
+
     private Vector3[] legHomePositions;
     private Vector3[] stepStartPositions;
     private Vector3[] stepTargetPositions;
@@ -66,11 +66,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private float currentSpeed;
     private Vector3 lastMoveDirection = Vector3.forward;
     private EnemyTargeting targeting;
-
-    public float SpeedMultiplier { get; set; } = 1f;
     private Transform chaseTarget;
-
     private Vector3 lastNetworkPosition;
+    private Vector3 spawnHome;
 
     private void Awake()
     {
@@ -80,6 +78,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
         targeting = GetComponent<EnemyTargeting>();
         if (targeting == null)
             targeting = gameObject.AddComponent<EnemyTargeting>();
+
         if (autoCalculateBodyHeight)
             CalculateBodyHeightFromStartPosition();
 
@@ -111,6 +110,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
         }
 
         lastNetworkPosition = transform.position;
+        spawnHome = transform.position;
     }
 
     private void CalculateBodyHeightFromStartPosition()
@@ -148,7 +148,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
             return;
 
         float measuredSpeed = delta.magnitude / dt;
-        currentSpeed = Mathf.Lerp(currentSpeed, measuredSpeed, 10f * dt);   // suavizado
+        currentSpeed = Mathf.Lerp(currentSpeed, measuredSpeed, 10f * dt);
         isMoving = currentSpeed > moveSpeed * 0.05f;
 
         if (delta.sqrMagnitude > 0.000001f)
@@ -193,7 +193,6 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         chaseDirection = Vector3.zero;
 
-
         Transform closestPlayer = targeting.FindClosestPlayer(detectionRange);
         if (closestPlayer != null)
         {
@@ -201,19 +200,31 @@ public class ProceduralKharvekMovement : MonoBehaviour
         }
         else if (chaseTarget != null)
         {
-        
             PlayerHealth targetHealth = chaseTarget.GetComponentInParent<PlayerHealth>();
             bool targetDead = targetHealth != null && targetHealth.IsDead;
 
-            Vector3 offset = chaseTarget.position - transform.position;
-            offset.y = 0f;
-
-            if (targetDead || offset.magnitude > losePlayerRange)
+            if (targetDead || HorizontalDistance(chaseTarget.position) > losePlayerRange)
                 chaseTarget = null;
         }
 
+        if (chaseTarget != null && leashRadius > 0f && DistanceFromHome(chaseTarget.position) > leashRadius)
+            chaseTarget = null;
+
         if (chaseTarget == null)
+        {
+            if (leashRadius > 0f)
+            {
+                Vector3 toHome = spawnHome - transform.position;
+                toHome.y = 0f;
+                if (toHome.magnitude > Mathf.Max(stopDistance, 5f))
+                {
+                    chaseDirection = toHome.normalized;
+                    return true;
+                }
+            }
+
             return false;
+        }
 
         Vector3 chaseOffset = chaseTarget.position - transform.position;
         chaseOffset.y = 0f;
@@ -224,6 +235,13 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private float HorizontalDistance(Vector3 target)
     {
         Vector3 offset = target - transform.position;
+        offset.y = 0f;
+        return offset.magnitude;
+    }
+
+    private float DistanceFromHome(Vector3 point)
+    {
+        Vector3 offset = point - spawnHome;
         offset.y = 0f;
         return offset.magnitude;
     }
@@ -331,6 +349,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(Application.isPlaying ? spawnHome : transform.position, leashRadius);
+
         Gizmos.color = Color.magenta;
         Gizmos.DrawWireSphere(transform.position, stopDistance);
 
