@@ -1,8 +1,11 @@
 using UnityEngine;
 
+
 [RequireComponent(typeof(InteractionPrompt))]
 public sealed class BombotellaPickup : Pickup, IInteractable
 {
+    [SerializeField] private KeyItemData bombotellaData;
+
     private InteractionPrompt prompt;
 
     public Vector3 Position => transform.position;
@@ -12,6 +15,9 @@ public sealed class BombotellaPickup : Pickup, IInteractable
     {
         base.Awake();
         prompt = GetComponent<InteractionPrompt>();
+
+        if (bombotellaData == null)
+            Debug.LogWarning("BombotellaPickup sin KeyItemData asignado.", this);
     }
 
     protected override void OnPlayerEnter(PlayerInventory inventory)
@@ -30,29 +36,28 @@ public sealed class BombotellaPickup : Pickup, IInteractable
 
     public void SetFocused(PlayerInteractor interactor, bool focused)
     {
-        if (focused)
-            prompt.Show("[E] Recoger bombotella");
-        else
+        if (!focused)
+        {
             prompt.Hide();
+            return;
+        }
+
+        bool hasFreeSlot = interactor.Inventory.Item == null;
+        prompt.Show(hasFreeSlot ? "[E] Recoger bombotella" : "Ya llevas un item");
     }
 
     public void Interact(PlayerInteractor interactor)
     {
-        if (!CanInteract)
+        if (!CanInteract || bombotellaData == null)
             return;
 
-        if (TraitorGameManager.Instance == null)
-        {
-            Debug.LogError("BombotellaPickup necesita un TraitorGameManager en la escena.", this);
-            return;
-        }
-
-        TraitorGameManager.Instance.RegisterBombotella();
-        Collect(interactor.Inventory);
+    
+        if (interactor.Inventory.TryCollect(bombotellaData))
+            Collect(interactor.Inventory);
     }
 
     protected override void Despawn()
     {
-        Destroy(gameObject);
+        RemoveForEveryone();
     }
 }

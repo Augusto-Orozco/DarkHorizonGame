@@ -45,6 +45,6 @@ public class ItemPickup : Pickup
     }
     protected override void Despawn()
     {
-        Destroy(gameObject);
+        RemoveForEveryone();
     }
 }

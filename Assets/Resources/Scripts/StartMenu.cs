@@ -59,8 +59,14 @@ public class StartMenu : MonoBehaviour
     }
 
     // OnClick de Exit.
+
     public void ExitGame()
     {
+#if UNITY_EDITOR
+        // En el editor, Application.Quit no hace nada: detenemos el Play
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
         Application.Quit();
+#endif
     }
 }

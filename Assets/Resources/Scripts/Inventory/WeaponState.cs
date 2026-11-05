@@ -91,4 +91,13 @@ public class WeaponState
             IsOverheated = false;
 
     }
+
+    public void SetAmmo(int magazine, int reserve)
+    {
+        if (!UsesAmmo)
+            return;
+
+        AmmoInMagazine = Mathf.Max(0, magazine);
+        ReserveAmmo = Mathf.Max(0, reserve);
+    }
 }

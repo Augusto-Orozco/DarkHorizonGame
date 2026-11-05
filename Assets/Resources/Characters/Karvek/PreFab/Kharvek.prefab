@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4527887859435859719}
+  - component: {fileID: 7377388845905996529}
+  - component: {fileID: 5178795785910494178}
   m_Layer: 0
   m_Name: Kharvek
   m_TagString: Untagged
@@ -25,13 +27,53 @@ Transform:
   m_GameObject: {fileID: 848716244662350377}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.42835, y: 0, z: -241.60654}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6836775992654558950}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7377388845905996529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848716244662350377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7498220791913653986}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &5178795785910494178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848716244662350377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed9e806b04134243a1f0d0667d9a498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemy
+  masterOnly:
+  - {fileID: 2374622120215453224}
+  - {fileID: 1178287621652447418}
+  - {fileID: 7770392935239869111}
+  - {fileID: 1638222540464597461}
 --- !u!1001 &1039365672920964888
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106,11 +148,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: moveSpeed
-      value: 40
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: stepHeight
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: leashRadius
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: acceleration
@@ -138,11 +184,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: detectionRange
-      value: 65
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: bodyProbeHeight
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: footFollowSpeed
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: footProbeHeight
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: stepForwardOffset
@@ -183,6 +241,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1178287621652447418}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7770392935239869111}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2374622120215453224}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7498220791913653986}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6729555270047459411}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
 --- !u!1 &6172969605374913628 stripped
 GameObject:
@@ -201,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
+  maxHealth: 300
 --- !u!65 &2533868548023694956
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -259,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
   bombPrefab: {fileID: 8537393960515256092, guid: a6422c44359e1894caffab30449bd2fb, type: 3}
   destroyEnemyOnDeath: 1
+  dropOnlyIfBoss: 1
 --- !u!114 &1178287621652447418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,7 +343,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KharvekContactDamage
   damagePerHit: 15
-  damageInterval: 3
+  damageInterval: 1.5
+--- !u!114 &7770392935239869111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightExposure
+  checkPoint: {fileID: 0}
+  checkHeight: 1
+  checkInterval: 0.2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugLog: 0
+--- !u!114 &2374622120215453224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7256814d2c297f14fb9a260d40c2d386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KharvekRage
+  rageSpeedMultiplier: 1.5
+  rageDamageIntervalMultiplier: 0.5
+  calmDownDelay: 3
+  debugLog: 0
+--- !u!114 &7498220791913653986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &6729555270047459411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7498220791913653986}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!4 &6836775992654558950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}

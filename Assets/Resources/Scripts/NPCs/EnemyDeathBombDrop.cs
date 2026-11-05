@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyHealth))]
@@ -7,6 +8,8 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private bool destroyEnemyOnDeath = true;
+    [Tooltip("Si está activo, solo suelta la bombotella si este enemigo es jefe (tiene EnemyBoss)")]
+    [SerializeField] private bool dropOnlyIfBoss = true;
 
     private EnemyHealth enemyHealth;
     private bool deathHandled;
@@ -46,13 +49,36 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
         deathHandled = true;
 
-        if (bombPrefab != null)
+        bool isBoss = TryGetComponent(out EnemyBoss _);
+        bool shouldDrop = !dropOnlyIfBoss || isBoss;
+
+        if (bombPrefab != null && shouldDrop)
         {
-            GameObject spawnedBomb = Instantiate(bombPrefab, transform.position, transform.rotation);
-            GroundPlacement.PlaceOnGround(spawnedBomb, transform.position, transform);
+            Collider body = GetComponent<Collider>();
+            Vector3 dropPoint = body != null ? body.bounds.center : transform.position;
+            Quaternion rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
+
+            NetworkItemSpawner.Spawn(bombPrefab, dropPoint, rotation, NetworkPickup.BuildData(0f));
         }
 
         if (destroyEnemyOnDeath)
-            Destroy(gameObject);
+            DestroyEnemy();
+    }
+
+    private void DestroyEnemy()
+    {
+        GameObject root = transform.root.gameObject;
+
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonView rootView = root.GetComponent<PhotonView>();
+            if (rootView != null)
+            {
+                PhotonNetwork.Destroy(rootView.gameObject);
+                return;
+            }
+        }
+
+        Destroy(root);
     }
 }

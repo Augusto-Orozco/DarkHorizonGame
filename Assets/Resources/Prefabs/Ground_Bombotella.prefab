@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1006807480794543602}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.2158, y: -1.047, z: -0.026000023}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -102,6 +102,9 @@ GameObject:
   - component: {fileID: 9105845267279437198}
   - component: {fileID: 4964961901771424703}
   - component: {fileID: 7410423985552565191}
+  - component: {fileID: -6297211979593128856}
+  - component: {fileID: 7043819218553387185}
+  - component: {fileID: 4017489659662563576}
   m_Layer: 0
   m_Name: Ground_Bombotella
   m_TagString: Untagged
@@ -118,7 +121,7 @@ Transform:
   m_GameObject: {fileID: 8537393960515256092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14, y: 0.5, z: 5.5}
+  m_LocalPosition: {x: 0.14, y: 3, z: 5.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -144,8 +147,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.589403, y: 0.5474716, z: 0.57379436}
-  m_Center: {x: -0.20529851, y: -1.0327446, z: -0.025900364}
+  m_Size: {x: 3.799108, y: 1.2788619, z: 3.4680111}
+  m_Center: {x: -0.006549418, y: 0.09361702, z: 0.012862086}
 --- !u!114 &4964961901771424703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,3 +179,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9758e36dde64452e927212be8d83f436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BombotellaPickup
+  bombotellaData: {fileID: 11400000, guid: 98e246f23c08d724ea85c2b0ddcd5165, type: 2}
+--- !u!114 &-6297211979593128856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7043819218553387185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da5ddc15a8af114c815154a1a55f71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPickup
+--- !u!114 &4017489659662563576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbf7304534dec04eb43a1759ffbf471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupGlow
+  color: {r: 1, g: 0.8, b: 0.2, a: 1}
+  glowIntensity: 2
+  lightRange: 20
+  lightIntensity: 8
+  lightHeight: 1.5
+  pulseSpeed: 1.5
+  pulseAmount: 0.35

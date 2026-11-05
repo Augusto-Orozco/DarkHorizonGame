@@ -1,21 +1,13 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 31-10-2026 | 
-|                                                                         |
-| PlayerHealth.cs | Script that administrates the health of the player,   |
-| damage an heal recieved as well a isDead state. Updates the player HUD. |
-|                                                                         |
-\*=======================================================================*/
-
-
 using System;
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerMovement))]
 public class PlayerHealth : MonoBehaviour, IDamageable
-{ //                                     // Interface that registers taken damage
+{
     [SerializeField] private float maxHealth = 100f;
     [Header("Respawn")]
     [SerializeField] private Transform spawnPoint;
@@ -29,20 +21,24 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
 
-
     private PlayerInventory inventory;
     private PlayerMovement movement;
     private CharacterController controller;
+    private PhotonView view;
     private Vector3 defaultSpawnPosition;
     private Quaternion defaultSpawnRotation;
     private bool deathHandled;
     private bool originalReadInput;
+
+    private bool IsNetworked => PhotonNetwork.InRoom && view != null && view.ViewID != 0;
+    private bool IsOwner => !IsNetworked || view.IsMine;
 
     private void Awake()
     {
         inventory = GetComponent<PlayerInventory>();
         movement = GetComponent<PlayerMovement>();
         controller = GetComponent<CharacterController>();
+        view = GetComponent<PhotonView>();
         defaultSpawnPosition = transform.position;
         defaultSpawnRotation = transform.rotation;
         originalReadInput = movement.readInput;
@@ -65,6 +61,27 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (IsDead || amount <= 0f)
             return;
 
+        if (!IsOwner)
+        {
+            view.RPC(nameof(RpcRequestDamage), view.Owner, amount);
+            return;
+        }
+
+        ApplyDamage(amount);
+    }
+
+    [PunRPC]
+    private void RpcRequestDamage(float amount)
+    {
+        if (IsOwner)
+            ApplyDamage(amount);
+    }
+
+    private void ApplyDamage(float amount)
+    {
+        if (IsDead)
+            return;
+
         SetHealth(CurrentHealth - amount);
 
         Debug.Log(
@@ -78,9 +95,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
             DeathPlayer();
         }
     }
+
     public void Heal(float amount)
     {
-        if (IsDead || amount <= 0f)
+        if (IsDead || amount <= 0f || !IsOwner)
             return;
 
         SetHealth(CurrentHealth + amount);
@@ -89,6 +107,19 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private void SetHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(value, 0f, maxHealth);
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+
+        if (IsNetworked && view.IsMine)
+            view.RPC(nameof(RpcSyncHealth), RpcTarget.Others, CurrentHealth);
+    }
+
+    [PunRPC]
+    private void RpcSyncHealth(float current)
+    {
+        if (IsOwner)
+            return;
+
+        CurrentHealth = Mathf.Clamp(current, 0f, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
@@ -124,9 +155,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         transform.SetPositionAndRotation(position, rotation);
         controller.enabled = true;
 
-        CurrentHealth = maxHealth;
         deathHandled = false;
         movement.readInput = originalReadInput;
-        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        SetHealth(maxHealth);
     }
 }

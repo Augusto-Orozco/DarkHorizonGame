@@ -88,6 +88,9 @@ public class PlayerInventory : MonoBehaviour
         return SelectSlot(GetOtherSlot(activeSlot));
     }
 
+    public void ApplyWeapon(WeaponSlotType slot, WeaponState weapon) => SetWeapon(slot, weapon);
+    public void ApplyActiveSlot(WeaponSlotType slot) => SetActiveSlot(slot);
+
 
     //Items
     public bool TryCollect(ItemData collected)

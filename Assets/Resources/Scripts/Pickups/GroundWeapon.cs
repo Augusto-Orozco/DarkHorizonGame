@@ -9,6 +9,7 @@ public class GroundWeapon : Pickup, IInteractable
     private InteractionPrompt prompt;
     public Vector3 Position => transform.position;
     public bool CanInteract => !IsCollected && state != null && isActiveAndEnabled;
+    public WeaponData Data => weaponData;
 
     protected override void Awake()
     {
@@ -58,10 +59,7 @@ public class GroundWeapon : Pickup, IInteractable
         Collect(interactor.Inventory);
     }
 
-    protected override void Despawn()
-    {
-        Destroy(gameObject);
-    }
+
 
     private string BuildPromptText(PlayerInventory inventory)
     {
@@ -81,23 +79,19 @@ public class GroundWeapon : Pickup, IInteractable
     )
     {
         GameObject prefab = weapon.Data.Prefab;
-        if(prefab == null)
+        if (prefab == null)
         {
             Debug.LogWarning($"{weapon.Data.ItemName} no tiene prefab asignado");
             return null;
         }
-        GameObject spawned = Instantiate(prefab, position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, position, ignoredRoot);
-        GroundWeapon groundWeapon = spawned.GetComponent<GroundWeapon>();
-        if(groundWeapon == null)
-        {
-            Debug.LogWarning($"El prefab de {weapon.Data.ItemName} no tiene GroundWeapon", spawned);
-            Destroy(spawned);
-            return null;
-        }
 
-        groundWeapon.Initialize(weapon);
-        return groundWeapon;
+        object[] data = NetworkPickup.BuildData(0f, weapon);
+        GameObject spawned = NetworkItemSpawner.Spawn(prefab, position, rotation, data);
+        return spawned != null ? spawned.GetComponent<GroundWeapon>() : null;
+    }
 
+    protected override void Despawn()
+    {
+        RemoveForEveryone();
     }
 }
