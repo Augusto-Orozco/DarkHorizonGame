@@ -79,7 +79,7 @@ public class PlayerWeaponInput : MonoBehaviour
 
     private void DropBread()
     {
-        if(dropPoint == null)
+        if (dropPoint == null)
         {
             Debug.LogWarning("No tiene DropInput asignado", this);
             return;
@@ -88,23 +88,18 @@ public class PlayerWeaponInput : MonoBehaviour
         if (!inventory.TryDropBread(out ConsumableData bread))
             return;
 
-        if(bread.Prefab == null)
+        if (bread.Prefab == null)
         {
             Debug.LogWarning("Bread no tiene prefab asignado", this);
             return;
         }
 
         Quaternion rotation = Quaternion.Euler(0f, dropPoint.eulerAngles.y, 0f);
-        GameObject spawned = Instantiate(bread.Prefab, dropPoint.position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, dropPoint.position, transform);
-        if (spawned.TryGetComponent(out ItemPickup pickup))
-            pickup.BlockPickup(dropPickupDelay);
-
+        NetworkItemSpawner.Spawn(bread.Prefab, dropPoint.position, rotation, NetworkPickup.BuildData(dropPickupDelay));
     }
 
     private void DropAmmo()
     {
-
         if (dropPoint == null || ammoBoxToDrop == null || ammoBoxToDrop.Prefab == null)
         {
             Debug.LogWarning("PlayerWeaponInput: falta Drop Point, Ammo Box To Drop o su Prefab.", this);
@@ -115,9 +110,6 @@ public class PlayerWeaponInput : MonoBehaviour
             return;
 
         Quaternion rotation = Quaternion.Euler(0f, dropPoint.eulerAngles.y, 0f);
-        GameObject spawned = Instantiate(ammoBoxToDrop.Prefab, dropPoint.position, rotation);
-        GroundPlacement.PlaceOnGround(spawned, dropPoint.position, transform);
-        if (spawned.TryGetComponent(out ItemPickup pickup))
-            pickup.BlockPickup(dropPickupDelay);
+        NetworkItemSpawner.Spawn(ammoBoxToDrop.Prefab, dropPoint.position, rotation, NetworkPickup.BuildData(dropPickupDelay));
     }
 }

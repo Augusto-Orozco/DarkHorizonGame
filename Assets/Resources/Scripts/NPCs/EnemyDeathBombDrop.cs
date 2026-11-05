@@ -56,9 +56,9 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
         {
             Collider body = GetComponent<Collider>();
             Vector3 dropPoint = body != null ? body.bounds.center : transform.position;
+            Quaternion rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
-            GameObject spawnedBomb = Instantiate(bombPrefab, dropPoint, transform.rotation);
-            GroundPlacement.PlaceOnGround(spawnedBomb, dropPoint, transform);
+            NetworkItemSpawner.Spawn(bombPrefab, dropPoint, rotation, NetworkPickup.BuildData(0f));
         }
 
         if (destroyEnemyOnDeath)

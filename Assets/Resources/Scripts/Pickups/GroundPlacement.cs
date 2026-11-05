@@ -30,6 +30,9 @@ public static class GroundPlacement
 
         foreach (RaycastHit hit in hits)
         {
+            if (IsCharacter(hit.collider))
+                continue;
+
             if (hit.point.y > origin.y + MaxSurfaceHeightAboveOrigin)
                 continue;
 
@@ -68,5 +71,11 @@ public static class GroundPlacement
     private static bool IsPartOf(Transform child, Transform root)
     {
         return child == root || child.IsChildOf(root);
+    }
+
+    private static bool IsCharacter(Collider collider)
+    {
+        return collider.GetComponentInParent<PlayerHealth>() != null ||
+               collider.GetComponentInParent<EnemyHealth>() != null;
     }
 }

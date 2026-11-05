@@ -102,6 +102,9 @@ GameObject:
   - component: {fileID: 9105845267279437198}
   - component: {fileID: 4964961901771424703}
   - component: {fileID: 7410423985552565191}
+  - component: {fileID: -6297211979593128856}
+  - component: {fileID: 7043819218553387185}
+  - component: {fileID: 4017489659662563576}
   m_Layer: 0
   m_Name: Ground_Bombotella
   m_TagString: Untagged
@@ -177,3 +180,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BombotellaPickup
   bombotellaData: {fileID: 11400000, guid: 98e246f23c08d724ea85c2b0ddcd5165, type: 2}
+--- !u!114 &-6297211979593128856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7043819218553387185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da5ddc15a8af114c815154a1a55f71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPickup
+--- !u!114 &4017489659662563576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8537393960515256092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bbf7304534dec04eb43a1759ffbf471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PickupGlow
+  color: {r: 1, g: 0.8, b: 0.2, a: 1}
+  glowIntensity: 2
+  lightRange: 20
+  lightIntensity: 8
+  lightHeight: 1.5
+  pulseSpeed: 1.5
+  pulseAmount: 0.35

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 7993390521174398661}
   - component: {fileID: 8043754503332522654}
   - component: {fileID: 7083665816184747659}
+  - component: {fileID: -8414056209492979911}
+  - component: {fileID: 4381772794770098066}
   m_Layer: 0
   m_Name: Ground_BubbleGun
   m_TagString: Untagged
@@ -104,6 +106,40 @@ MonoBehaviour:
   message: Grab the bubble gun
   playerTag: Player
   triggerOnce: 1
+--- !u!114 &-8414056209492979911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630717805198233418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &4381772794770098066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630717805198233418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da5ddc15a8af114c815154a1a55f71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPickup
 --- !u!1 &3557996134950119439
 GameObject:
   m_ObjectHideFlags: 0

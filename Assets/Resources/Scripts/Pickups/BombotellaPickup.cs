@@ -58,6 +58,6 @@ public sealed class BombotellaPickup : Pickup, IInteractable
 
     protected override void Despawn()
     {
-        Destroy(gameObject);
+        RemoveForEveryone();
     }
 }

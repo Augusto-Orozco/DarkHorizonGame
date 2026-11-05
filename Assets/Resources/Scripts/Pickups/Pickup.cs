@@ -1,6 +1,6 @@
-using UnityEngine;
 using System;
-
+using Photon.Pun;
+using UnityEngine;
 
 public abstract class Pickup : MonoBehaviour
 {
@@ -11,16 +11,15 @@ public abstract class Pickup : MonoBehaviour
     {
         if (!HasTriggerCollider())
             Debug.LogWarning("El pickup necesita un Collder con Is Trigger activo");
-
     }
 
-    //Lo de deteccion
     private void OnTriggerEnter(Collider other)
     {
         if (IsCollected)
             return;
+
         PlayerInventory inventory = other.GetComponentInParent<PlayerInventory>();
-        if(inventory != null)
+        if (inventory != null && IsLocalPlayer(inventory))
             OnPlayerEnter(inventory);
     }
 
@@ -30,24 +29,21 @@ public abstract class Pickup : MonoBehaviour
             return;
 
         PlayerInventory inventory = other.GetComponentInParent<PlayerInventory>();
-        if (inventory != null)
+        if (inventory != null && IsLocalPlayer(inventory))
             OnPlayerStay(inventory);
     }
 
     private void OnTriggerExit(Collider other)
     {
         PlayerInventory inventory = other.GetComponentInParent<PlayerInventory>();
-        if (inventory != null)
+        if (inventory != null && IsLocalPlayer(inventory))
             OnPlayerExit(inventory);
-
     }
 
     protected abstract void OnPlayerEnter(PlayerInventory inventory);
     protected virtual void OnPlayerStay(PlayerInventory inventory) { }
     protected virtual void OnPlayerExit(PlayerInventory inventory) { }
 
-
-    //Si si se acepta el pickuo se corre lo que sigue
     protected void Collect(PlayerInventory collector)
     {
         if (IsCollected)
@@ -61,6 +57,24 @@ public abstract class Pickup : MonoBehaviour
     protected virtual void Despawn()
     {
         gameObject.SetActive(false);
+    }
+
+    protected void RemoveForEveryone()
+    {
+        NetworkPickup networkPickup = GetComponent<NetworkPickup>();
+        if (networkPickup != null && networkPickup.TryRemoveForEveryone())
+            return;
+
+        Destroy(gameObject);
+    }
+
+    private static bool IsLocalPlayer(PlayerInventory inventory)
+    {
+        if (!PhotonNetwork.InRoom)
+            return true;
+
+        PhotonView view = inventory.GetComponent<PhotonView>();
+        return view == null || view.IsMine;
     }
 
     private bool HasTriggerCollider()

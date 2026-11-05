@@ -47,6 +47,8 @@ MonoBehaviour:
   - RpcSpit
   - RpcRequestDamage
   - RpcSyncHealth
+  - RpcRequestRemove
+  - RpcSpawn
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
