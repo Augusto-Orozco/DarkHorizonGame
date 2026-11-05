@@ -87,9 +87,12 @@ public class MariangulaMovement : MonoBehaviour, IPatrolArea
     private float nextFleeAllowedTime;
     private int lastLightLevel;
     private bool ownsPatrolCenter;
+    private NetworkEnemyVisuals netVisuals;
 
     private void Awake()
     {
+        netVisuals = GetComponent<NetworkEnemyVisuals>();
+
         bodyCollider = GetComponent<Collider>();
         health = GetComponent<EnemyHealth>();
 
@@ -397,6 +400,8 @@ public class MariangulaMovement : MonoBehaviour, IPatrolArea
         animator.speed = 1f;
         animator.applyRootMotion = true;  
         animator.Play(GetAnimatorStateHash(animationName), 0, 0f);
+        if (netVisuals != null)
+            netVisuals.SendPlay(GetAnimatorStateHash(animationName));
         animationState = newState;
     }
 

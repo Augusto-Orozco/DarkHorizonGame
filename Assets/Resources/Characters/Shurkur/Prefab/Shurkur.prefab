@@ -136,6 +136,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3837458179481861562}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6107313415079155607}
   m_SourcePrefab: {fileID: 100100000, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
 --- !u!1 &4627777800499569190 stripped
 GameObject:
@@ -345,6 +348,18 @@ MonoBehaviour:
   - {fileID: 7448704846661450471}
   - {fileID: -7103275567984899213}
   - {fileID: 736126156099175989}
+--- !u!114 &6107313415079155607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4627777800499569190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb1a4655ea6ba3428690f3b05b8f97c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemyVisuals
 --- !u!4 &5436684568285903004 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}

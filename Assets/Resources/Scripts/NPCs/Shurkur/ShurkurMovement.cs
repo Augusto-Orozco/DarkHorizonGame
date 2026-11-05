@@ -66,9 +66,11 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
     private bool hasPatrolTarget;
     private bool spitProjectileSpawned;
     private bool ownsPatrolCenter;
+    private NetworkEnemyVisuals netVisuals;
 
     private void Awake()
     {
+        netVisuals = GetComponent<NetworkEnemyVisuals>();
         bodyCollider = GetComponent<Collider>();
 
         targeting = GetComponent<EnemyTargeting>();
@@ -236,20 +238,25 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
         if (direction.sqrMagnitude <= 0.001f)
             return;
 
+        SpawnSpitProjectile(spitSpawnPoint.position, direction, spitProjectileDamage);
+        if (netVisuals != null)
+            netVisuals.SendSpit(spitSpawnPoint.position, direction);
+    }
+    public void SpawnSpitProjectile(Vector3 position, Vector3 direction, float damage)
+    {
+        if (spitPrefab == null)
+            return;
+
         GameObject projectile = Instantiate(
             spitPrefab,
-            spitSpawnPoint.position,
+            position,
             Quaternion.LookRotation(direction.normalized, Vector3.up));
 
         ShurkurSpitProjectile spit = projectile.GetComponent<ShurkurSpitProjectile>();
         if (spit == null)
             spit = projectile.AddComponent<ShurkurSpitProjectile>();
 
-        spit.Initialize(direction,
-            spitProjectileSpeed,
-            spitProjectileLifetime,
-            spitProjectileDamage,
-            gameObject);
+        spit.Initialize(direction, spitProjectileSpeed, spitProjectileLifetime, damage, gameObject);
     }
 
 
@@ -355,7 +362,11 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
         }
 
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+        {
             animator.Play(stateHash, 0, 0f);
+            if (netVisuals != null)
+                netVisuals.SendPlay(stateHash);
+        }
     }
 
     private void OnDrawGizmosSelected()

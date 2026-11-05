@@ -43,6 +43,8 @@ MonoBehaviour:
   - RPC_SetActiveSlot
   - RPC_SetWeapon
   - RPC_Shot
+  - RpcPlay
+  - RpcSpit
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

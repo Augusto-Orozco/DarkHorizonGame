@@ -70,7 +70,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemy
   masterOnly:
-  - {fileID: 7942166604093582617}
   - {fileID: 2374622120215453224}
   - {fileID: 1178287621652447418}
   - {fileID: 7770392935239869111}
@@ -394,14 +393,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
   m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7942166604093582617 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-  m_PrefabInstance: {fileID: 1039365672920964888}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcb30924bafaa5346946630ef5bb141c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ProceduralKharvekMovement

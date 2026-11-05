@@ -448,6 +448,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7916474631278998661}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5959882657706754024}
   m_SourcePrefab: {fileID: 100100000, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
 --- !u!1 &3171787666840924659 stripped
 GameObject:
@@ -633,3 +636,15 @@ MonoBehaviour:
   - {fileID: 5612321778953451212}
   - {fileID: 8955522976656430286}
   - {fileID: 4125207925409290850}
+--- !u!114 &5959882657706754024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fb1a4655ea6ba3428690f3b05b8f97c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemyVisuals

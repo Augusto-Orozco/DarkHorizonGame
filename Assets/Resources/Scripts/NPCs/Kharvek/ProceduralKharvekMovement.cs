@@ -70,6 +70,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
     public float SpeedMultiplier { get; set; } = 1f;
     private Transform chaseTarget;
 
+    private Vector3 lastNetworkPosition;
+
     private void Awake()
     {
         if (wallCollider == null)
@@ -107,6 +109,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
             Bounds b = wallCollider.bounds;
             stopDistance = Mathf.Max(b.extents.x, b.extents.z) * 0.8f;
         }
+
+        lastNetworkPosition = transform.position;
     }
 
     private void CalculateBodyHeightFromStartPosition()
@@ -119,13 +123,39 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     private void Update()
     {
-        MoveBody();
+        if (NetworkEnemy.IsAuthority)
+            MoveBody();
+        else
+            FollowNetworkMovement();
     }
 
     private void LateUpdate()
     {
-        FitBodyToGround();
+        if (NetworkEnemy.IsAuthority)
+            FitBodyToGround();
+
         UpdateLegTargets();
+    }
+
+    private void FollowNetworkMovement()
+    {
+        Vector3 delta = transform.position - lastNetworkPosition;
+        delta.y = 0f;
+        lastNetworkPosition = transform.position;
+
+        float dt = Time.deltaTime;
+        if (dt <= 0f)
+            return;
+
+        float measuredSpeed = delta.magnitude / dt;
+        currentSpeed = Mathf.Lerp(currentSpeed, measuredSpeed, 10f * dt);   // suavizado
+        isMoving = currentSpeed > moveSpeed * 0.05f;
+
+        if (delta.sqrMagnitude > 0.000001f)
+            lastMoveDirection = delta.normalized;
+
+        distanceSinceStep += delta.magnitude;
+        bodyBobPhase += delta.magnitude * bodyBobSpeed;
     }
 
     private void MoveBody()
