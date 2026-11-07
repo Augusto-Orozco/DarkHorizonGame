@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
+using System.Collections;
 
 [RequireComponent(typeof(PhotonView))]
 public sealed class TraitorGameManager : MonoBehaviourPun
@@ -26,6 +27,12 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     private bool IsNetworked => PhotonNetwork.InRoom && photonView.ViewID != 0;
 
+    [Header("Comandante")]
+    [SerializeField] private float introDelay = 3f;
+    [TextArea][SerializeField] private string introMessage = "Aquí el comandante. Hay 4 Kharvek custodiando las bombotellas. Encuéntrenlos y tráiganlas a la bóveda.";
+    [TextArea][SerializeField] private string deliveredMessage = "Bombotella entregada. Faltan {0}.";
+    [TextArea][SerializeField] private string unlockedMessage = "¡La bóveda está abierta! Vayan por el artefacto.";
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -46,6 +53,13 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             RegisterPlayer(player);
 
         CheckRoomUnlock();
+        StartCoroutine(IntroRoutine());
+    }
+
+    private IEnumerator IntroRoutine()
+    {
+        yield return new WaitForSeconds(introDelay);
+        Commander.Say(introMessage, 6f);
     }
 
     private void OnDestroy()
@@ -111,6 +125,8 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
         OnBombotellasChanged?.Invoke(collectedBombotellas, requiredBombotellas);
         RefreshGatePrompts();
+        if (collectedBombotellas < requiredBombotellas)
+            Commander.Say(string.Format(deliveredMessage, requiredBombotellas - collectedBombotellas), 4f);
         CheckRoomUnlock();
     }
 
@@ -153,6 +169,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             }
 
             Debug.Log("[TRAITOR] La entrada a la sala del elemento fue desbloqueada.", this);
+            Commander.Say(unlockedMessage, 6f);
         }
     }
 
