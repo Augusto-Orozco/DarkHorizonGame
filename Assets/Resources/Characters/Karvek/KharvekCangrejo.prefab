@@ -151,7 +151,7 @@ Transform:
   m_GameObject: {fileID: 1554465233180439625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 0, z: 0}
+  m_LocalPosition: {x: -0.01, y: 0, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -641,7 +641,7 @@ Transform:
   m_GameObject: {fileID: 4582240008500668182}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.92, y: 0, z: -1.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1010,6 +1010,14 @@ GameObject:
   - component: {fileID: 6360618577768076280}
   - component: {fileID: 7865883495128961825}
   - component: {fileID: 6941366306348708353}
+  - component: {fileID: 770852009551064134}
+  - component: {fileID: 1320075730835725425}
+  - component: {fileID: 815599136855853031}
+  - component: {fileID: 7163765901820520297}
+  - component: {fileID: 8034347328486988260}
+  - component: {fileID: 7040700239392313056}
+  - component: {fileID: 1221363665486282827}
+  - component: {fileID: 1415560818309206538}
   m_Layer: 0
   m_Name: KharvekCangrejo
   m_TagString: Untagged
@@ -1085,37 +1093,184 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb30924bafaa5346946630ef5bb141c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProceduralKharvekMovement
-  moveSpeed: 250
-  acceleration: 10
+  moveSpeed: 20
+  acceleration: 5
   deceleration: 10
-  rotationSpeed: 6
-  movementCamera: {fileID: 0}
+  rotationSpeed: 4
+  detectionRange: 90
+  losePlayerRange: 120
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 64
+  wallCollider: {fileID: 0}
+  stopDistance: 0
+  leashRadius: 500
+  maxClimbHeight: 4
+  climbProbeDistance: 6
   groundMask:
     serializedVersion: 2
-    m_Bits: 1
-  bodyProbeHeight: 150
+    m_Bits: 128
+  bodyProbeHeight: 5
   bodyProbeDistance: 400
   bodyHeight: 50
   autoCalculateBodyHeight: 1
+  bodyLowering: 15
   groundFollowSpeed: 12
   bodyBobAmount: 5
-  bodyBobSpeed: 0.05
+  bodyBobSpeed: 0.15
   legTargets:
   - {fileID: 4949161644307905389}
   - {fileID: 1392475110770605830}
   - {fileID: 9177621110630939706}
   - {fileID: 2478910532645385946}
-  footProbeHeight: 150
+  footProbeHeight: 10
   footProbeDistance: 400
   footOffset: 0
-  footFollowSpeed: 5
+  footFollowSpeed: 4
   stepThreshold: 45
-  stepHeight: 15
-  stepDuration: 0.1
-  stepDistance: 60
-  stepForwardOffset: 20
+  stepHeight: 10
+  stepDuration: 0.15
+  stepDistance: 30
+  stepForwardOffset: 10
   stepLeadFromSpeed: 2
   gaitInterval: 5
+--- !u!114 &770852009551064134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxHealth: 300
+--- !u!65 &1320075730835725425
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.75, z: 1}
+  m_Center: {x: 0, y: 0.4, z: 0}
+--- !u!114 &815599136855853031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
+  bombPrefab: {fileID: 8537393960515256092, guid: a6422c44359e1894caffab30449bd2fb, type: 3}
+  destroyEnemyOnDeath: 1
+  dropOnlyIfBoss: 1
+--- !u!114 &7163765901820520297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f9af4926e9e4a6478eb336906b7a489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KharvekContactDamage
+  damagePerHit: 15
+  damageInterval: 1.5
+--- !u!114 &8034347328486988260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightExposure
+  checkPoint: {fileID: 0}
+  checkHeight: 1
+  checkInterval: 0.2
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  debugLog: 0
+--- !u!114 &7040700239392313056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7256814d2c297f14fb9a260d40c2d386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KharvekRage
+  rageSpeedMultiplier: 1.5
+  rageDamageIntervalMultiplier: 0.5
+  calmDownDelay: 3
+  debugLog: 0
+--- !u!114 &1221363665486282827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &1415560818309206538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1221363665486282827}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &7012604375617990297
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,7 +1353,7 @@ Transform:
   m_GameObject: {fileID: 7116686330228747419}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40.15, y: 0, z: -26.8}
+  m_LocalPosition: {x: 42.1, y: 0, z: -28.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1254,7 +1409,7 @@ Transform:
   m_GameObject: {fileID: 8285323656999152989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 0, z: -26.8}
+  m_LocalPosition: {x: -40.88, y: 0, z: -28.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1341,8 +1496,8 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -9098997480887575037, guid: 160bd3c7005056f4d845dd589448f750, type: 3}
-  - {fileID: -9098997480887575037, guid: 160bd3c7005056f4d845dd589448f750, type: 3}
+  - {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
+  - {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

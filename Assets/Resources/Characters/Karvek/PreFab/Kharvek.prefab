@@ -52,8 +52,7 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 7498220791913653986}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -70,10 +69,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemy
   masterOnly:
-  - {fileID: 2374622120215453224}
-  - {fileID: 1178287621652447418}
-  - {fileID: 7770392935239869111}
-  - {fileID: 1638222540464597461}
+  - {fileID: 8059479614299099640}
+  - {fileID: 7856070724868454513}
+  - {fileID: 6994984954440648444}
+  - {fileID: 377465113702619391}
 --- !u!1001 &1039365672920964888
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -82,18 +81,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4527887859435859719}
     m_Modifications:
-    - target: {fileID: 2478910532645385946, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3561806932837791376, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -40.88
-      objectReference: {fileID: 0}
-    - target: {fileID: 3561806932837791376, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -28.19
-      objectReference: {fileID: 0}
     - target: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.42835
@@ -134,166 +121,47 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6091644090586062534, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
-    - target: {fileID: 6091644090586062534, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 67dbb4c750b70bc47a15f3744ba5fe6d, type: 2}
     - target: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: m_Name
       value: KharvekCangrejo
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: moveSpeed
-      value: 20
+      propertyPath: maxClimbHeight
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: stepHeight
-      value: 10
+      propertyPath: maxGroundSlope
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: leashRadius
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: acceleration
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: bodyBobSpeed
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: bodyLowering
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: stepDistance
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: stepDuration
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: rotationSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: detectionRange
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: bodyProbeHeight
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: footFollowSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: footProbeHeight
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: groundMask.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6941366306348708353, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: stepForwardOffset
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7443892170127445250, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 42.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7443892170127445250, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -28.19
-      objectReference: {fileID: 0}
-    - target: {fileID: 9177621110630939706, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.92
-      objectReference: {fileID: 0}
-    - target: {fileID: 9177621110630939706, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.75
+      propertyPath: climbProbeDistance
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7823224890890576895}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2533868548023694956}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1828542713336023072}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1638222540464597461}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1178287621652447418}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7770392935239869111}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2374622120215453224}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7498220791913653986}
-    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6729555270047459411}
+      insertIndex: 7
+      addedObject: {fileID: 4270978794193657637}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+--- !u!114 &377465113702619391 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 815599136855853031, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
 --- !u!1 &6172969605374913628 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
   m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7823224890890576895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c80ccb84106edd04190363cd11e9c3cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 300
---- !u!65 &2533868548023694956
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 0.75, z: 1}
-  m_Center: {x: 0, y: 0.4, z: 0}
---- !u!64 &1828542713336023072
+--- !u!64 &4270978794193657637
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,47 +176,22 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &1638222540464597461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!4 &6836775992654558950 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b5d7f0e2e8a4c42a9b5d3f1e7c6a804, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDeathBombDrop
-  bombPrefab: {fileID: 8537393960515256092, guid: a6422c44359e1894caffab30449bd2fb, type: 3}
-  destroyEnemyOnDeath: 1
-  dropOnlyIfBoss: 1
---- !u!114 &1178287621652447418
+--- !u!114 &6994984954440648444 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f9af4926e9e4a6478eb336906b7a489, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KharvekContactDamage
-  damagePerHit: 15
-  damageInterval: 1.5
---- !u!114 &7770392935239869111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 8034347328486988260, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6172969605374913628}
   m_Enabled: 1
@@ -356,18 +199,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af3274eea7019594eaedada2753975db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightExposure
-  checkPoint: {fileID: 0}
-  checkHeight: 1
-  checkInterval: 0.2
-  obstacleMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  debugLog: 0
---- !u!114 &2374622120215453224
+--- !u!114 &7856070724868454513 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7163765901820520297, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f9af4926e9e4a6478eb336906b7a489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KharvekContactDamage
+--- !u!114 &8059479614299099640 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7040700239392313056, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6172969605374913628}
   m_Enabled: 1
@@ -375,51 +221,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7256814d2c297f14fb9a260d40c2d386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KharvekRage
-  rageSpeedMultiplier: 1.5
-  rageDamageIntervalMultiplier: 0.5
-  calmDownDelay: 3
-  debugLog: 0
---- !u!114 &7498220791913653986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
---- !u!114 &6729555270047459411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6172969605374913628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents:
-  - {fileID: 7498220791913653986}
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
---- !u!4 &6836775992654558950 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
-  m_PrefabInstance: {fileID: 1039365672920964888}
-  m_PrefabAsset: {fileID: 0}
