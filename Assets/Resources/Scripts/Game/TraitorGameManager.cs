@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
-public sealed class TraitorGameManager : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+public sealed class TraitorGameManager : MonoBehaviourPun
 {
     public static TraitorGameManager Instance { get; private set; }
 
@@ -14,10 +17,14 @@ public sealed class TraitorGameManager : MonoBehaviour
     private bool artifactCollected;
     private bool roomUnlocked;
 
+    public event Action<int, int> OnBombotellasChanged;
+
     public bool RoomUnlocked => roomUnlocked;
     public int CollectedBombotellas => collectedBombotellas;
     public int RequiredBombotellas => requiredBombotellas;
     public bool HasRequiredBombotellas => collectedBombotellas >= requiredBombotellas;
+
+    private bool IsNetworked => PhotonNetwork.InRoom && photonView.ViewID != 0;
 
     private void Awake()
     {
@@ -63,7 +70,46 @@ public sealed class TraitorGameManager : MonoBehaviour
         if (roomUnlocked)
             return;
 
-        collectedBombotellas++;
+        if (!IsNetworked)
+        {
+            SetCollected(collectedBombotellas + 1);
+            return;
+        }
+
+        if (PhotonNetwork.IsMasterClient)
+            AddBombotellaAsMaster();
+        else
+            photonView.RPC(nameof(RpcRegisterBombotella), RpcTarget.MasterClient);
+    }
+
+    [PunRPC]
+    private void RpcRegisterBombotella()
+    {
+        if (PhotonNetwork.IsMasterClient)
+            AddBombotellaAsMaster();
+    }
+
+    private void AddBombotellaAsMaster()
+    {
+        if (roomUnlocked)
+            return;
+
+        int newCount = Mathf.Min(collectedBombotellas + 1, requiredBombotellas);
+        photonView.RPC(nameof(RpcSetCollected), RpcTarget.All, newCount);
+    }
+
+    [PunRPC]
+    private void RpcSetCollected(int count)
+    {
+        SetCollected(count);
+    }
+
+    private void SetCollected(int count)
+    {
+        collectedBombotellas = count;
+        Debug.Log($"[BOMBOTELLAS] {collectedBombotellas}/{requiredBombotellas}", this);
+
+        OnBombotellasChanged?.Invoke(collectedBombotellas, requiredBombotellas);
         RefreshGatePrompts();
         CheckRoomUnlock();
     }
@@ -82,7 +128,7 @@ public sealed class TraitorGameManager : MonoBehaviour
             return false;
         }
 
-        PlayerMovement selectedPlayer = players[Random.Range(0, players.Count)];
+        PlayerMovement selectedPlayer = players[UnityEngine.Random.Range(0, players.Count)];
         TraitorPlayer traitor = selectedPlayer.GetComponent<TraitorPlayer>();
         if (traitor == null)
             traitor = selectedPlayer.gameObject.AddComponent<TraitorPlayer>();
