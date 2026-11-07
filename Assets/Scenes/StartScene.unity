@@ -288,7 +288,7 @@ MonoBehaviour:
   gameVersion: 0.1
   maxPlayers: 4
   codeLength: 4
-  gameSceneName: MapaDemoS5
+  gameSceneName: MapaDemoS5V1
   joinPanel: {fileID: 1290059717}
   codeInput: {fileID: 1936704880}
   createButton: {fileID: 863308864}
