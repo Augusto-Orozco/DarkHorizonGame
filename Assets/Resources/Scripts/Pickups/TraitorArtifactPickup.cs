@@ -42,7 +42,7 @@ public sealed class TraitorArtifactPickup : Pickup, IInteractable
 
     public void Interact(PlayerInteractor interactor)
     {
-        if (!CanInteract || !TraitorGameManager.Instance.TryAssignTraitor())
+        if (!CanInteract || !TraitorGameManager.Instance.RequestCollectArtifact())
             return;
 
         Collect(interactor.Inventory);
@@ -50,6 +50,6 @@ public sealed class TraitorArtifactPickup : Pickup, IInteractable
 
     protected override void Despawn()
     {
-        Destroy(gameObject);
+        RemoveForEveryone();
     }
 }

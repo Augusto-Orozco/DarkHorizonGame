@@ -623,6 +623,14 @@ MonoBehaviour:
   requiredBombotellas: 1
   roomGates:
   - {fileID: 286693801}
+  introDelay: 3
+  introMessage: "Aqu\xED el comandante. Hay 4 Kharvek custodiando las bombotellas.
+    Encu\xE9ntrenlos y tr\xE1iganlas a la b\xF3veda."
+  deliveredMessage: Bombotella entregada. Faltan {0}.
+  unlockedMessage: "\xA1La b\xF3veda est\xE1 abierta! Vayan por el artefacto."
+  traitorMessage: "Eres el traidor. Elimina al escuadr\xF3n antes de que lleguen
+    a la nave."
+  crewMessage: "\xA1Hay un traidor entre ustedes! Lleven el artefacto a la nave."
 --- !u!4 &150863161
 Transform:
   m_ObjectHideFlags: 0
@@ -1212,7 +1220,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 304195114940947033, guid: e3aa70274a095b9469aad7ff671cfeaa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1260304130}
+    - targetCorrespondingSourceObject: {fileID: 304195114940947033, guid: e3aa70274a095b9469aad7ff671cfeaa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1260304131}
   m_SourcePrefab: {fileID: 100100000, guid: e3aa70274a095b9469aad7ff671cfeaa, type: 3}
 --- !u!1001 &569402537
 PrefabInstance:
@@ -1910,6 +1924,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1260304123 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 304195114940947033, guid: e3aa70274a095b9469aad7ff671cfeaa, type: 3}
+  m_PrefabInstance: {fileID: 569128031}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1260304130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260304123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 15
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &1260304131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260304123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da5ddc15a8af114c815154a1a55f71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPickup
 --- !u!1 &1272832661
 GameObject:
   m_ObjectHideFlags: 0

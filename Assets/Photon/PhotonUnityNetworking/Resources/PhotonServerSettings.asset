@@ -51,6 +51,8 @@ MonoBehaviour:
   - RpcSpawn
   - RpcRegisterBombotella
   - RpcSetCollected
+  - RpcArtifactCollected
+  - RpcRequestArtifact
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

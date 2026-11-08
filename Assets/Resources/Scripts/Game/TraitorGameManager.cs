@@ -1,8 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(PhotonView))]
 public sealed class TraitorGameManager : MonoBehaviourPun
@@ -13,25 +14,34 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     [SerializeField] private int requiredBombotellas = 4;
     [SerializeField] private TraitorRoomGate[] roomGates;
 
+    [Header("Comandante")]
+    [SerializeField] private float introDelay = 3f;
+    [TextArea][SerializeField] private string introMessage = "Aquí el comandante. Hay 4 Kharvek custodiando las bombotellas. Encuéntrenlos y tráiganlas a la bóveda.";
+    [TextArea][SerializeField] private string deliveredMessage = "Bombotella entregada. Faltan {0}.";
+    [TextArea][SerializeField] private string unlockedMessage = "¡La bóveda está abierta! Vayan por el artefacto.";
+    [TextArea][SerializeField] private string traitorMessage = "Eres el traidor. Elimina al escuadrón antes de que lleguen a la nave.";
+    [TextArea][SerializeField] private string crewMessage = "¡Hay un traidor entre ustedes! Lleven el artefacto a la nave.";
+
+    [Header("Fase final")]
+    [SerializeField, Range(0.1f, 1f)] private float carrierSpeedMultiplier = 0.8f;
+
     private readonly List<PlayerMovement> players = new List<PlayerMovement>();
     private int collectedBombotellas;
     private bool artifactCollected;
     private bool roomUnlocked;
 
     public event Action<int, int> OnBombotellasChanged;
+    public event Action<PlayerHealth> OnTraitorAssigned;
 
     public bool RoomUnlocked => roomUnlocked;
+    public bool ArtifactCollected => artifactCollected;
     public int CollectedBombotellas => collectedBombotellas;
     public int RequiredBombotellas => requiredBombotellas;
     public bool HasRequiredBombotellas => collectedBombotellas >= requiredBombotellas;
+    public int TraitorActorNumber { get; private set; } = -1;
+    public int ArtifactHolderActorNumber { get; private set; } = -1;
 
     private bool IsNetworked => PhotonNetwork.InRoom && photonView.ViewID != 0;
-
-    [Header("Comandante")]
-    [SerializeField] private float introDelay = 3f;
-    [TextArea][SerializeField] private string introMessage = "Aquí el comandante. Hay 4 Kharvek custodiando las bombotellas. Encuéntrenlos y tráiganlas a la bóveda.";
-    [TextArea][SerializeField] private string deliveredMessage = "Bombotella entregada. Faltan {0}.";
-    [TextArea][SerializeField] private string unlockedMessage = "¡La bóveda está abierta! Vayan por el artefacto.";
 
     private void Awake()
     {
@@ -125,33 +135,107 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
         OnBombotellasChanged?.Invoke(collectedBombotellas, requiredBombotellas);
         RefreshGatePrompts();
+
         if (collectedBombotellas < requiredBombotellas)
             Commander.Say(string.Format(deliveredMessage, requiredBombotellas - collectedBombotellas), 4f);
+
         CheckRoomUnlock();
     }
 
-    public bool TryAssignTraitor()
+    public bool RequestCollectArtifact()
     {
-        if (artifactCollected)
+        if (artifactCollected || !roomUnlocked)
             return false;
 
-        artifactCollected = true;
-        players.RemoveAll(player => player == null || !player.isActiveAndEnabled);
-
-        if (players.Count == 0)
+        if (!IsNetworked)
         {
-            Debug.LogWarning("No hay jugadores registrados para elegir al traidor.", this);
-            return false;
+            AssignTraitorOffline();
+            return true;
         }
 
-        PlayerMovement selectedPlayer = players[UnityEngine.Random.Range(0, players.Count)];
-        TraitorPlayer traitor = selectedPlayer.GetComponent<TraitorPlayer>();
-        if (traitor == null)
-            traitor = selectedPlayer.gameObject.AddComponent<TraitorPlayer>();
-
-        traitor.Activate();
-        Debug.Log($"[TRAITOR] {selectedPlayer.name} fue elegido como el traidor.", selectedPlayer);
+        photonView.RPC(nameof(RpcRequestArtifact), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
         return true;
+    }
+
+    [PunRPC]
+    private void RpcRequestArtifact(int collectorActor)
+    {
+        if (!PhotonNetwork.IsMasterClient || artifactCollected)
+            return;
+
+        List<int> candidates = new List<int>();
+        foreach (Player player in PhotonNetwork.PlayerList)
+        {
+            if (player.ActorNumber != collectorActor)
+                candidates.Add(player.ActorNumber);
+        }
+
+        if (candidates.Count == 0)
+            candidates.Add(collectorActor);
+
+        int traitorActor = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+        photonView.RPC(nameof(RpcArtifactCollected), RpcTarget.All, collectorActor, traitorActor);
+    }
+
+    [PunRPC]
+    private void RpcArtifactCollected(int collectorActor, int traitorActor)
+    {
+        artifactCollected = true;
+        ArtifactHolderActorNumber = collectorActor;
+        TraitorActorNumber = traitorActor;
+
+        int crewCount = Mathf.Max(1, PhotonNetwork.PlayerList.Length - 1);
+
+        PlayerHealth traitor = FindPlayer(traitorActor);
+        if (traitor != null)
+            ActivateTraitor(traitor, crewCount);
+
+        PlayerHealth carrier = FindPlayer(collectorActor);
+        if (carrier != null && carrier.TryGetComponent(out PlayerMovement carrierMovement))
+            carrierMovement.ExternalSpeedMultiplier = carrierSpeedMultiplier;
+
+        bool iAmTraitor = PhotonNetwork.LocalPlayer.ActorNumber == traitorActor;
+        Commander.Say(iAmTraitor ? traitorMessage : crewMessage, 6f);
+
+        Debug.Log($"[TRAITOR] Artefacto: jugador {collectorActor}. Traidor: jugador {traitorActor}. Escuadrón: {crewCount}.", this);
+    }
+
+    private void AssignTraitorOffline()
+    {
+        artifactCollected = true;
+
+        PlayerHealth[] all = FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None);
+        if (all.Length == 0)
+        {
+            Debug.LogWarning("No hay jugadores para elegir al traidor.", this);
+            return;
+        }
+
+        PlayerHealth traitor = all[UnityEngine.Random.Range(0, all.Length)];
+        ActivateTraitor(traitor, Mathf.Max(1, all.Length - 1));
+        Commander.Say(crewMessage, 6f);
+    }
+
+    private void ActivateTraitor(PlayerHealth player, int crewCount)
+    {
+        TraitorPlayer traitor = player.GetComponent<TraitorPlayer>();
+        if (traitor == null)
+            traitor = player.gameObject.AddComponent<TraitorPlayer>();
+
+        traitor.Activate(crewCount);
+        OnTraitorAssigned?.Invoke(player);
+    }
+
+    public static PlayerHealth FindPlayer(int actorNumber)
+    {
+        foreach (PlayerHealth player in FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None))
+        {
+            PhotonView view = player.GetComponent<PhotonView>();
+            if (view != null && view.OwnerActorNr == actorNumber)
+                return player;
+        }
+
+        return null;
     }
 
     private void CheckRoomUnlock()
