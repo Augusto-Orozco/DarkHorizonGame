@@ -39,6 +39,9 @@ public class PlayerWeaponInput : MonoBehaviour
         if (Keyboard.current == null)
             return;
 
+        if (health != null && health.IsDead)
+            return;
+
         if (keyboard[dropKey].wasPressedThisFrame)
             DropWeapon();
 

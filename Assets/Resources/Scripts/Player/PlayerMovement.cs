@@ -7,6 +7,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimiento")]
     public float moveSpeed = 5f;
+    public float ExternalSpeedMultiplier { get; set; } = 1f;
+
     public float gravity = -20f;
 
     [Header("Cámara y Mouse")]
@@ -154,7 +156,7 @@ public class PlayerMovement : MonoBehaviour
             float speedMultiplier = traitor != null
                 ? traitor.MovementSpeedMultiplier
                 : 1f;
-            controller.Move(moveDirection * moveSpeed * speedMultiplier * Time.deltaTime);
+            controller.Move(moveDirection * moveSpeed * speedMultiplier * ExternalSpeedMultiplier * Time.deltaTime);
         }
     }
 

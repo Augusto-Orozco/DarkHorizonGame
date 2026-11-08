@@ -104,21 +104,31 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         SetHealth(CurrentHealth + amount);
     }
 
+    public void SetMaxHealth(float newMaxHealth, bool healToFull)
+    {
+        if (!IsOwner || newMaxHealth <= 0f)
+            return;
+
+        maxHealth = newMaxHealth;
+        SetHealth(healToFull ? maxHealth : CurrentHealth);
+    }
+
     private void SetHealth(float value)
     {
         CurrentHealth = Mathf.Clamp(value, 0f, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
 
         if (IsNetworked && view.IsMine)
-            view.RPC(nameof(RpcSyncHealth), RpcTarget.Others, CurrentHealth);
+            view.RPC(nameof(RpcSyncHealth), RpcTarget.Others, CurrentHealth, maxHealth);
     }
 
     [PunRPC]
-    private void RpcSyncHealth(float current)
+    private void RpcSyncHealth(float current, float max)
     {
         if (IsOwner)
             return;
 
+        maxHealth = max;
         CurrentHealth = Mathf.Clamp(current, 0f, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
@@ -137,7 +147,10 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         deathHandled = true;
         movement.readInput = false;
         OnDied?.Invoke();
-        StartCoroutine(Respawn());
+
+        bool finalPhase = TraitorGameManager.Instance != null && TraitorGameManager.Instance.ArtifactCollected;
+        if (!finalPhase)
+            StartCoroutine(Respawn());
     }
 
     private IEnumerator Respawn()
