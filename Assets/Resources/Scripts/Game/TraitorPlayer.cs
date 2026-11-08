@@ -1,9 +1,17 @@
+using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 
 public sealed class TraitorPlayer : MonoBehaviour
 {
-    [Header("Bonificaciones")]
-    [SerializeField, Min(1f)] private float movementSpeedMultiplier = 1.35f;
+    [Header("Balance")]
+    [SerializeField, Min(1f)] private float baseHealth = 100f;
+    [SerializeField, Min(0f)] private float healthPerCrewMember = 75f;
+    [SerializeField, Range(0.1f, 2f)] private float movementSpeedMultiplier = 0.85f;
+    [SerializeField, Min(1f)] private float damageMultiplier = 1.5f;
+    [SerializeField, Min(0f)] private float revealStunDuration = 3f;
+
+    [Header("Visual")]
     [SerializeField, Min(1f)] private float sizeMultiplier = 1.2f;
     [SerializeField] private Color traitorEmissionColor = Color.red;
     [SerializeField, Min(0f)] private float traitorEmissionIntensity = 2f;
@@ -15,6 +23,16 @@ public sealed class TraitorPlayer : MonoBehaviour
     public bool IsTraitor { get; private set; }
     public bool HasUnlimitedAmmo => IsTraitor;
     public float MovementSpeedMultiplier => IsTraitor ? movementSpeedMultiplier : 1f;
+    public float DamageMultiplier => IsTraitor ? damageMultiplier : 1f;
+
+    public static bool IsTraitorObject(GameObject target)
+    {
+        if (target == null)
+            return false;
+
+        TraitorPlayer traitor = target.GetComponentInParent<TraitorPlayer>();
+        return traitor != null && traitor.IsTraitor;
+    }
 
     private void Awake()
     {
@@ -26,7 +44,7 @@ public sealed class TraitorPlayer : MonoBehaviour
             originalMaterials[i] = renderers[i].materials;
     }
 
-    public void Activate()
+    public void Activate(int crewCount)
     {
         if (IsTraitor)
             return;
@@ -34,6 +52,30 @@ public sealed class TraitorPlayer : MonoBehaviour
         IsTraitor = true;
         transform.localScale = originalScale * sizeMultiplier;
         ApplyTraitorVisual();
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        if (health != null)
+            health.SetMaxHealth(baseHealth + healthPerCrewMember * Mathf.Max(1, crewCount), true);
+
+        PhotonView view = GetComponent<PhotonView>();
+        bool isMine = !PhotonNetwork.InRoom || view == null || view.IsMine;
+        if (isMine && revealStunDuration > 0f)
+            StartCoroutine(RevealStun());
+    }
+
+    private IEnumerator RevealStun()
+    {
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        if (movement == null)
+            yield break;
+
+        bool previousInput = movement.readInput;
+        movement.readInput = false;
+        yield return new WaitForSeconds(revealStunDuration);
+
+        PlayerHealth health = GetComponent<PlayerHealth>();
+        if (health == null || !health.IsDead)
+            movement.readInput = previousInput;
     }
 
     private void ApplyTraitorVisual()

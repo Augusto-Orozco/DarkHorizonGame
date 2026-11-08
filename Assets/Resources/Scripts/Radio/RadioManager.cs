@@ -1,10 +1,4 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 21-10-2026 | 
-|                                                                         |
-| RadioManager.cs | Script that administrates the dialague system for the |
-| commander NPC, dissapears after a set time and only is triggered once.  |
-|                                                                         |
-\*=======================================================================*/
+
 
 
 using System.Collections;
@@ -41,6 +35,21 @@ public class RadioManager : MonoBehaviour
 
         if (portrait != null)
             portrait.color = idleColor;
+    }
+
+    private void OnEnable()
+    {
+        Commander.OnMessage += HandleCommanderMessage;
+    }
+
+    private void OnDisable()
+    {
+        Commander.OnMessage -= HandleCommanderMessage;
+    }
+
+    private void HandleCommanderMessage(string message, float duration)
+    {
+        ShowMessage(message);
     }
 
     /*--<summary>------------------------------------------------------------------\

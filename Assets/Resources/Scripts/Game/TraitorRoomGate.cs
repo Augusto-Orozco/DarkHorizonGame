@@ -1,9 +1,18 @@
+using System.Collections;
 using UnityEngine;
 
 public sealed class TraitorRoomGate : MonoBehaviour
 {
     [SerializeField] private Collider gateCollider;
     [SerializeField] private InteractionPrompt prompt;
+
+    [Header("Animación de apertura")]
+    [SerializeField] private Transform doorVisual;
+    [SerializeField] private Vector3 openOffset = new Vector3(0f, 30f, 0f);
+    [SerializeField] private float openDuration = 3f;
+    [SerializeField] private AnimationCurve openCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    private bool isOpen;
 
     private void Awake()
     {
@@ -24,11 +33,38 @@ public sealed class TraitorRoomGate : MonoBehaviour
             return;
         }
 
-        if (gateCollider != null)
-            gateCollider.enabled = !open;
+        if (!open || isOpen)
+            return;
 
-        if (open && prompt != null)
+        isOpen = true;
+
+        if (prompt != null)
             prompt.Hide();
+
+        if (doorVisual != null)
+            StartCoroutine(OpenRoutine());
+        else if (gateCollider != null)
+            gateCollider.enabled = false;
+    }
+
+    private IEnumerator OpenRoutine()
+    {
+        Vector3 closedPosition = doorVisual.position;
+        Vector3 openPosition = closedPosition + openOffset;
+        float elapsed = 0f;
+
+        while (elapsed < openDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = openCurve.Evaluate(Mathf.Clamp01(elapsed / openDuration));
+            doorVisual.position = Vector3.LerpUnclamped(closedPosition, openPosition, t);
+            yield return null;
+        }
+
+        doorVisual.position = openPosition;
+
+        if (gateCollider != null)
+            gateCollider.enabled = false;
     }
 
     public void RefreshRequirement()

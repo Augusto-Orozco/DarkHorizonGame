@@ -674,6 +674,7 @@ GameObject:
   - component: {fileID: -5161808181410841403}
   - component: {fileID: 2191914351189830403}
   - component: {fileID: 6377378761740383943}
+  - component: {fileID: 8965706254075160991}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -1018,6 +1019,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac68e5ecd252df46b1920ae81c0df74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkShotRelay
+--- !u!114 &8965706254075160991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 822dd98d1b56f6c4a9301e8abcb4750c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDeathDrop
+  dropPoint: {fileID: 1556829423684261578}
+  dropHeight: 0.5
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0
@@ -3046,6 +3061,7 @@ GameObject:
   - component: {fileID: 2322653812770342190}
   - component: {fileID: 2401247629466119516}
   - component: {fileID: 8891917579569641231}
+  - component: {fileID: 2512053329173102019}
   m_Layer: 3
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3231,6 +3247,25 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &2512053329173102019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9084959685136608753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8dae19a82f20f04a9ad1844bd5a38cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpectatorCamera
+  labelRoot: {fileID: 7324962258014706242}
+  labelText: {fileID: 2392473742681839191}
+  labelFormat: 'Espectando a {0}
+
+    [Clic] Siguiente'
+  startDelay: 2
+  followSpeed: 15
 --- !u!1001 &4469047451922787543
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3388,9 +3423,25 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5337dc16881d8bb4f901c2f833a5a8fb, type: 3}
+--- !u!114 &2392473742681839191 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2249258617619937920, guid: 5337dc16881d8bb4f901c2f833a5a8fb, type: 3}
+  m_PrefabInstance: {fileID: 4469047451922787543}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7324962258014706242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &6868030552536162836 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7013542355526110915, guid: 5337dc16881d8bb4f901c2f833a5a8fb, type: 3}
+  m_PrefabInstance: {fileID: 4469047451922787543}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7324962258014706242 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6602911091932853909, guid: 5337dc16881d8bb4f901c2f833a5a8fb, type: 3}
   m_PrefabInstance: {fileID: 4469047451922787543}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &8716193910785119973 stripped

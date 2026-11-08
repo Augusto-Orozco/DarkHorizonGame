@@ -49,6 +49,14 @@ MonoBehaviour:
   - RpcSyncHealth
   - RpcRequestRemove
   - RpcSpawn
+  - RpcRegisterBombotella
+  - RpcSetCollected
+  - RpcArtifactCollected
+  - RpcRequestArtifact
+  - RpcGameOver
+  - RpcReportExtraction
+  - RpcArtifactDropped
+  - RpcSetCarrier
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
