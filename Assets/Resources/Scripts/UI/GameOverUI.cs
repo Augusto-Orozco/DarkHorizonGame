@@ -1,9 +1,9 @@
-using Photon.Pun;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOverUI : MonoBehaviourPunCallbacks
+public class GameOverUI : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text titleText;
@@ -16,6 +16,8 @@ public class GameOverUI : MonoBehaviourPunCallbacks
     [SerializeField] private string crewExtractedText = "El escuadrón escapó con el artefacto.";
     [SerializeField] private string traitorDefeatedText = "El traidor fue eliminado.";
     [SerializeField] private string traitorWinsText = "El traidor acabó con el escuadrón.";
+
+    [SerializeField] private string squadWipedText = "El escuadrón cayó antes de recuperar el artefacto.";
 
     private bool subscribed;
 
@@ -44,13 +46,14 @@ public class GameOverUI : MonoBehaviourPunCallbacks
     {
         bool iAmTraitor = TraitorGameManager.Instance.IsLocalTraitor;
         bool traitorWon = result == TraitorGameManager.GameResult.TraitorWins;
-        bool won = traitorWon == iAmTraitor;
+        bool won = result != TraitorGameManager.GameResult.SquadWiped && traitorWon == iAmTraitor;
 
         titleText.text = won ? victoryTitle : defeatTitle;
         subtitleText.text = result switch
         {
             TraitorGameManager.GameResult.CrewExtracted => crewExtractedText,
             TraitorGameManager.GameResult.TraitorDefeated => traitorDefeatedText,
+            TraitorGameManager.GameResult.SquadWiped => squadWipedText,
             _ => traitorWinsText
         };
 
@@ -66,14 +69,7 @@ public class GameOverUI : MonoBehaviourPunCallbacks
 
     public void BackToMenu()
     {
-        if (PhotonNetwork.InRoom)
-            PhotonNetwork.LeaveRoom();
-        else
-            SceneManager.LoadScene(menuSceneName);
+        ReturnToMenu.Go(menuSceneName);
     }
 
-    public override void OnLeftRoom()
-    {
-        SceneManager.LoadScene(menuSceneName);
-    }
 }

@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-
-
 public class ItemCountUI : MonoBehaviour
 {
     private enum CountType { Bread, Grenade }
@@ -20,6 +18,12 @@ public class ItemCountUI : MonoBehaviour
     [SerializeField] private Color emptyColor = new Color(1f, 1f, 1f, 0.3f);
 
     private int CurrentCount => type == CountType.Bread ? inventory.BreadCount : inventory.GrenadeCount;
+
+    private void Awake()
+    {
+        if (inventory == null)
+            inventory = GetComponentInParent<PlayerInventory>();
+    }
 
     private void OnEnable()
     {
