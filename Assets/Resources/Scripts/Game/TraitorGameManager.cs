@@ -24,6 +24,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     [Header("Fase final")]
     [SerializeField, Range(0.1f, 1f)] private float carrierSpeedMultiplier = 0.8f;
+    [SerializeField, Min(0.1f)] private float endCheckInterval = 0.5f;
 
     private readonly List<PlayerMovement> players = new List<PlayerMovement>();
     private int collectedBombotellas;
@@ -42,6 +43,20 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     public int ArtifactHolderActorNumber { get; private set; } = -1;
 
     private bool IsNetworked => PhotonNetwork.InRoom && photonView.ViewID != 0;
+
+    public event Action<GameResult> OnGameOver;
+    public bool IsGameOver { get; private set; }
+    public bool IsLocalTraitor => currentTraitor != null && IsLocalPlayer(currentTraitor);
+
+    private PlayerHealth currentTraitor;
+    private float nextEndCheck;
+
+    public enum GameResult
+    {
+        CrewExtracted,
+        TraitorDefeated,
+        TraitorWins
+    }
 
     private void Awake()
     {
@@ -218,6 +233,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     private void ActivateTraitor(PlayerHealth player, int crewCount)
     {
+        currentTraitor = player;
         TraitorPlayer traitor = player.GetComponent<TraitorPlayer>();
         if (traitor == null)
             traitor = player.gameObject.AddComponent<TraitorPlayer>();
@@ -236,6 +252,106 @@ public sealed class TraitorGameManager : MonoBehaviourPun
         }
 
         return null;
+    }
+
+    private void Update()
+    {
+        if (IsGameOver || !artifactCollected)
+            return;
+
+        if (IsNetworked && !PhotonNetwork.IsMasterClient)
+            return;
+
+        if (Time.time < nextEndCheck)
+            return;
+
+        nextEndCheck = Time.time + endCheckInterval;
+        CheckEndConditions();
+    }
+
+    private void CheckEndConditions()
+    {
+        if (currentTraitor == null || currentTraitor.IsDead)
+        {
+            EndGame(GameResult.TraitorDefeated);
+            return;
+        }
+
+        foreach (PlayerHealth player in FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None))
+        {
+            if (player != currentTraitor && !player.IsDead)
+                return;
+        }
+
+        EndGame(GameResult.TraitorWins);
+    }
+
+    public void ReportArtifactExtracted()
+    {
+        if (IsGameOver || !artifactCollected)
+            return;
+
+        if (!IsNetworked)
+        {
+            EndGame(GameResult.CrewExtracted);
+            return;
+        }
+
+        photonView.RPC(nameof(RpcReportExtraction), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+    }
+
+    [PunRPC]
+    private void RpcReportExtraction(int actorNumber)
+    {
+        if (!PhotonNetwork.IsMasterClient || IsGameOver || actorNumber != ArtifactHolderActorNumber)
+            return;
+
+        EndGame(GameResult.CrewExtracted);
+    }
+
+    private void EndGame(GameResult result)
+    {
+        if (IsGameOver)
+            return;
+
+        if (IsNetworked)
+            photonView.RPC(nameof(RpcGameOver), RpcTarget.All, (int)result);
+        else
+            ApplyGameOver((int)result);
+    }
+
+    [PunRPC]
+    private void RpcGameOver(int result)
+    {
+        ApplyGameOver(result);
+    }
+
+    private void ApplyGameOver(int result)
+    {
+        if (IsGameOver)
+            return;
+
+        IsGameOver = true;
+        Debug.Log($"[FIN] {(GameResult)result}", this);
+        OnGameOver?.Invoke((GameResult)result);
+    }
+
+    public bool IsArtifactCarrier(PlayerHealth player)
+    {
+        if (!IsNetworked)
+            return true;
+
+        PhotonView view = player.GetComponent<PhotonView>();
+        return view != null && view.OwnerActorNr == ArtifactHolderActorNumber;
+    }
+
+    private static bool IsLocalPlayer(PlayerHealth player)
+    {
+        if (!PhotonNetwork.InRoom)
+            return true;
+
+        PhotonView view = player.GetComponent<PhotonView>();
+        return view != null && view.IsMine;
     }
 
     private void CheckRoomUnlock()
