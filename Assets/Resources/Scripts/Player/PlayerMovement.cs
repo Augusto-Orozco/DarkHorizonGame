@@ -10,6 +10,19 @@ public class PlayerMovement : MonoBehaviour
     public float ExternalSpeedMultiplier { get; set; } = 1f;
 
     public float gravity = -20f;
+[Header("Pasos")]
+[SerializeField] private AudioClip normalFootstepClip;
+[SerializeField] private AudioClip metalFootstepClip;
+[SerializeField] private AudioSource footstepAudioSource;
+
+[Header("Volumen de pasos")]
+[SerializeField, Range(0f, 1f)]
+private float normalFootstepVolume = 0.3f;
+
+[SerializeField, Range(0f, 1f)]
+private float metalFootstepVolume = 0.2f;
+
+private AudioClip currentFootstepClip;
 
     [Header("Cámara y Mouse")]
     [Tooltip("Asigna la Cámara (o el Pivot de la Cámara) que es hijo de este personaje.")]
@@ -55,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
     private bool hasBubbleGun;
     private bool shootingActive;
     private TraitorPlayer traitor;
+    private float footstepTimer;
 
     private enum MovementState
     {
@@ -100,10 +114,65 @@ public class PlayerMovement : MonoBehaviour
             HandleGravity();
         }
 
+        HandleFootsteps();
         HandleAnimations();
         UpdateBodyAnimatorState();
     }
 
+    private void HandleFootsteps()
+    {
+        if (footstepAudioSource == null)
+        {
+            footstepAudioSource = GetComponent<AudioSource>();
+
+            if (footstepAudioSource == null)
+            {
+                footstepAudioSource = gameObject.AddComponent<AudioSource>();
+                footstepAudioSource.spatialBlend = 1f;
+                footstepAudioSource.playOnAwake = false;
+            }
+        }
+
+        if (controller == null || !isMoving)
+        {
+            footstepAudioSource.Stop();
+            return;
+        }
+
+        AudioClip selectedClip = normalFootstepClip;
+        float selectedVolume = normalFootstepVolume;
+
+        // Detectar el suelo debajo del jugador
+        if (Physics.Raycast(
+            transform.position + Vector3.up * 0.1f,
+            Vector3.down,
+            out RaycastHit hit,
+            2f))
+        {
+            if (hit.collider.CompareTag("Nave"))
+            {
+                selectedClip = metalFootstepClip;
+                selectedVolume = metalFootstepVolume;
+            }
+        }
+
+        // Cambiar sonido si cambia la superficie
+        if (currentFootstepClip != selectedClip)
+        {
+            currentFootstepClip = selectedClip;
+
+            footstepAudioSource.Stop();
+            footstepAudioSource.clip = currentFootstepClip;
+        }
+
+        footstepAudioSource.volume = selectedVolume;
+        footstepAudioSource.loop = true;
+
+        if (!footstepAudioSource.isPlaying && currentFootstepClip != null)
+        {
+            footstepAudioSource.Play();
+        }
+    }
     void HandleMouseLook()
     {
         if (Mouse.current == null)
