@@ -34,6 +34,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     private bool IsNetworked => PhotonNetwork.InRoom && view != null && view.ViewID != 0;
     private bool IsOwner => !IsNetworked || view.IsMine;
 
+    public bool IsOut { get; private set; }
+
     private void Awake()
     {
         inventory = GetComponent<PlayerInventory>();
@@ -167,9 +169,27 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         movement.readInput = false;
         OnDied?.Invoke();
 
-        bool finalPhase = TraitorGameManager.Instance != null && TraitorGameManager.Instance.ArtifactCollected;
-        if (!finalPhase)
+        TraitorGameManager manager = TraitorGameManager.Instance;
+        if (manager == null)
+        {
             StartCoroutine(Respawn());
+            return;
+        }
+
+        manager.ReportDeath(this);
+    }
+
+    public void GrantRespawn()
+    {
+        if (!IsOwner || !IsDead)
+            return;
+
+        StartCoroutine(Respawn());
+    }
+
+    public void MarkOut()
+    {
+        IsOut = true;
     }
 
     private IEnumerator Respawn()
@@ -188,6 +208,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         controller.enabled = true;
 
         deathHandled = false;
+        IsOut = false;
         movement.readInput = originalReadInput;
         SetHealth(maxHealth);
     }
