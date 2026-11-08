@@ -631,8 +631,11 @@ MonoBehaviour:
   traitorMessage: "Eres el traidor. Elimina al escuadr\xF3n antes de que lleguen
     a la nave."
   crewMessage: "\xA1Hay un traidor entre ustedes! Lleven el artefacto a la nave."
+  artifactDroppedMessage: "\xA1El portador cay\xF3! Recuperen el artefacto."
+  artifactRecoveredMessage: "Artefacto recuperado. \xA1Ll\xE9venlo a la nave!"
   carrierSpeedMultiplier: 0.8
   endCheckInterval: 0.5
+  artifactPrefab: {fileID: 0}
 --- !u!4 &150863161
 Transform:
   m_ObjectHideFlags: 0
@@ -4098,6 +4101,67 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0760291252b1ec243b61729070810ff1, type: 3}
+--- !u!1001 &8730577616658645335
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2451374886008880180, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: sceneViewId
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 8572417032865578737, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_Name
+      value: Ruby (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -411
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 15.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -789
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.4029367
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.91522783
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 132.476
+      objectReference: {fileID: 0}
+    - target: {fileID: 9060265482460177483, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4125,6 +4189,7 @@ SceneRoots:
   - {fileID: 732201883}
   - {fileID: 1727711638}
   - {fileID: 569128031}
+  - {fileID: 8730577616658645335}
   - {fileID: 569402537}
   - {fileID: 909704098}
   - {fileID: 2114287264}

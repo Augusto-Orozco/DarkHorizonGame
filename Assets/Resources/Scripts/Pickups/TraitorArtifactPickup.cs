@@ -10,7 +10,7 @@ public sealed class TraitorArtifactPickup : Pickup, IInteractable
         !IsCollected &&
         isActiveAndEnabled &&
         TraitorGameManager.Instance != null &&
-        TraitorGameManager.Instance.RoomUnlocked;
+        TraitorGameManager.Instance.CanLocalTakeArtifact;
 
     protected override void Awake()
     {

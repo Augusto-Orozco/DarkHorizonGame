@@ -21,10 +21,13 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     [TextArea][SerializeField] private string unlockedMessage = "¡La bóveda está abierta! Vayan por el artefacto.";
     [TextArea][SerializeField] private string traitorMessage = "Eres el traidor. Elimina al escuadrón antes de que lleguen a la nave.";
     [TextArea][SerializeField] private string crewMessage = "¡Hay un traidor entre ustedes! Lleven el artefacto a la nave.";
+    [TextArea][SerializeField] private string artifactDroppedMessage = "¡El portador cayó! Recuperen el artefacto.";
+    [TextArea][SerializeField] private string artifactRecoveredMessage = "Artefacto recuperado. ¡Llévenlo a la nave!";
 
     [Header("Fase final")]
     [SerializeField, Range(0.1f, 1f)] private float carrierSpeedMultiplier = 0.8f;
     [SerializeField, Min(0.1f)] private float endCheckInterval = 0.5f;
+    [SerializeField] private GameObject artifactPrefab;
 
     private readonly List<PlayerMovement> players = new List<PlayerMovement>();
     private int collectedBombotellas;
@@ -41,6 +44,11 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     public bool HasRequiredBombotellas => collectedBombotellas >= requiredBombotellas;
     public int TraitorActorNumber { get; private set; } = -1;
     public int ArtifactHolderActorNumber { get; private set; } = -1;
+    public bool ArtifactOnGround => artifactCollected && ArtifactHolderActorNumber == -1;
+    public bool CanLocalTakeArtifact =>
+        roomUnlocked &&
+        !IsGameOver &&
+        (!artifactCollected || (IsNetworked && ArtifactOnGround && !IsLocalTraitor));
 
     private bool IsNetworked => PhotonNetwork.InRoom && photonView.ViewID != 0;
 
@@ -50,6 +58,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     private PlayerHealth currentTraitor;
     private float nextEndCheck;
+    private Vector3 lastCarrierPosition;
 
     public enum GameResult
     {
@@ -159,7 +168,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     public bool RequestCollectArtifact()
     {
-        if (artifactCollected || !roomUnlocked)
+        if (!CanLocalTakeArtifact)
             return false;
 
         if (!IsNetworked)
@@ -175,8 +184,16 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     [PunRPC]
     private void RpcRequestArtifact(int collectorActor)
     {
-        if (!PhotonNetwork.IsMasterClient || artifactCollected)
+        if (!PhotonNetwork.IsMasterClient || IsGameOver)
             return;
+
+        if (artifactCollected)
+        {
+            if (ArtifactOnGround && collectorActor != TraitorActorNumber)
+                photonView.RPC(nameof(RpcSetCarrier), RpcTarget.All, collectorActor);
+
+            return;
+        }
 
         List<int> candidates = new List<int>();
         foreach (Player player in PhotonNetwork.PlayerList)
@@ -196,7 +213,6 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     private void RpcArtifactCollected(int collectorActor, int traitorActor)
     {
         artifactCollected = true;
-        ArtifactHolderActorNumber = collectorActor;
         TraitorActorNumber = traitorActor;
 
         int crewCount = Mathf.Max(1, PhotonNetwork.PlayerList.Length - 1);
@@ -205,14 +221,68 @@ public sealed class TraitorGameManager : MonoBehaviourPun
         if (traitor != null)
             ActivateTraitor(traitor, crewCount);
 
-        PlayerHealth carrier = FindPlayer(collectorActor);
-        if (carrier != null && carrier.TryGetComponent(out PlayerMovement carrierMovement))
-            carrierMovement.ExternalSpeedMultiplier = carrierSpeedMultiplier;
+        ApplyCarrier(collectorActor);
 
         bool iAmTraitor = PhotonNetwork.LocalPlayer.ActorNumber == traitorActor;
         Commander.Say(iAmTraitor ? traitorMessage : crewMessage, 6f);
 
         Debug.Log($"[TRAITOR] Artefacto: jugador {collectorActor}. Traidor: jugador {traitorActor}. Escuadrón: {crewCount}.", this);
+    }
+
+    [PunRPC]
+    private void RpcSetCarrier(int carrierActor)
+    {
+        ApplyCarrier(carrierActor);
+        Commander.Say(artifactRecoveredMessage, 4f);
+    }
+
+    private void ApplyCarrier(int carrierActor)
+    {
+        ArtifactHolderActorNumber = carrierActor;
+
+        PlayerHealth carrier = FindPlayer(carrierActor);
+        if (carrier == null)
+            return;
+
+        lastCarrierPosition = carrier.transform.position;
+        SetSpeedMultiplier(carrier, carrierSpeedMultiplier);
+    }
+
+    private void CheckCarrier()
+    {
+        if (ArtifactHolderActorNumber == -1)
+            return;
+
+        PlayerHealth carrier = FindPlayer(ArtifactHolderActorNumber);
+        if (carrier != null)
+            lastCarrierPosition = carrier.transform.position;
+
+        if (carrier != null && !carrier.IsDead)
+            return;
+
+        if (artifactPrefab != null)
+            NetworkItemSpawner.Spawn(artifactPrefab, lastCarrierPosition + Vector3.up * 0.5f, Quaternion.identity, NetworkPickup.BuildData(0f));
+        else
+            Debug.LogWarning("TraitorGameManager sin Artifact Prefab: el artefacto no puede caer al suelo.", this);
+
+        photonView.RPC(nameof(RpcArtifactDropped), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void RpcArtifactDropped()
+    {
+        PlayerHealth previous = FindPlayer(ArtifactHolderActorNumber);
+        if (previous != null)
+            SetSpeedMultiplier(previous, 1f);
+
+        ArtifactHolderActorNumber = -1;
+        Commander.Say(artifactDroppedMessage, 5f);
+    }
+
+    private static void SetSpeedMultiplier(PlayerHealth player, float multiplier)
+    {
+        if (player.TryGetComponent(out PlayerMovement movement))
+            movement.ExternalSpeedMultiplier = multiplier;
     }
 
     private void AssignTraitorOffline()
@@ -267,6 +337,9 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
         nextEndCheck = Time.time + endCheckInterval;
         CheckEndConditions();
+
+        if (!IsGameOver && IsNetworked)
+            CheckCarrier();
     }
 
     private void CheckEndConditions()
