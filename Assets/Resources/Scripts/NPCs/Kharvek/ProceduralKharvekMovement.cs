@@ -22,6 +22,10 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [Header("Leash")]
     [SerializeField] private float leashRadius = 200f;
 
+    [Header("Climbing")]
+    [SerializeField] private float maxClimbHeight = 4f;
+    [SerializeField] private float climbProbeDistance = 6f;
+
     [Header("Ground")]
     [SerializeField] private LayerMask groundMask = ~0;
     [SerializeField] private float bodyProbeHeight = 15f;
@@ -30,6 +34,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
     [SerializeField] private bool autoCalculateBodyHeight = true;
     [SerializeField] private float bodyLowering = 0f;
     [SerializeField] private float groundFollowSpeed = 1.2f;
+    [SerializeField, Range(0f, 80f)] private float maxGroundSlope = 45f;
     [SerializeField] private float bodyBobAmount = 0.5f;
     [SerializeField] private float bodyBobSpeed = 0.005f;
 
@@ -69,6 +74,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private Transform chaseTarget;
     private Vector3 lastNetworkPosition;
     private Vector3 spawnHome;
+    private bool bodyHeightInitialized;
 
     private void Awake()
     {
@@ -79,8 +85,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
         if (targeting == null)
             targeting = gameObject.AddComponent<EnemyTargeting>();
 
-        if (autoCalculateBodyHeight)
-            CalculateBodyHeightFromStartPosition();
+        if (!autoCalculateBodyHeight)
+            bodyHeightInitialized = true;
 
         int legCount = legTargets == null ? 0 : legTargets.Length;
         legHomePositions = new Vector3[legCount];
@@ -117,8 +123,11 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         Vector3 origin = transform.position + Vector3.up * bodyProbeHeight;
 
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, bodyProbeDistance, groundMask, QueryTriggerInteraction.Ignore))
-            bodyHeight = Mathf.Max(0f, transform.position.y - hit.point.y);
+        if (!TryGetGround(origin, bodyProbeDistance, out RaycastHit hit))
+            return;
+
+        bodyHeight = Mathf.Max(0f, transform.position.y - hit.point.y);
+        bodyHeightInitialized = true;
     }
 
     private void Update()
@@ -132,7 +141,12 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private void LateUpdate()
     {
         if (NetworkEnemy.IsAuthority)
+        {
+            if (autoCalculateBodyHeight && !bodyHeightInitialized)
+                CalculateBodyHeightFromStartPosition();
+
             FitBodyToGround();
+        }
 
         UpdateLegTargets();
     }
@@ -177,6 +191,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
         }
 
         float speed = moveSpeed * SpeedMultiplier;
+        TryApplyClimbStep();
 
         bool closeEnough = isChasing && chaseTarget != null && HorizontalDistance(chaseTarget.position) <= stopDistance;
         float targetSpeed = (isChasing && !closeEnough) ? speed : 0f;
@@ -184,7 +199,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
         currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, speedChange);
         isMoving = currentSpeed > moveSpeed * 0.05f;
 
-        EnemyMover.Move(transform, wallCollider, lastMoveDirection * (currentSpeed * Time.deltaTime), obstacleMask);
+        LayerMask wallMask = obstacleMask & ~groundMask;
+        EnemyMover.Move(transform, wallCollider, lastMoveDirection * (currentSpeed * Time.deltaTime), wallMask);
         distanceSinceStep += currentSpeed * Time.deltaTime;
         bodyBobPhase += currentSpeed * Time.deltaTime * bodyBobSpeed;
     }
@@ -232,6 +248,45 @@ public class ProceduralKharvekMovement : MonoBehaviour
         return true;
     }
 
+    private void TryApplyClimbStep()
+    {
+        if (maxClimbHeight <= 0f || climbProbeDistance <= 0f || currentSpeed <= 0.1f)
+            return;
+
+        Vector3 forward = Vector3.ProjectOnPlane(lastMoveDirection, Vector3.up).normalized;
+        if (!TryGetGround(transform.position + Vector3.up * bodyProbeHeight, bodyProbeDistance, out RaycastHit currentGround))
+            return;
+
+        Vector3 probePosition = transform.position + forward * climbProbeDistance + Vector3.up * bodyProbeHeight;
+        if (!TryGetGround(probePosition, bodyProbeDistance, out RaycastHit aheadGround))
+            return;
+
+        float climb = aheadGround.point.y - currentGround.point.y;
+        if (climb > 0f && climb <= maxClimbHeight)
+            transform.position += Vector3.up * Mathf.Min(climb, currentSpeed * Time.deltaTime * 0.75f);
+    }
+
+    private bool TryGetGround(Vector3 origin, float distance, out RaycastHit groundHit)
+    {
+        RaycastHit[] hits = Physics.RaycastAll(origin, Vector3.down, distance, groundMask, QueryTriggerInteraction.Ignore);
+        groundHit = default;
+
+        float closestDistance = float.PositiveInfinity;
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.transform.IsChildOf(transform))
+                continue;
+
+            if (hit.distance < closestDistance)
+            {
+                closestDistance = hit.distance;
+                groundHit = hit;
+            }
+        }
+
+        return !float.IsInfinity(closestDistance);
+    }
+
     private float HorizontalDistance(Vector3 target)
     {
         Vector3 offset = target - transform.position;
@@ -250,7 +305,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         Vector3 origin = transform.position + Vector3.up * bodyProbeHeight;
 
-        if (!Physics.Raycast(origin, Vector3.down, out RaycastHit hit, bodyProbeDistance, groundMask, QueryTriggerInteraction.Ignore))
+        if (!TryGetGround(origin, bodyProbeDistance, out RaycastHit hit))
             return;
 
         Vector3 targetPosition = transform.position;
@@ -259,11 +314,17 @@ public class ProceduralKharvekMovement : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, targetPosition, groundFollowSpeed * Time.deltaTime);
 
         groundNormal = Vector3.Slerp(groundNormal, hit.normal, groundFollowSpeed * Time.deltaTime);
-        Vector3 forward = Vector3.ProjectOnPlane(transform.forward, groundNormal);
+        groundNormal.y = Mathf.Max(groundNormal.y, Mathf.Cos(maxGroundSlope * Mathf.Deg2Rad));
+        groundNormal.Normalize();
 
-        if (forward.sqrMagnitude > 0.001f)
+        Vector3 horizontalForward = Vector3.ProjectOnPlane(lastMoveDirection, Vector3.up);
+        if (horizontalForward.sqrMagnitude < 0.001f)
+            horizontalForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+
+        if (horizontalForward.sqrMagnitude > 0.001f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(forward.normalized, groundNormal);
+            Quaternion yawRotation = Quaternion.LookRotation(horizontalForward.normalized, Vector3.up);
+            Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, groundNormal) * yawRotation;
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, groundFollowSpeed * Time.deltaTime);
         }
     }
@@ -278,7 +339,7 @@ public class ProceduralKharvekMovement : MonoBehaviour
             Vector3 homePosition = transform.TransformPoint(legHomePositions[i]);
             Vector3 rayOrigin = homePosition + Vector3.up * footProbeHeight;
 
-            if (!Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, footProbeDistance, groundMask, QueryTriggerInteraction.Ignore))
+            if (!TryGetGround(rayOrigin, footProbeDistance, out RaycastHit hit))
                 continue;
 
             Vector3 desiredPosition = hit.point + hit.normal * footOffset;
