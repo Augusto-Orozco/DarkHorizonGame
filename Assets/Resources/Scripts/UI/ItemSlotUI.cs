@@ -6,6 +6,12 @@ public class ItemSlotUI : MonoBehaviour
     [SerializeField] private PlayerInventory inventory;
     [SerializeField] private Image icon;
 
+    private void Awake()
+    {
+        if (inventory == null)
+            inventory = GetComponentInParent<PlayerInventory>();
+    }
+
     private void OnEnable()
     {
         if (inventory == null)
