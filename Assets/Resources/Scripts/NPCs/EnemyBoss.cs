@@ -28,6 +28,8 @@ public class EnemyBoss : MonoBehaviour
 
     public EnemyHealth Health { get; private set; }
 
+    public Color AuraColor => auraColor;
+
     public string BossName => string.IsNullOrEmpty(bossName)
         ? name.Replace("(Clone)", "").Trim()
         : bossName;

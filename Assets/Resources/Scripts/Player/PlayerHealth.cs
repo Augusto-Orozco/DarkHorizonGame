@@ -20,6 +20,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
+    public event Action<Color> OnHitFlash;
 
     private PlayerInventory inventory;
     private PlayerMovement movement;
@@ -131,6 +132,24 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         maxHealth = max;
         CurrentHealth = Mathf.Clamp(current, 0f, maxHealth);
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+    }
+
+    public void FlashHit(Color color)
+    {
+        if (IsOwner)
+        {
+            OnHitFlash?.Invoke(color);
+            return;
+        }
+
+        view.RPC(nameof(RpcFlashHit), view.Owner, color.r, color.g, color.b);
+    }
+
+    [PunRPC]
+    private void RpcFlashHit(float r, float g, float b)
+    {
+        if (IsOwner)
+            OnHitFlash?.Invoke(new Color(r, g, b, 1f));
     }
 
     private void HandleBreadConsumed(ConsumableData bread)
