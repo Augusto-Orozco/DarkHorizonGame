@@ -71,14 +71,14 @@ public class SpectatorCamera : MonoBehaviour
 
     private void TryStartSpectating()
     {
-        if (!ownerHealth.IsDead)
+        if (!ownerHealth.IsDead || !ownerHealth.IsOut)
         {
             deadTime = -1f;
             return;
         }
 
         TraitorGameManager manager = TraitorGameManager.Instance;
-        if (manager == null || !manager.ArtifactCollected || manager.IsGameOver)
+        if (manager == null || manager.IsGameOver)
             return;
 
         if (deadTime < 0f)

@@ -57,6 +57,10 @@ MonoBehaviour:
   - RpcReportExtraction
   - RpcArtifactDropped
   - RpcSetCarrier
+  - RpcFlashHit
+  - RpcReportDeath
+  - RpcRespawnDecision
+  - RpcSetTeamLives
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

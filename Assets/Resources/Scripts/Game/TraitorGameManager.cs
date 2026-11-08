@@ -24,6 +24,13 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     [TextArea][SerializeField] private string artifactDroppedMessage = "¡El portador cayó! Recuperen el artefacto.";
     [TextArea][SerializeField] private string artifactRecoveredMessage = "Artefacto recuperado. ¡Llévenlo a la nave!";
 
+    [Header("Reapariciones")]
+    [SerializeField, Min(0)] private int livesPerPlayer = 2;
+    [SerializeField, Min(0)] private int minTeamLives = 3;
+    [SerializeField, Min(0f)] private float respawnGrace = 4f;
+    [TextArea][SerializeField] private string lifeLostMessage = "Cayó un compañero. Quedan {0} reapariciones.";
+    [TextArea][SerializeField] private string noLivesMessage = "¡Ya no quedan reapariciones! Si caen todos, se acabó.";
+
     [Header("Fase final")]
     [SerializeField, Range(0.1f, 1f)] private float carrierSpeedMultiplier = 0.8f;
     [SerializeField, Min(0.1f)] private float endCheckInterval = 0.5f;
@@ -36,6 +43,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     public event Action<int, int> OnBombotellasChanged;
     public event Action<PlayerHealth> OnTraitorAssigned;
+    public event Action<int> OnTeamLivesChanged;
 
     public bool RoomUnlocked => roomUnlocked;
     public bool ArtifactCollected => artifactCollected;
@@ -43,6 +51,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     public int RequiredBombotellas => requiredBombotellas;
     public bool HasRequiredBombotellas => collectedBombotellas >= requiredBombotellas;
     public int TraitorActorNumber { get; private set; } = -1;
+    public int TeamLives { get; private set; } = -1;
     public int ArtifactHolderActorNumber { get; private set; } = -1;
     public bool ArtifactOnGround => artifactCollected && ArtifactHolderActorNumber == -1;
     public bool CanLocalTakeArtifact =>
@@ -59,12 +68,14 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     private PlayerHealth currentTraitor;
     private float nextEndCheck;
     private Vector3 lastCarrierPosition;
+    private float lastRespawnGrant = -100f;
 
     public enum GameResult
     {
         CrewExtracted,
         TraitorDefeated,
-        TraitorWins
+        TraitorWins,
+        SquadWiped
     }
 
     private void Awake()
@@ -87,7 +98,120 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             RegisterPlayer(player);
 
         CheckRoomUnlock();
+        InitTeamLives();
         StartCoroutine(IntroRoutine());
+    }
+
+    private void InitTeamLives()
+    {
+        int playerCount = IsNetworked
+            ? PhotonNetwork.PlayerList.Length
+            : Mathf.Max(1, FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None).Length);
+
+        TeamLives = Mathf.Max(minTeamLives, playerCount * livesPerPlayer);
+        OnTeamLivesChanged?.Invoke(TeamLives);
+    }
+
+    public void ReportDeath(PlayerHealth player)
+    {
+        if (artifactCollected || IsGameOver)
+        {
+            player.MarkOut();
+            return;
+        }
+
+        if (!IsNetworked)
+        {
+            if (TeamLives > 0)
+            {
+                lastRespawnGrant = Time.time;
+                SetTeamLives(TeamLives - 1);
+                player.GrantRespawn();
+            }
+            else
+            {
+                player.MarkOut();
+            }
+
+            return;
+        }
+
+        photonView.RPC(nameof(RpcReportDeath), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber);
+    }
+
+    [PunRPC]
+    private void RpcReportDeath(int actorNumber)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
+        Player target = PhotonNetwork.CurrentRoom.GetPlayer(actorNumber);
+        if (target == null)
+            return;
+
+        bool grant = !artifactCollected && !IsGameOver && TeamLives > 0;
+        if (grant)
+        {
+            lastRespawnGrant = Time.time;
+            photonView.RPC(nameof(RpcSetTeamLives), RpcTarget.All, TeamLives - 1);
+        }
+
+        photonView.RPC(nameof(RpcRespawnDecision), target, grant);
+    }
+
+    [PunRPC]
+    private void RpcRespawnDecision(bool grant)
+    {
+        PlayerHealth local = FindLocalPlayer();
+        if (local == null)
+            return;
+
+        if (grant && !artifactCollected)
+            local.GrantRespawn();
+        else
+            local.MarkOut();
+    }
+
+    [PunRPC]
+    private void RpcSetTeamLives(int lives)
+    {
+        SetTeamLives(lives);
+    }
+
+    private void SetTeamLives(int lives)
+    {
+        TeamLives = Mathf.Max(0, lives);
+        OnTeamLivesChanged?.Invoke(TeamLives);
+        Commander.Say(TeamLives > 0 ? string.Format(lifeLostMessage, TeamLives) : noLivesMessage, 4f);
+    }
+
+    private static PlayerHealth FindLocalPlayer()
+    {
+        foreach (PlayerHealth player in FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None))
+        {
+            if (IsLocalPlayer(player))
+                return player;
+        }
+
+        return null;
+    }
+
+    private void CheckSquadWiped()
+    {
+        if (TeamLives != 0 || Time.time < lastRespawnGrant + respawnGrace)
+            return;
+
+        PlayerHealth[] all = FindObjectsByType<PlayerHealth>(FindObjectsSortMode.None);
+        if (all.Length == 0)
+            return;
+
+        foreach (PlayerHealth player in all)
+        {
+            if (!player.IsDead)
+                return;
+        }
+
+        EndGame(GameResult.SquadWiped);
     }
 
     private IEnumerator IntroRoutine()
@@ -326,7 +450,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     private void Update()
     {
-        if (IsGameOver || !artifactCollected)
+        if (IsGameOver)
             return;
 
         if (IsNetworked && !PhotonNetwork.IsMasterClient)
@@ -336,6 +460,13 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             return;
 
         nextEndCheck = Time.time + endCheckInterval;
+
+        if (!artifactCollected)
+        {
+            CheckSquadWiped();
+            return;
+        }
+
         CheckEndConditions();
 
         if (!IsGameOver && IsNetworked)

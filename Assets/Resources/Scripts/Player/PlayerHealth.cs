@@ -20,6 +20,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDied;
+    public event Action<Color> OnHitFlash;
 
     private PlayerInventory inventory;
     private PlayerMovement movement;
@@ -32,6 +33,8 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
     private bool IsNetworked => PhotonNetwork.InRoom && view != null && view.ViewID != 0;
     private bool IsOwner => !IsNetworked || view.IsMine;
+
+    public bool IsOut { get; private set; }
 
     private void Awake()
     {
@@ -133,6 +136,24 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
 
+    public void FlashHit(Color color)
+    {
+        if (IsOwner)
+        {
+            OnHitFlash?.Invoke(color);
+            return;
+        }
+
+        view.RPC(nameof(RpcFlashHit), view.Owner, color.r, color.g, color.b);
+    }
+
+    [PunRPC]
+    private void RpcFlashHit(float r, float g, float b)
+    {
+        if (IsOwner)
+            OnHitFlash?.Invoke(new Color(r, g, b, 1f));
+    }
+
     private void HandleBreadConsumed(ConsumableData bread)
     {
         if (bread != null)
@@ -148,9 +169,27 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         movement.readInput = false;
         OnDied?.Invoke();
 
-        bool finalPhase = TraitorGameManager.Instance != null && TraitorGameManager.Instance.ArtifactCollected;
-        if (!finalPhase)
+        TraitorGameManager manager = TraitorGameManager.Instance;
+        if (manager == null)
+        {
             StartCoroutine(Respawn());
+            return;
+        }
+
+        manager.ReportDeath(this);
+    }
+
+    public void GrantRespawn()
+    {
+        if (!IsOwner || !IsDead)
+            return;
+
+        StartCoroutine(Respawn());
+    }
+
+    public void MarkOut()
+    {
+        IsOut = true;
     }
 
     private IEnumerator Respawn()
@@ -169,6 +208,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         controller.enabled = true;
 
         deathHandled = false;
+        IsOut = false;
         movement.readInput = originalReadInput;
         SetHealth(maxHealth);
     }
