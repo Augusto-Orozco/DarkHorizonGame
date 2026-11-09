@@ -82,6 +82,30 @@ PrefabInstance:
     m_TransformParent: {fileID: 4527887859435859719}
     m_Modifications:
     - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Size.x
+      value: 1.1956418
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Size.y
+      value: 0.8877769
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Size.z
+      value: 0.81224006
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Center.x
+      value: -0.035109073
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Center.y
+      value: 0.44388846
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      propertyPath: m_Center.z
+      value: -0.008830006
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320075730835725425, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       propertyPath: m_IsTrigger
       value: 0
       objectReference: {fileID: 0}
@@ -145,10 +169,14 @@ PrefabInstance:
       propertyPath: duration
       value: 0.4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8925395967610933281, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8711683664185550714, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4965916425099342044}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
 --- !u!114 &377465113702619391 stripped
 MonoBehaviour:
@@ -199,3 +227,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7256814d2c297f14fb9a260d40c2d386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KharvekRage
+--- !u!1 &8541797630570281058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8711683664185550714, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+  m_PrefabInstance: {fileID: 1039365672920964888}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4965916425099342044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8541797630570281058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a216b434ea2c4cb4fb6e510fbbad7b10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHitFlash
+  duration: 0.4

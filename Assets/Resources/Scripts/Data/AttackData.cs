@@ -1,11 +1,3 @@
-/*=======================================================================*\
-| Daniel Díaz Romero........A01801486                        | 28-10-2026 | 
-|                                                                         |
-| AttackData.cs | ScriptableObject that defines the attack proporties and |
-| behaviour of an enemy.                                                  |
-|                                                                         |
-\*=======================================================================*/
-
 using UnityEngine;
 
 public enum AttackType
