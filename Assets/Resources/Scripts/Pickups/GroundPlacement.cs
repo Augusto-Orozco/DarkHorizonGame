@@ -76,6 +76,7 @@ public static class GroundPlacement
     private static bool IsCharacter(Collider collider)
     {
         return collider.GetComponentInParent<PlayerHealth>() != null ||
-               collider.GetComponentInParent<EnemyHealth>() != null;
+               collider.GetComponentInParent<EnemyHealth>() != null ||
+               collider.GetComponentInParent<NetworkEnemy>() != null;
     }
 }
