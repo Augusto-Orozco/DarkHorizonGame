@@ -2390,8 +2390,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 45
-  rotationSpeed: 150
   gravity: -20
+  footstepClip: {fileID: 8300000, guid: 21ae01027c1c49d4bb47575b170a5358, type: 3}
+  footstepInterval: 0.45
+  footstepAudioSource: {fileID: 0}
+  cameraTransform: {fileID: 0}
+  mouseSensitivity: 15
+  minPitch: -35
+  maxPitch: 60
+  readInput: 1
   bodyAnimator: {fileID: 3945109976030475137}
   armAnimators:
   - {fileID: 6962844770013147240}
@@ -2541,6 +2548,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
+  spawnPoint: {fileID: 0}
+  respawnDelay: 2
 --- !u!1 &7968192699816020817
 GameObject:
   m_ObjectHideFlags: 0

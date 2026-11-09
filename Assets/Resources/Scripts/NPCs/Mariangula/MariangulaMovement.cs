@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MariangulaMovement : MonoBehaviour, IPatrolArea
+public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
 {
     private const string IdleStateName = "idle";
     private const string PreMoveStateName = "premov";
