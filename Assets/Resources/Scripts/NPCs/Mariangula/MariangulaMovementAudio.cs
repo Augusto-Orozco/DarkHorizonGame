@@ -38,10 +38,6 @@ public partial class MariangulaMovement
     private bool attackAudioActive;
     private float attackAudioStopTime;
 
-    // =========================================================
-    // START
-    // =========================================================
-
     private void Start()
     {
         idleSource = CreateAudioSource(
@@ -62,9 +58,6 @@ public partial class MariangulaMovement
         );
     }
 
-    // =========================================================
-    // LATE UPDATE
-    // =========================================================
 
     private void LateUpdate()
     {
@@ -74,42 +67,35 @@ public partial class MariangulaMovement
         UpdateAudioState();
     }
 
-    // =========================================================
-    // ACTUALIZAR ESTADOS DE AUDIO
-    // =========================================================
 
     private void UpdateAudioState()
     {
         bool isAttacking = state == MariangulaState.Attacking;
         bool isChasing = state == MariangulaState.Chasing;
 
-        // Movimiento real de la animación.
+      
         bool isMoving =
             animationState == AnimationState.PreMove ||
             animationState == AnimationState.Move ||
             animationState == AnimationState.PostMove;
-
-        // =====================================================
-        // ATAQUE
-        // =====================================================
 
         if (isAttacking)
         {
             StopLoop(idleSource);
             StopLoop(footstepsSource);
 
-            // Solo inicia el audio si todavía no está activo.
+           
             if (!attackAudioActive)
             {
                 attackAudioActive = true;
                 PlayLoop(attackSource);
             }
 
-            // Mientras ataque, se amplía el tiempo antes de detenerlo.
+            
             attackAudioStopTime =
                 Time.time + attackAudioGraceTime;
 
-            // Los gritos continúan durante el ataque.
+    
             if (!wasChasing)
             {
                 PlayScream();
@@ -125,21 +111,12 @@ public partial class MariangulaMovement
             return;
         }
 
-        // =====================================================
-        // DETENER AUDIO DE ATAQUE
-        // =====================================================
-
         if (attackAudioActive &&
             Time.time >= attackAudioStopTime)
         {
             StopLoop(attackSource);
             attackAudioActive = false;
         }
-
-        // =====================================================
-        // PERSECUCIÓN Y GRITOS
-        // =====================================================
-
         if (isChasing)
         {
             if (!wasChasing)
@@ -160,10 +137,6 @@ public partial class MariangulaMovement
             wasChasing = false;
         }
 
-        // =====================================================
-        // PASOS
-        // =====================================================
-
         if (isChasing && isMoving)
         {
             StopLoop(idleSource);
@@ -172,10 +145,6 @@ public partial class MariangulaMovement
         else
         {
             StopLoop(footstepsSource);
-
-            // =================================================
-            // IDLE
-            // =================================================
 
             if (!isChasing)
             {
@@ -187,11 +156,6 @@ public partial class MariangulaMovement
             }
         }
     }
-
-    // =========================================================
-    // CREAR AUDIO SOURCE
-    // =========================================================
-
     private AudioSource CreateAudioSource(
         AudioClip clip,
         bool loop,
@@ -208,11 +172,6 @@ public partial class MariangulaMovement
 
         return source;
     }
-
-    // =========================================================
-    // REPRODUCIR LOOP
-    // =========================================================
-
     private void PlayLoop(AudioSource source)
     {
         if (source != null &&
@@ -223,10 +182,6 @@ public partial class MariangulaMovement
         }
     }
 
-    // =========================================================
-    // DETENER LOOP
-    // =========================================================
-
     private void StopLoop(AudioSource source)
     {
         if (source != null && source.isPlaying)
@@ -234,11 +189,6 @@ public partial class MariangulaMovement
             source.Stop();
         }
     }
-
-    // =========================================================
-    // GRITO
-    // =========================================================
-
     private void PlayScream()
     {
         if (screamSource != null &&
