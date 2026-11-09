@@ -16,11 +16,11 @@ MonoBehaviour:
     AppIdRealtime: cd9d6b5c-d90c-4ee1-ac03-df904c11745b
     AppIdFusion: 
     AppIdChat: 
-    AppIdVoice: 
+    AppIdVoice: 06e51876-b590-4a7d-862d-eb75331db007
     AppIdVideo: 
     AppVersion: 
     UseNameServer: 1
-    FixedRegion: us
+    FixedRegion: 
     Server: 
     Port: 0
     ProxyServer: 
@@ -61,6 +61,8 @@ MonoBehaviour:
   - RpcReportDeath
   - RpcRespawnDecision
   - RpcSetTeamLives
+  - CantHearYou
+  - HeresWhy
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
