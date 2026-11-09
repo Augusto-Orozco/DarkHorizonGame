@@ -61,13 +61,10 @@ MonoBehaviour:
   - RpcReportDeath
   - RpcRespawnDecision
   - RpcSetTeamLives
-<<<<<<< Updated upstream
   - CantHearYou
   - HeresWhy
-=======
   - RpcFlashFromBullet
   - RpcFlash
->>>>>>> Stashed changes
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
