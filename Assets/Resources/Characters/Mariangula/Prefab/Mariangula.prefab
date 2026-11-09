@@ -513,6 +513,15 @@ MonoBehaviour:
   soloLightDamageMultiplier: 1.2
   groupLightDamageMultiplier: 1.5
   animator: {fileID: 7002133797759559856}
+  idleClip: {fileID: 0}
+  footstepsClip: {fileID: 8300000, guid: d317eb2c165a52e46b39544ec1382121, type: 3}
+  screamClip: {fileID: 8300000, guid: 15c22b44e6802874b8353bca0ff089a4, type: 3}
+  attackClip: {fileID: 0}
+  screamInterval: 5
+  idleVolume: 1
+  footstepsVolume: 1
+  screamVolume: 1
+  attackVolume: 1
 --- !u!114 &8330648569914394587
 MonoBehaviour:
   m_ObjectHideFlags: 0
