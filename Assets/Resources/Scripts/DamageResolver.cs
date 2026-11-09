@@ -13,7 +13,7 @@ public static class DamageResolver
         if (target.transform.root == attacker.transform.root)
             return false;
 
-        IDamageable damageable = target.GetComponentInParent<IDamageable>();
+        IDamageable damageable = FindDamageable(target);
         if (damageable == null || damageable.IsDead)
             return false;
 
@@ -40,6 +40,21 @@ public static class DamageResolver
 
         Debug.Log($"[DAMAGE] {attacker.name} causó {amount} de daño a {target.name}");
         return true;
+    }
+
+    public static IDamageable FindDamageable(GameObject target)
+    {
+        if (target == null)
+            return null;
+
+        IDamageable damageable = target.GetComponentInParent<IDamageable>();
+        if (damageable != null)
+            return damageable;
+
+        NetworkEnemy networkEnemy = target.GetComponentInParent<NetworkEnemy>();
+        return networkEnemy != null
+            ? networkEnemy.GetComponentInChildren<IDamageable>(true)
+            : null;
     }
 
     private static EnemyBoss FindBoss(GameObject attacker)

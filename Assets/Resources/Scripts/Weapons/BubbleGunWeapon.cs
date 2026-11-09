@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -83,7 +84,13 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
             ? weaponAim.GetAimDirection(muzzle)
             : muzzle.forward;
 
-        SpawnBubbles(muzzle.position, aimDirection, GetMovementMultiplier(), damage, player.gameObject);
+        bool isDamageAuthority = !PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient;
+        SpawnBubbles(
+            muzzle.position,
+            aimDirection,
+            GetMovementMultiplier(),
+            isDamageAuthority ? damage : 0f,
+            isDamageAuthority ? player.gameObject : null);
 
         if (shotRelay != null)
             shotRelay.SendShot(muzzle.position, aimDirection);
@@ -94,7 +101,13 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
     {
         if (bubblePrefab == null) return;
         if (player != null) player.StartShooting();
-        SpawnBubbles(origin, direction, 0f, 0f, null);
+        bool isDamageAuthority = PhotonNetwork.IsMasterClient;
+        SpawnBubbles(
+            origin,
+            direction,
+            0f,
+            isDamageAuthority ? damage : 0f,
+            isDamageAuthority && player != null ? player.gameObject : null);
     }
 
     private void SpawnBubbles(Vector3 origin, Vector3 aimDirection, float movementMultiplier,

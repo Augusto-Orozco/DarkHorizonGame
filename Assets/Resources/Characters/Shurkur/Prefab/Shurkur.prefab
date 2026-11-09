@@ -91,14 +91,54 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3625428447774704671, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -6647860390138228897, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: -3625428447774704671, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -388460369914044068, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
     - target: {fileID: -1932512730483681920, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
       propertyPath: m_LocalPosition.z
       value: -7.3
       objectReference: {fileID: 0}
+    - target: {fileID: -1520937431782879959, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2671012196626663249, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: -1520937431782879959, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -388460369914044068, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
     - target: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
       propertyPath: m_Name
       value: Shurkur
       objectReference: {fileID: 0}
+    - target: {fileID: 4868051082415139541, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 8080765465280771327, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: 4868051082415139541, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5213583650935529284, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: 5682320573712238437, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -1560696171193812486, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: 5682320573712238437, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4199448701210428674, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: 7706110884207132511, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6981290006637109699, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
+    - target: {fileID: 7706110884207132511, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4309859850662032359, guid: f03e8e2e59602cc46a9b84f19e6cdadd, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -139,6 +179,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6107313415079155607}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2042707874279112496}
   m_SourcePrefab: {fileID: 100100000, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
 --- !u!1 &4627777800499569190 stripped
 GameObject:
@@ -160,8 +203,8 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 2.577771
@@ -360,6 +403,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb1a4655ea6ba3428690f3b05b8f97c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkEnemyVisuals
+--- !u!114 &2042707874279112496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4627777800499569190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a216b434ea2c4cb4fb6e510fbbad7b10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHitFlash
+  duration: 0.2
 --- !u!4 &5436684568285903004 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: baa0e94de6faf334fa6887a44495bea8, type: 3}
