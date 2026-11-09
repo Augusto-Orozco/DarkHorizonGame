@@ -16,6 +16,12 @@ public sealed class TraitorPlayer : MonoBehaviour
     [SerializeField] private Color traitorEmissionColor = Color.red;
     [SerializeField, Min(0f)] private float traitorEmissionIntensity = 2f;
 
+    [SerializeField] private Color traitorTint = new Color(1f, 0.35f, 0.35f, 1f);
+    [SerializeField, Min(0f)] private float glowRange = 8f;
+    [SerializeField, Min(0f)] private float glowIntensity = 4f;
+
+    private GameObject glowObject;
+
     private Vector3 originalScale;
     private Renderer[] renderers;
     private Material[][] originalMaterials;
@@ -86,17 +92,36 @@ public sealed class TraitorPlayer : MonoBehaviour
         Color emission = traitorEmissionColor * traitorEmissionIntensity;
         foreach (Renderer renderer in renderers)
         {
-            if (renderer == null)
+            if (renderer == null || renderer is ParticleSystemRenderer)
                 continue;
 
             foreach (Material material in renderer.materials)
             {
-                if (!material.HasProperty("_EmissionColor"))
-                    continue;
+                if (material.HasProperty("_BaseColor"))
+                    material.SetColor("_BaseColor", traitorTint);
+                else if (material.HasProperty("_Color"))
+                    material.SetColor("_Color", traitorTint);
 
-                material.EnableKeyword("_EMISSION");
-                material.SetColor("_EmissionColor", emission);
+                if (material.HasProperty("_EmissionColor"))
+                {
+                    material.EnableKeyword("_EMISSION");
+                    material.SetColor("_EmissionColor", emission);
+                }
             }
+        }
+
+        if (glowObject == null)
+        {
+            glowObject = new GameObject("TraitorGlow");
+            glowObject.transform.SetParent(transform, false);
+            glowObject.transform.localPosition = Vector3.up * 1.5f;
+
+            Light glow = glowObject.AddComponent<Light>();
+            glow.type = LightType.Point;
+            glow.color = traitorEmissionColor;
+            glow.range = glowRange;
+            glow.intensity = glowIntensity;
+            glow.shadows = LightShadows.None;
         }
     }
 
@@ -116,6 +141,12 @@ public sealed class TraitorPlayer : MonoBehaviour
 
     private void RestoreOriginalMaterials()
     {
+        if (glowObject != null)
+        {
+            Destroy(glowObject);
+            glowObject = null;
+        }
+
         if (renderers == null || originalMaterials == null)
             return;
 
