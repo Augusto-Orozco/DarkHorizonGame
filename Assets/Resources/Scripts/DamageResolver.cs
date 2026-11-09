@@ -17,7 +17,8 @@ public static class DamageResolver
         if (damageable == null || damageable.IsDead)
             return false;
 
-        bool targetIsPlayer = target.GetComponentInParent<PlayerHealth>() != null;
+        PlayerHealth targetPlayer = target.GetComponentInParent<PlayerHealth>();
+        bool targetIsPlayer = targetPlayer != null;
         bool attackerIsPlayer = attacker.GetComponentInParent<PlayerHealth>() != null;
         if (targetIsPlayer && attackerIsPlayer &&
             !TraitorPlayer.IsTraitorObject(attacker) &&
@@ -30,7 +31,23 @@ public static class DamageResolver
 
         damageable.TakeDamage(amount);
 
+        if (targetIsPlayer)
+        {
+            EnemyBoss boss = FindBoss(attacker);
+            if (boss != null)
+                targetPlayer.FlashHit(boss.AuraColor);
+        }
+
         Debug.Log($"[DAMAGE] {attacker.name} causó {amount} de daño a {target.name}");
         return true;
+    }
+
+    private static EnemyBoss FindBoss(GameObject attacker)
+    {
+        EnemyBoss boss = attacker.GetComponentInParent<EnemyBoss>();
+        if (boss == null)
+            boss = attacker.GetComponentInChildren<EnemyBoss>();
+
+        return boss;
     }
 }
