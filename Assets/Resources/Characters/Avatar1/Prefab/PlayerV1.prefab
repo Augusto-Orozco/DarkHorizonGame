@@ -3512,6 +3512,14 @@ MonoBehaviour:
   minPitch: -20
   maxPitch: 50
   followSpeed: 15
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  collisionRadius: 0.2
+  collisionOffset: 0.1
+  collisionReturnSpeed: 10
+  collisionSmoothTime: 0.12
+  sideCheckOffset: 0.25
 --- !u!114 &2401247629466119516
 MonoBehaviour:
   m_ObjectHideFlags: 0
