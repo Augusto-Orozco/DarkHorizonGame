@@ -54,9 +54,9 @@ public sealed class EnemyDeathBombDrop : MonoBehaviour
 
         if (bombPrefab != null && shouldDrop)
         {
-            Transform enemyRoot = transform.root;
-            Vector3 dropPoint = enemyRoot.position;
-            Quaternion rotation = Quaternion.Euler(0f, enemyRoot.eulerAngles.y, 0f);
+            Collider body = GetComponent<Collider>();
+            Vector3 dropPoint = body != null ? body.bounds.center : transform.position;
+            Quaternion rotation = Quaternion.Euler(0f, transform.eulerAngles.y, 0f);
 
             NetworkItemSpawner.Spawn(bombPrefab, dropPoint, rotation, NetworkPickup.BuildData(0f));
         }
