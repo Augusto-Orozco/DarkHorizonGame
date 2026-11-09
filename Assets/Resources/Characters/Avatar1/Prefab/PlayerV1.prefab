@@ -1010,8 +1010,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 45
   gravity: -20
-  normalFootstepClip: {fileID: 8300000, guid: 993ad1c0713e0fe4bbd51d0e6a2473f0, type: 3}
-  metalFootstepClip: {fileID: 8300000, guid: 6c3d6c355abfb054da291ae4acb71a69, type: 3}
+  normalFootstepClip: {fileID: 8300000, guid: 19213e27f4d8fd74d9813229082f2563, type: 3}
+  metalFootstepClip: {fileID: 8300000, guid: 071272af4b9faee46abdefd2c6e1430e, type: 3}
   footstepAudioSource: {fileID: 0}
   normalFootstepVolume: 0.5
   metalFootstepVolume: 0.5

@@ -533,14 +533,15 @@ MonoBehaviour:
   groupLightDamageMultiplier: 1.5
   animator: {fileID: 7002133797759559856}
   idleClip: {fileID: 0}
-  footstepsClip: {fileID: 8300000, guid: d317eb2c165a52e46b39544ec1382121, type: 3}
-  screamClip: {fileID: 8300000, guid: 15c22b44e6802874b8353bca0ff089a4, type: 3}
-  attackClip: {fileID: 8300000, guid: 4f689581d45a9c64093d57fb9137c560, type: 3}
+  footstepsClip: {fileID: 8300000, guid: 87e3f0e9aebb76448b635ff46b6fd967, type: 3}
+  screamClip: {fileID: 8300000, guid: 2b8eb089c97d5574ea98edf3566b492d, type: 3}
+  attackClip: {fileID: 8300000, guid: d0cff3eeed58dcc45b7d3b6b37f30ae9, type: 3}
   screamInterval: 5
   idleVolume: 1
   footstepsVolume: 1
   screamVolume: 1
   attackVolume: 1
+  attackAudioGraceTime: 0.15
 --- !u!114 &8330648569914394587
 MonoBehaviour:
   m_ObjectHideFlags: 0
