@@ -24728,7 +24728,7 @@ MonoBehaviour:
   respawnGrace: 4
   lifeLostMessage: "Cay\xF3 un compa\xF1ero. Quedan {0} reapariciones."
   noLivesMessage: "\xA1Ya no quedan reapariciones! Si caen todos, se acab\xF3."
-  carrierSpeedMultiplier: 0.8
+  carrierSpeedMultiplier: 0.6
   endCheckInterval: 0.5
   artifactPrefab: {fileID: 8572417032865578737, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
 --- !u!4 &1495867858
@@ -35872,6 +35872,30 @@ PrefabInstance:
     - target: {fileID: 8537393960515256092, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
       propertyPath: m_Name
       value: Ground_CajaBalas (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Size.x
+      value: 1.1458585
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Size.y
+      value: 0.2592079
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Size.z
+      value: 0.39707756
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Center.x
+      value: 0.07293038
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Center.y
+      value: -0.43959722
+      objectReference: {fileID: 0}
+    - target: {fileID: 9105845267279437198, guid: a93e48c134951ba4fa78ddf1411ee246, type: 3}
+      propertyPath: m_Center.z
+      value: 0.15825558
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

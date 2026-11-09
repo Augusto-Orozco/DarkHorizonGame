@@ -23,6 +23,8 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         CurrentHealth = maxHealth;
         view = GetComponent<PhotonView>();
+        if (GetComponent<EnemyHitFlash>() == null)
+            gameObject.AddComponent<EnemyHitFlash>();
 
         if (view == null && GetComponentInParent<PhotonView>() != null)
             Debug.LogError($"[{name}] EnemyHealth necesita una PhotonView en ESTE mismo objeto para la red.", this);

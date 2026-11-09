@@ -68,6 +68,11 @@ public class BubbleProjectile : MonoBehaviour
         if (hit)
         {
             Debug.Log($"[BUBBLE] Daño aplicado: {damage}");
+
+            EnemyHealth enemyHealth = DamageResolver.FindDamageable(other.gameObject) as EnemyHealth;
+            if (enemyHealth != null)
+                enemyHealth.GetComponent<EnemyHitFlash>()?.Flash();
+
             Destroy(gameObject);
         }
     }

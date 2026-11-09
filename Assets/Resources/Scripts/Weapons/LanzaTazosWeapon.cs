@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -88,7 +89,14 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
             : muzzle.forward;
         Vector3 direction = GetSpreadDirection(aimDirection);
 
-        SpawnTazo(prefab, muzzle.position, direction, GetMovementMultiplier(), tazoDamage, player.gameObject);
+        bool isDamageAuthority = !PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient;
+        SpawnTazo(
+            prefab,
+            muzzle.position,
+            direction,
+            GetMovementMultiplier(),
+            isDamageAuthority ? tazoDamage : 0f,
+            isDamageAuthority ? player.gameObject : null);
 
         if (shotRelay != null)
             shotRelay.SendShot(muzzle.position, direction);
@@ -100,7 +108,14 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
         GameObject prefab = GetTazoPrefab();
         if (prefab == null) return;
         if (player != null) player.StartShooting();
-        SpawnTazo(prefab, origin, direction, 0f, 0f, null);
+        bool isDamageAuthority = PhotonNetwork.IsMasterClient;
+        SpawnTazo(
+            prefab,
+            origin,
+            direction,
+            0f,
+            isDamageAuthority ? tazoDamage : 0f,
+            isDamageAuthority && player != null ? player.gameObject : null);
     }
 
     private GameObject GetTazoPrefab()
