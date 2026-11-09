@@ -1,26 +1,28 @@
 
 using UnityEngine;
+using Photon.Pun;
 using Photon.Voice.PUN;
 
 public class VoiceSpeakingIndicator : MonoBehaviour
 {
-    [Header("Photon Voice")]
+    [Header("Photon")]
     [SerializeField]
     private PhotonVoiceView photonVoiceView;
+
+    [SerializeField]
+    private PhotonView photonView;
 
     [Header("Visual")]
     [SerializeField]
     private SpriteRenderer speakerIcon;
 
-    [SerializeField]
-    private Vector3 offset = new Vector3(0f, 2.2f, 0f);
-
-    private bool lastSpeakingState;
-
     private void Awake()
     {
         if (photonVoiceView == null)
             photonVoiceView = GetComponentInParent<PhotonVoiceView>();
+
+        if (photonView == null)
+            photonView = GetComponentInParent<PhotonView>();
 
         if (speakerIcon == null)
             speakerIcon = GetComponent<SpriteRenderer>();
@@ -29,19 +31,26 @@ public class VoiceSpeakingIndicator : MonoBehaviour
             speakerIcon.enabled = false;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
-        if (photonVoiceView == null || speakerIcon == null)
+        if (photonVoiceView == null ||
+            photonView == null ||
+            speakerIcon == null)
             return;
 
-        bool isSpeaking = photonVoiceView.IsSpeaking;
+        bool isSpeaking;
 
-        if (isSpeaking != lastSpeakingState)
+        if (photonView.IsMine)
         {
-            speakerIcon.enabled = isSpeaking;
-            lastSpeakingState = isSpeaking;
+            // Jugador local: mostrar cuando transmite.
+            isSpeaking = photonVoiceView.IsRecording;
+        }
+        else
+        {
+            // Jugadores remotos: mostrar cuando reproducen voz.
+            isSpeaking = photonVoiceView.IsSpeaking;
         }
 
-        transform.localPosition = offset;
+        speakerIcon.enabled = isSpeaking;
     }
 }
