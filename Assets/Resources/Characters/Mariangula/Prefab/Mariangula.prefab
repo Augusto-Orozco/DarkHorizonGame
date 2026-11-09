@@ -438,6 +438,9 @@ PrefabInstance:
       addedObject: {fileID: 4125207925409290850}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 2840831787532651655}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 7668719778717070667}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 60f8c93400f3bd3498c1f63e7933276b, type: 3}
       insertIndex: -1
@@ -530,14 +533,15 @@ MonoBehaviour:
   groupLightDamageMultiplier: 1.5
   animator: {fileID: 7002133797759559856}
   idleClip: {fileID: 0}
-  footstepsClip: {fileID: 8300000, guid: d317eb2c165a52e46b39544ec1382121, type: 3}
-  screamClip: {fileID: 8300000, guid: 15c22b44e6802874b8353bca0ff089a4, type: 3}
-  attackClip: {fileID: 8300000, guid: 4f689581d45a9c64093d57fb9137c560, type: 3}
+  footstepsClip: {fileID: 8300000, guid: 87e3f0e9aebb76448b635ff46b6fd967, type: 3}
+  screamClip: {fileID: 8300000, guid: 2b8eb089c97d5574ea98edf3566b492d, type: 3}
+  attackClip: {fileID: 8300000, guid: d0cff3eeed58dcc45b7d3b6b37f30ae9, type: 3}
   screamInterval: 5
   idleVolume: 1
   footstepsVolume: 1
   screamVolume: 1
   attackVolume: 1
+  attackAudioGraceTime: 0.15
 --- !u!114 &8330648569914394587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,8 +570,8 @@ MonoBehaviour:
   bombPrefab: {fileID: 8537393960515256092, guid: a6422c44359e1894caffab30449bd2fb, type: 3}
   destroyEnemyOnDeath: 1
   dropOnlyIfBoss: 1
---- !u!65 &7668719778717070667
-BoxCollider:
+--- !u!136 &2840831787532651655
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -583,6 +587,29 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Height: 7
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.83, z: 0}
+--- !u!65 &7668719778717070667
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3171787666840924659}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1.963623, y: 5.856526, z: 3.825632}

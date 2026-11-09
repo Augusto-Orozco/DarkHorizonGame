@@ -71,7 +71,13 @@ public class BubbleProjectile : MonoBehaviour
 
             EnemyHealth enemyHealth = DamageResolver.FindDamageable(other.gameObject) as EnemyHealth;
             if (enemyHealth != null)
-                enemyHealth.GetComponent<EnemyHitFlash>()?.Flash();
+            {
+                EnemyHitFlash hitFlash = other.GetComponentInParent<EnemyHitFlash>();
+                if (hitFlash == null)
+                    hitFlash = enemyHealth.GetComponentInChildren<EnemyHitFlash>(true);
+
+                hitFlash?.Flash();
+            }
 
             Destroy(gameObject);
         }
