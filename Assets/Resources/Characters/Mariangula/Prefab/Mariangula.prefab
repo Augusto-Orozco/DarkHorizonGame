@@ -516,7 +516,7 @@ MonoBehaviour:
   idleClip: {fileID: 0}
   footstepsClip: {fileID: 8300000, guid: d317eb2c165a52e46b39544ec1382121, type: 3}
   screamClip: {fileID: 8300000, guid: 15c22b44e6802874b8353bca0ff089a4, type: 3}
-  attackClip: {fileID: 0}
+  attackClip: {fileID: 8300000, guid: 4f689581d45a9c64093d57fb9137c560, type: 3}
   screamInterval: 5
   idleVolume: 1
   footstepsVolume: 1

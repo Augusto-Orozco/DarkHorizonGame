@@ -769,7 +769,7 @@ MonoBehaviour:
   normalFootstepClip: {fileID: 8300000, guid: 993ad1c0713e0fe4bbd51d0e6a2473f0, type: 3}
   metalFootstepClip: {fileID: 8300000, guid: 6c3d6c355abfb054da291ae4acb71a69, type: 3}
   footstepAudioSource: {fileID: 0}
-  normalFootstepVolume: 0.25
+  normalFootstepVolume: 0.5
   metalFootstepVolume: 0.5
   cameraTransform: {fileID: 0}
   mouseSensitivity: 15
