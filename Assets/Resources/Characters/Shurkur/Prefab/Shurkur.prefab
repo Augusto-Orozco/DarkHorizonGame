@@ -431,10 +431,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9bc12b8b3bcdbe44843b3e9dc478b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAudio
-  idleLoop: {fileID: 0}
-  moveLoop: {fileID: 0}
+  idleLoop: {fileID: 8300000, guid: 0d1faeb31e8e59e48bf9b04cd0090167, type: 3}
+  moveLoop: {fileID: 8300000, guid: 0d1faeb31e8e59e48bf9b04cd0090167, type: 3}
   alertClip: {fileID: 0}
-  attackClip: {fileID: 0}
+  attackClip: {fileID: 8300000, guid: 86f1e051e076c934b80c0edd929391a0, type: 3}
   rageClip: {fileID: 0}
   hurtClip: {fileID: 0}
   deathClip: {fileID: 0}
