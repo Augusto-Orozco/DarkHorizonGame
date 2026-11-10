@@ -66,10 +66,16 @@ public class KharvekContactDamage : MonoBehaviour
         {
             nextDamageTime = Time.time + damageInterval * IntervalMultiplier;
 
+            EnemyAudio enemyAudio = GetComponentInParent<EnemyAudio>();
+            if (enemyAudio != null)
+                enemyAudio.PlayEvent(EnemyAudio.Sound.Attack);
+
             Debug.Log(
                 $"[KHARVEK] Contacto con jugador. " +
                 $"Daño aplicado: {damagePerHit}"
             );
         }
+
+
     }
 }

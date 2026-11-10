@@ -144,6 +144,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
       insertIndex: 7
       addedObject: {fileID: 4270978794193657637}
+    - targetCorrespondingSourceObject: {fileID: 6613072835866260292, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2344346040640398546}
   m_SourcePrefab: {fileID: 100100000, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}
 --- !u!114 &377465113702619391 stripped
 MonoBehaviour:
@@ -183,6 +186,32 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &2344346040640398546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6172969605374913628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bc12b8b3bcdbe44843b3e9dc478b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAudio
+  idleLoop: {fileID: 0}
+  moveLoop: {fileID: 0}
+  alertClip: {fileID: 0}
+  attackClip: {fileID: 0}
+  rageClip: {fileID: 0}
+  hurtClip: {fileID: 0}
+  deathClip: {fileID: 0}
+  loopVolume: 0.8
+  sfxVolume: 1
+  body: {fileID: 0}
+  alertRepeatInterval: 0
+  moveSpeedThreshold: 0.3
+  hurtCooldown: 0.3
+  maxDistance: 40
 --- !u!4 &6836775992654558950 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5804447332534036990, guid: efbeb6791fdc553448a97d45e18b6814, type: 3}

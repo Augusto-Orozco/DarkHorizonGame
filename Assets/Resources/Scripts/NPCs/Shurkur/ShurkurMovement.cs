@@ -120,6 +120,9 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
             UpdateChasing();
         else
             UpdatePatrolling();
+        EnemyAudio enemyAudio = GetComponentInParent<EnemyAudio>();
+        if (enemyAudio != null)
+            enemyAudio.SetChasing(state != ShurkurState.Patrolling);
     }
 
 
@@ -224,6 +227,9 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
             return;
 
         spitProjectileSpawned = true;
+        EnemyAudio spitAudio = GetComponentInParent<EnemyAudio>();
+        if (spitAudio != null)
+            spitAudio.PlayEvent(EnemyAudio.Sound.Attack);
 
         if (spitPrefab == null || spitSpawnPoint == null || player == null)
         {

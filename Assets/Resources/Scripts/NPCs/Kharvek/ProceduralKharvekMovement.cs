@@ -175,6 +175,10 @@ public class ProceduralKharvekMovement : MonoBehaviour
     private void MoveBody()
     {
         bool isChasing = TryGetChaseDirection(out Vector3 chaseDirection);
+
+        EnemyAudio enemyAudio = GetComponentInParent<EnemyAudio>();
+        if (enemyAudio != null)
+            enemyAudio.SetChasing(isChasing);
         if (isChasing)
         {
             lastMoveDirection = chaseDirection;

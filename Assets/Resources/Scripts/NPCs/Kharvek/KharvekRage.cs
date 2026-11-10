@@ -76,6 +76,13 @@ public class KharvekRage : MonoBehaviour
 
         IsEnraged = enraged;
 
+        if (enraged)
+        {
+            EnemyAudio enemyAudio = GetComponentInParent<EnemyAudio>();
+            if (enemyAudio != null)
+                enemyAudio.PlayEvent(EnemyAudio.Sound.Rage);
+        }
+
         if (movement != null)
             movement.SpeedMultiplier = enraged ? rageSpeedMultiplier : 1f;
 
