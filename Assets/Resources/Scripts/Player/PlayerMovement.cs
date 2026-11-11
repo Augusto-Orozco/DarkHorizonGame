@@ -109,8 +109,18 @@ private AudioClip currentFootstepClip;
     {
         if (readInput)
         {
-            HandleMouseLook();
-            HandleMovement();
+            if (PauseMenuController.IsPaused)
+            {
+                isMoving = false; // sin input ni pasos en pausa
+            }
+            else
+            {
+                HandleMouseLook();
+                HandleMovement();
+            }
+
+            // La gravedad (controller.Move) debe correr SIEMPRE: el prefab tiene un Rigidbody
+            // junto al CharacterController y, sin este Move por frame, se desliza solo.
             HandleGravity();
         }
 
@@ -178,7 +188,7 @@ private AudioClip currentFootstepClip;
         if (Mouse.current == null)
             return;
 
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity * Time.deltaTime;
+        Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity * GameSettings.Sensitivity * Time.deltaTime;
 
         // 1. Girar el cuerpo entero del personaje horizontalmente con el mouse
         transform.Rotate(Vector3.up * mouseDelta.x);
@@ -186,7 +196,7 @@ private AudioClip currentFootstepClip;
         // 2. Inclinar la cámara verticalmente (Pitch)
         if (cameraTransform != null && !cameraPitchHandledByThirdPersonCamera)
         {
-            cameraPitch -= mouseDelta.y;
+            cameraPitch -= mouseDelta.y * GameSettings.PitchSign;
             cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
             cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
         }

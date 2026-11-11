@@ -45,7 +45,7 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
     private void Update()
     {
 
-        if (player == null || !player.readInput || !player.HasBubbleGun() || Mouse.current == null)
+        if (player == null || !player.readInput || PauseMenuController.IsPaused || !player.HasBubbleGun() || Mouse.current == null)
             return;
 
         if (traitor == null)

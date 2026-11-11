@@ -42,6 +42,9 @@ public class PlayerWeaponInput : MonoBehaviour
         if (health != null && health.IsDead)
             return;
 
+        if (PauseMenuController.IsPaused)
+            return;
+
         if (keyboard[dropKey].wasPressedThisFrame)
             DropWeapon();
 
