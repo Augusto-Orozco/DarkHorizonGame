@@ -27,9 +27,11 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
     private NetworkShotRelay shotRelay;
     private float nextFireTime;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
+    private LanzaTazosAudio lanzaTazosAudio;
 
     private void Awake()
     {
+        lanzaTazosAudio = GetComponent<LanzaTazosAudio>();
         player = GetComponentInParent<PlayerMovement>();
         weaponAim = GetComponentInParent<PlayerWeaponAim>();
         if (weaponAim == null && player != null)
@@ -63,8 +65,20 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 
         player.SetShootingActive(wantsToFire && canFire);
 
-        if (wantsToFire && canFire && Time.time >= nextFireTime)
-            Fire();
+        if (wantsToFire && Time.time >= nextFireTime)
+        {
+            if (canFire)
+            {
+                Fire();
+            }
+            else if (CurrentState != null &&
+                    CurrentState.UsesAmmo &&
+                    CurrentState.AmmoInMagazine <= 0)
+            {
+                nextFireTime = Time.time + Mathf.Max(0.01f, fireCooldown);
+                lanzaTazosAudio?.PlayEmpty();
+            }
+        }
     }
 
 
@@ -77,9 +91,13 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
             return;
         }
 
-        if (CurrentState != null && CurrentState.UsesAmmo &&
-            !inventory.TryConsumeActiveAmmo())
+        if (CurrentState != null && CurrentState.UsesAmmo && !inventory.TryConsumeActiveAmmo())
+        {
+            lanzaTazosAudio?.PlayEmpty();
             return;
+        }
+
+lanzaTazosAudio?.PlayShot();
 
         nextFireTime = Time.time + Mathf.Max(0.01f, fireCooldown);
         player.StartShooting();
