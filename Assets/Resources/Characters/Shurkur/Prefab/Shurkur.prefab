@@ -439,7 +439,7 @@ MonoBehaviour:
   hurtClip: {fileID: 0}
   deathClip: {fileID: 0}
   loopVolume: 0.8
-  sfxVolume: 1
+  sfxVolume: 0.5
   body: {fileID: 0}
   alertRepeatInterval: 0
   moveSpeedThreshold: 0.3

@@ -1018,6 +1018,7 @@ GameObject:
   - component: {fileID: 7040700239392313056}
   - component: {fileID: 1221363665486282827}
   - component: {fileID: 1415560818309206538}
+  - component: {fileID: -4332050458692681232}
   m_Layer: 0
   m_Name: KharvekCangrejo
   m_TagString: Untagged
@@ -1116,6 +1117,7 @@ MonoBehaviour:
   autoCalculateBodyHeight: 1
   bodyLowering: 15
   groundFollowSpeed: 12
+  maxGroundSlope: 45
   bodyBobAmount: 5
   bodyBobSpeed: 0.15
   legTargets:
@@ -1271,6 +1273,32 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-4332050458692681232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6613072835866260292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bc12b8b3bcdbe44843b3e9dc478b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAudio
+  idleLoop: {fileID: 8300000, guid: d8179e94cc6b2d246a182406c346750a, type: 3}
+  moveLoop: {fileID: 8300000, guid: 537e95d8a7d1dfc47985259e8a818718, type: 3}
+  alertClip: {fileID: 8300000, guid: 88a048796543b90419a557f466493c37, type: 3}
+  attackClip: {fileID: 8300000, guid: 629d4a891d765654b85de07c8210cd9e, type: 3}
+  rageClip: {fileID: 8300000, guid: 91c90af7f708f2b469f26962ad03a40e, type: 3}
+  hurtClip: {fileID: 8300000, guid: 084d51ddde19b7040b6d22a0657feabf, type: 3}
+  deathClip: {fileID: 8300000, guid: dd803e35a9f76e64fb97e73244485391, type: 3}
+  loopVolume: 0.8
+  sfxVolume: 1
+  body: {fileID: 0}
+  alertRepeatInterval: 0
+  moveSpeedThreshold: 0.3
+  hurtCooldown: 0.3
+  maxDistance: 200
 --- !u!1 &7012604375617990297
 GameObject:
   m_ObjectHideFlags: 0
