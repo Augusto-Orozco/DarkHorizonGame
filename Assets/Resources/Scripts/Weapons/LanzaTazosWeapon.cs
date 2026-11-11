@@ -45,7 +45,7 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 
     private void Update()
     {
-        if (player == null || !player.readInput || !player.HasBubbleGun())
+        if (player == null || !player.readInput || PauseMenuController.IsPaused || !player.HasBubbleGun())
             return;
 
         Keyboard keyboard = Keyboard.current;

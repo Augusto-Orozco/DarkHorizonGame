@@ -129,12 +129,12 @@ TextureImporter:
       name: horizontal_idle_thumb_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 15
-        height: 38
+        x: 5
+        y: 1
+        width: 5
+        height: 36
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -151,7 +151,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: e4396bb27dc700b4aabbec64596f6a2c
     internalID: 0
     vertices: []
     indices: 
@@ -162,6 +162,7 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       horizontal_idle_thumb_0: 3599194815508451574
+      horizontal_idle_thumb_1: 2083433328
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -70,12 +70,12 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void HandleMouse()
     {
-        if (Mouse.current == null)
+        if (Mouse.current == null || PauseMenuController.IsPaused)
             return;
 
         Vector2 mouseDelta = Mouse.current.delta.ReadValue();
 
-        pitch -= mouseDelta.y * sensitivityY;
+        pitch -= mouseDelta.y * sensitivityY * GameSettings.Sensitivity * GameSettings.PitchSign;
 
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
