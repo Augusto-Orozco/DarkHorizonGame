@@ -25,6 +25,7 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
     private TraitorPlayer traitor;
     private NetworkShotRelay shotRelay;
     private WeaponState CurrentState => inventory != null ? inventory.ActiveWeapon : null;
+    private BubbleGunAudio bubbleGunAudio;
 
     private void Awake()
     {
@@ -40,10 +41,23 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
 
         if (player != null)
             playerRb = player.GetComponentInParent<Rigidbody>();
+
+        bubbleGunAudio = GetComponent<BubbleGunAudio>();
     }
 
     private void Update()
-    {
+    {   
+        
+        bool isCooling = player != null
+        && player.HasBubbleGun()
+        && CurrentState != null
+        && CurrentState.IsOverheated;
+
+        bubbleGunAudio?.SetCooling(isCooling);
+
+        if (player == null || !player.readInput || PauseMenuController.IsPaused ||
+        !player.HasBubbleGun() || Mouse.current == null)
+        return;
 
         if (player == null || !player.readInput || PauseMenuController.IsPaused || !player.HasBubbleGun() || Mouse.current == null)
             return;
@@ -79,6 +93,7 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
         nextFireTime = Time.time + fireCooldown;
         CurrentState?.AddShotHeat();
         player.StartShooting();
+        bubbleGunAudio?.PlayShot();
 
         Vector3 aimDirection = weaponAim != null
             ? weaponAim.GetAimDirection(muzzle)
