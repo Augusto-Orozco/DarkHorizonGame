@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
-  m_Name: Tabla1
+  m_Name: MenuTable
   m_EditorClassIdentifier: Unity.Localization.Editor::UnityEditor.Localization.StringTableCollection
   m_SharedTableData: {fileID: 11400000, guid: 67e20062b03c68646bba5f4136765bd9, type: 2}
   m_Tables:
