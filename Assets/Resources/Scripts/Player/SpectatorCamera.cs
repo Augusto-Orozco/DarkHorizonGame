@@ -14,6 +14,8 @@ public class SpectatorCamera : MonoBehaviour
     [SerializeField, Min(1f)] private float followSpeed = 15f;
 
     private readonly List<PlayerHealth> candidates = new List<PlayerHealth>();
+    private PlayerInput playerInput;
+    private InputAction nextAction;
     private ThirdPersonCamera thirdPerson;
     private PlayerHealth ownerHealth;
     private Vector3 localOffset;
@@ -37,6 +39,16 @@ public class SpectatorCamera : MonoBehaviour
         PhotonView view = GetComponentInParent<PhotonView>();
         if (ownerHealth == null || (PhotonNetwork.InRoom && view != null && !view.IsMine))
             enabled = false;
+
+        playerInput = ownerHealth.GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            InputActionMap playerMap =
+                playerInput.actions.FindActionMap("Player", true);
+
+            nextAction = playerMap.FindAction("Next", true);
+        }
     }
 
     private void Update()
@@ -50,7 +62,11 @@ public class SpectatorCamera : MonoBehaviour
         if (target == null || target.IsDead)
             NextTarget();
 
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        bool nextPressed =
+            (nextAction != null && nextAction.WasPressedThisFrame()) ||
+            (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame);
+
+        if (nextPressed)
             NextTarget();
     }
 

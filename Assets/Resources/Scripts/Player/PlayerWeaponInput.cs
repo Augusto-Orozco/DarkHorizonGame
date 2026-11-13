@@ -23,6 +23,17 @@ public class PlayerWeaponInput : MonoBehaviour
     [Tooltip("Caja que cae al soltar balas.")]
     [SerializeField] private AmmoBoxData ammoBoxToDrop;
 
+    [Header("Input System")]
+    [SerializeField] private PlayerInput playerInput;
+
+    private InputAction dropWeaponAction;
+    private InputAction switchWeaponAction;
+    private InputAction primaryAction;
+    private InputAction secondaryAction;
+    private InputAction breadAction;
+    private InputAction dropBreadAction;
+    private InputAction dropAmmoAction;
+
     private PlayerInventory inventory;
     private PlayerHealth health;
 
@@ -31,42 +42,62 @@ public class PlayerWeaponInput : MonoBehaviour
     {
         inventory = GetComponent<PlayerInventory>();
         health = GetComponent<PlayerHealth>();
+
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            InputActionMap playerMap =
+                playerInput.actions.FindActionMap("Player", true);
+
+            dropWeaponAction = playerMap.FindAction("DropWeapon", true);
+            switchWeaponAction = playerMap.FindAction("SwitchWeapon", true);
+            primaryAction = playerMap.FindAction("SelectPrimary", true);
+            secondaryAction = playerMap.FindAction("SelectSecondary", true);
+            breadAction = playerMap.FindAction("ConsumeBread", true);
+            dropBreadAction = playerMap.FindAction("DropBread", true);
+            dropAmmoAction = playerMap.FindAction("DropAmmo", true);
+        }
+        else
+        {
+            Debug.LogError("PlayerWeaponInput necesita PlayerInput.", this);
+        }
     }
 
-    private void Update()
+   private void Update()
     {
-        Keyboard keyboard = Keyboard.current;
-        if (Keyboard.current == null)
-            return;
-
         if (health != null && health.IsDead)
             return;
 
         if (PauseMenuController.IsPaused)
             return;
 
-        if (keyboard[dropKey].wasPressedThisFrame)
+        if (dropWeaponAction == null)
+            return;
+
+        if (dropWeaponAction.WasPressedThisFrame())
             DropWeapon();
 
-        if (keyboard[switchKey].wasPressedThisFrame)
+        if (switchWeaponAction.WasPressedThisFrame())
             inventory.SwitchWeapon();
 
-        if (keyboard[primaryKey].wasPressedThisFrame)
+        if (primaryAction.WasPressedThisFrame())
             inventory.SelectSlot(WeaponSlotType.Primary);
 
-        if (keyboard[secondaryKey].wasPressedThisFrame)
+        if (secondaryAction.WasPressedThisFrame())
             inventory.SelectSlot(WeaponSlotType.Secondary);
 
-        if (keyboard[breadKey].wasPressedThisFrame && (health == null || health.CanHeal))
+        if (breadAction.WasPressedThisFrame() &&
+            (health == null || health.CanHeal))
             inventory.TryConsumeBread();
-        if (keyboard[dropBreadKey].wasPressedThisFrame)
+
+        if (dropBreadAction.WasPressedThisFrame())
             DropBread();
 
-        if (keyboard[dropAmmoKey].wasPressedThisFrame)
+        if (dropAmmoAction.WasPressedThisFrame())
             DropAmmo();
-
     }
-
     private void DropWeapon()
     {
         if (dropPoint == null)

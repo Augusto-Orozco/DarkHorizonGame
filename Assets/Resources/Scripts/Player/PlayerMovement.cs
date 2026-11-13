@@ -10,19 +10,28 @@ public class PlayerMovement : MonoBehaviour
     public float ExternalSpeedMultiplier { get; set; } = 1f;
 
     public float gravity = -20f;
-[Header("Pasos")]
-[SerializeField] private AudioClip normalFootstepClip;
-[SerializeField] private AudioClip metalFootstepClip;
-[SerializeField] private AudioSource footstepAudioSource;
 
-[Header("Volumen de pasos")]
-[SerializeField, Range(0f, 1f)]
-private float normalFootstepVolume = 0.3f;
+    [Header("Input System")]
+    [SerializeField] private PlayerInput playerInput;
 
-[SerializeField, Range(0f, 1f)]
-private float metalFootstepVolume = 0.2f;
+    [SerializeField] private float gamepadLookSensitivity = 180f;
 
-private AudioClip currentFootstepClip;
+    private InputAction moveAction;
+    private InputAction lookAction;
+
+    [Header("Pasos")]
+    [SerializeField] private AudioClip normalFootstepClip;
+    [SerializeField] private AudioClip metalFootstepClip;
+    [SerializeField] private AudioSource footstepAudioSource;
+
+    [Header("Volumen de pasos")]
+    [SerializeField, Range(0f, 1f)]
+    private float normalFootstepVolume = 0.3f;
+
+    [SerializeField, Range(0f, 1f)]
+    private float metalFootstepVolume = 0.2f;
+
+    private AudioClip currentFootstepClip;
 
     [Header("Cámara y Mouse")]
     [Tooltip("Asigna la Cámara (o el Pivot de la Cámara) que es hijo de este personaje.")]
@@ -79,9 +88,25 @@ private AudioClip currentFootstepClip;
         Shooting
     }
 
+    private void InitializeInput()
+    {
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput == null)
+        {
+            Debug.LogError("PlayerMovement necesita PlayerInput.", this);
+            return;
+        }
+
+        moveAction = playerInput.actions.FindAction("Player/Move");
+        lookAction = playerInput.actions.FindAction("Player/Look");
+    }
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
+        InitializeInput();
         traitor = GetComponent<TraitorPlayer>();
         TraitorGameManager.Instance?.RegisterPlayer(this);
 
@@ -183,62 +208,84 @@ private AudioClip currentFootstepClip;
             footstepAudioSource.Play();
         }
     }
-    void HandleMouseLook()
+    
+    private void HandleMouseLook()
     {
-        if (Mouse.current == null)
+        if (lookAction == null)
             return;
 
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue() * mouseSensitivity * GameSettings.Sensitivity * Time.deltaTime;
+        Vector2 lookInput = lookAction.ReadValue<Vector2>();
 
-        // 1. Girar el cuerpo entero del personaje horizontalmente con el mouse
-        transform.Rotate(Vector3.up * mouseDelta.x);
+        if (lookInput.sqrMagnitude < 0.0001f)
+            return;
 
-        // 2. Inclinar la cámara verticalmente (Pitch)
+        bool usingGamepad =
+            lookAction.activeControl != null &&
+            lookAction.activeControl.device is Gamepad;
+
+        float sensitivity = usingGamepad
+            ? gamepadLookSensitivity * GameSettings.Sensitivity * Time.deltaTime
+            : mouseSensitivity * GameSettings.Sensitivity * Time.deltaTime;
+
+        Vector2 lookDelta = lookInput * sensitivity;
+
+        // Rotación horizontal del personaje.
+        transform.Rotate(Vector3.up * lookDelta.x);
+
+        // Rotación vertical de la cámara.
         if (cameraTransform != null && !cameraPitchHandledByThirdPersonCamera)
         {
-            cameraPitch -= mouseDelta.y * GameSettings.PitchSign;
-            cameraPitch = Mathf.Clamp(cameraPitch, minPitch, maxPitch);
-            cameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0f, 0f);
+            cameraPitch -= lookDelta.y * GameSettings.PitchSign;
+
+            cameraPitch = Mathf.Clamp(
+                cameraPitch,
+                minPitch,
+                maxPitch
+            );
+
+            cameraTransform.localRotation =
+                Quaternion.Euler(cameraPitch, 0f, 0f);
         }
     }
 
-    void HandleMovement()
+    private void HandleMovement()
     {
-        if (Keyboard.current == null)
+        if (moveAction == null)
         {
             isMoving = false;
             return;
         }
 
-        float forwardInput = 0f;
-        float strafeInput = 0f;
+        Vector2 input = moveAction.ReadValue<Vector2>();
 
-        if (Keyboard.current.wKey.isPressed)
-            forwardInput += 1f;
-        if (Keyboard.current.sKey.isPressed)
-            forwardInput -= 1f;
+        float forwardInput = input.y;
+        float strafeInput = input.x;
 
-        if (Keyboard.current.aKey.isPressed)
-            strafeInput -= 1f;
-        if (Keyboard.current.dKey.isPressed)
-            strafeInput += 1f;
+        isMoving = input.sqrMagnitude > 0.01f;
 
-        isMoving = (Mathf.Abs(forwardInput) > 0.01f || Mathf.Abs(strafeInput) > 0.01f);
+        if (!isMoving)
+            return;
 
-        if (isMoving)
-        {
-            // Movimiento relativo a la orientación local del personaje
-            Vector3 moveDirection = (transform.forward * forwardInput + transform.right * strafeInput).normalized;
-            if (traitor == null)
-                traitor = GetComponent<TraitorPlayer>();
+        Vector3 moveDirection =
+            (transform.forward * forwardInput +
+            transform.right * strafeInput).normalized;
 
-            float speedMultiplier = traitor != null
-                ? traitor.MovementSpeedMultiplier
-                : 1f;
-            controller.Move(moveDirection * moveSpeed * speedMultiplier * ExternalSpeedMultiplier * Time.deltaTime);
-        }
+        if (traitor == null)
+            traitor = GetComponent<TraitorPlayer>();
+
+        float speedMultiplier = traitor != null
+            ? traitor.MovementSpeedMultiplier
+            : 1f;
+
+        controller.Move(
+            moveDirection *
+            moveSpeed *
+            speedMultiplier *
+            ExternalSpeedMultiplier *
+            Time.deltaTime
+        );
     }
-
+    
     private void OnDisable()
     {
         TraitorGameManager.Instance?.UnregisterPlayer(this);

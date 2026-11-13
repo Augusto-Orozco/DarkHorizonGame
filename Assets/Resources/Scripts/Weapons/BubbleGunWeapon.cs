@@ -17,6 +17,11 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
     [SerializeField] private int bubblesPerShot = 6;
     [SerializeField] private float spreadAngle = 10f;
 
+    [Header("Input System")]
+    [SerializeField] private PlayerInput playerInput;
+
+    private InputAction attackAction;
+
     private PlayerMovement player;
     private PlayerWeaponAim weaponAim;
     private Rigidbody playerRb;
@@ -43,37 +48,53 @@ public class BubbleGunWeapon : MonoBehaviour, IRemoteShooter
             playerRb = player.GetComponentInParent<Rigidbody>();
 
         bubbleGunAudio = GetComponent<BubbleGunAudio>();
+
+        if (playerInput == null && player != null)
+            playerInput = player.GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            InputActionMap playerMap =
+                playerInput.actions.FindActionMap("Player", true);
+
+            attackAction = playerMap.FindAction("Attack", true);
+        }
+        else
+        {
+            Debug.LogError("BubbleGunWeapon necesita PlayerInput.", this);
+        }
     }
 
     private void Update()
-    {   
-        
+    {
         bool isCooling = player != null
-        && player.HasBubbleGun()
-        && CurrentState != null
-        && CurrentState.IsOverheated;
+            && player.HasBubbleGun()
+            && CurrentState != null
+            && CurrentState.IsOverheated;
 
         bubbleGunAudio?.SetCooling(isCooling);
 
-        if (player == null || !player.readInput || PauseMenuController.IsPaused ||
-        !player.HasBubbleGun() || Mouse.current == null)
-        return;
-
-        if (player == null || !player.readInput || PauseMenuController.IsPaused || !player.HasBubbleGun() || Mouse.current == null)
+        if (player == null ||
+            !player.readInput ||
+            PauseMenuController.IsPaused ||
+            !player.HasBubbleGun() ||
+            attackAction == null)
             return;
 
         if (traitor == null)
             traitor = GetComponentInParent<TraitorPlayer>();
 
         bool wantsToFire = automaticFire
-            ? Mouse.current.leftButton.isPressed
-            : Mouse.current.leftButton.wasPressedThisFrame;
+            ? attackAction.IsPressed()
+            : attackAction.WasPressedThisFrame();
 
         WeaponState state = CurrentState;
+
         bool canFire = state == null ||
             (!state.IsOverheated &&
-             (!state.UsesAmmo || (traitor != null && traitor.HasUnlimitedAmmo) ||
-              state.AmmoInMagazine > 0));
+            (!state.UsesAmmo ||
+            (traitor != null && traitor.HasUnlimitedAmmo) ||
+            state.AmmoInMagazine > 0));
 
         player.SetShootingActive(wantsToFire && canFire);
 
