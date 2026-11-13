@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: Tabla1_es
+  m_Name: Textos_es
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
   m_LocaleId:
     m_Code: es
@@ -95,7 +95,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 20
-    m_Localized: "V\xEDdeo"
+    m_Localized: Video
     m_Metadata:
       m_Items: []
   - m_Id: 21
@@ -135,7 +135,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 30
-    m_Localized: Moverse derecha
+    m_Localized: "Moverse atr\xE1s"
     m_Metadata:
       m_Items: []
   - m_Id: 31
@@ -143,7 +143,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 32
-    m_Localized: Moverse adelante
+    m_Localized: Moverse derecha
     m_Metadata:
       m_Items: []
   - m_Id: 33
@@ -236,6 +236,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 55
     m_Localized: Esc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56
+    m_Localized: Idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57
+    m_Localized: Salir del juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58
+    m_Localized: "C\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59
+    m_Localized: 'Comandante:'
     m_Metadata:
       m_Items: []
   references:

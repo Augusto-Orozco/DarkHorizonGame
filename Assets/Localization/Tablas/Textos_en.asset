@@ -9,240 +9,251 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
-  m_Name: Tabla1 Shared Data
-  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
-  m_TableCollectionName: Tabla1
-  m_TableCollectionNameGuidString: 67e20062b03c68646bba5f4136765bd9
-  m_Entries:
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Textos_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 67e20062b03c68646bba5f4136765bd9, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
   - m_Id: 1
-    m_Key: G001
+    m_Localized: Play
     m_Metadata:
       m_Items: []
   - m_Id: 2
-    m_Key: G002
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   - m_Id: 3
-    m_Key: G003
+    m_Localized: Exit
     m_Metadata:
       m_Items: []
   - m_Id: 4
-    m_Key: G004
+    m_Localized: Lobby
     m_Metadata:
       m_Items: []
   - m_Id: 5
-    m_Key: G005
+    m_Localized: Back
     m_Metadata:
       m_Items: []
   - m_Id: 6
-    m_Key: G006
+    m_Localized: ...
     m_Metadata:
       m_Items: []
   - m_Id: 7
-    m_Key: G007
+    m_Localized: Create Lobby
     m_Metadata:
       m_Items: []
   - m_Id: 8
-    m_Key: G008
+    m_Localized: Join Lobby
     m_Metadata:
       m_Items: []
   - m_Id: 9
-    m_Key: G009
+    m_Localized: ...
     m_Metadata:
       m_Items: []
   - m_Id: 10
-    m_Key: G010
+    m_Localized: ...
     m_Metadata:
       m_Items: []
   - m_Id: 11
-    m_Key: G011
+    m_Localized: ...
     m_Metadata:
       m_Items: []
   - m_Id: 12
-    m_Key: G012
+    m_Localized: Start
     m_Metadata:
       m_Items: []
   - m_Id: 13
-    m_Key: G013
+    m_Localized: Leave
     m_Metadata:
       m_Items: []
   - m_Id: 14
-    m_Key: G014
+    m_Localized: Settings
     m_Metadata:
       m_Items: []
   - m_Id: 15
-    m_Key: G015
+    m_Localized: Save
     m_Metadata:
       m_Items: []
   - m_Id: 16
-    m_Key: G016
+    m_Localized: Reset
     m_Metadata:
       m_Items: []
   - m_Id: 17
-    m_Key: G017
+    m_Localized: Close
     m_Metadata:
       m_Items: []
   - m_Id: 18
-    m_Key: G018
+    m_Localized: Audio
     m_Metadata:
       m_Items: []
   - m_Id: 19
-    m_Key: G019
+    m_Localized: Master Volume
     m_Metadata:
       m_Items: []
   - m_Id: 20
-    m_Key: G020
+    m_Localized: Video
     m_Metadata:
       m_Items: []
   - m_Id: 21
-    m_Key: G021
+    m_Localized: Toggle Fullscreen
     m_Metadata:
       m_Items: []
   - m_Id: 22
-    m_Key: G022
+    m_Localized: Controls
     m_Metadata:
       m_Items: []
   - m_Id: 23
-    m_Key: G023
+    m_Localized: Sensitivity
     m_Metadata:
       m_Items: []
   - m_Id: 24
-    m_Key: G024
+    m_Localized: Invert Y Axis
     m_Metadata:
       m_Items: []
   - m_Id: 25
-    m_Key: G025
+    m_Localized: Key Binds
     m_Metadata:
       m_Items: []
   - m_Id: 26
-    m_Key: G026
+    m_Localized: Move Forward
     m_Metadata:
       m_Items: []
   - m_Id: 27
-    m_Key: G027
+    m_Localized: W
     m_Metadata:
       m_Items: []
   - m_Id: 28
-    m_Key: G028
+    m_Localized: Move Left
     m_Metadata:
       m_Items: []
   - m_Id: 29
-    m_Key: G029
+    m_Localized: A
     m_Metadata:
       m_Items: []
   - m_Id: 30
-    m_Key: G030
+    m_Localized: Move Backward
     m_Metadata:
       m_Items: []
   - m_Id: 31
-    m_Key: G031
+    m_Localized: S
     m_Metadata:
       m_Items: []
   - m_Id: 32
-    m_Key: G032
+    m_Localized: Move Right
     m_Metadata:
       m_Items: []
   - m_Id: 33
-    m_Key: G033
+    m_Localized: D
     m_Metadata:
       m_Items: []
   - m_Id: 34
-    m_Key: G034
+    m_Localized: Shoot
     m_Metadata:
       m_Items: []
   - m_Id: 35
-    m_Key: G035
+    m_Localized: Click
     m_Metadata:
       m_Items: []
   - m_Id: 36
-    m_Key: G036
+    m_Localized: Reload
     m_Metadata:
       m_Items: []
   - m_Id: 37
-    m_Key: G037
+    m_Localized: R
     m_Metadata:
       m_Items: []
   - m_Id: 38
-    m_Key: G038
+    m_Localized: Switch Weapon
     m_Metadata:
       m_Items: []
   - m_Id: 39
-    m_Key: G039
+    m_Localized: Q
     m_Metadata:
       m_Items: []
   - m_Id: 40
-    m_Key: G040
+    m_Localized: Primary
     m_Metadata:
       m_Items: []
   - m_Id: 41
-    m_Key: G041
+    m_Localized: 1
     m_Metadata:
       m_Items: []
   - m_Id: 42
-    m_Key: G042
+    m_Localized: Secondary
     m_Metadata:
       m_Items: []
   - m_Id: 43
-    m_Key: G043
+    m_Localized: 2
     m_Metadata:
       m_Items: []
   - m_Id: 44
-    m_Key: G044
+    m_Localized: Interact
     m_Metadata:
       m_Items: []
   - m_Id: 45
-    m_Key: G045
+    m_Localized: E
     m_Metadata:
       m_Items: []
   - m_Id: 46
-    m_Key: G046
+    m_Localized: Drop Weapon
     m_Metadata:
       m_Items: []
   - m_Id: 47
-    m_Key: G047
+    m_Localized: X
     m_Metadata:
       m_Items: []
   - m_Id: 48
-    m_Key: G048
+    m_Localized: Eat Bread
     m_Metadata:
       m_Items: []
   - m_Id: 49
-    m_Key: G049
+    m_Localized: F
     m_Metadata:
       m_Items: []
   - m_Id: 50
-    m_Key: G050
+    m_Localized: Drop Bread
     m_Metadata:
       m_Items: []
   - m_Id: 51
-    m_Key: G051
+    m_Localized: Z
     m_Metadata:
       m_Items: []
   - m_Id: 52
-    m_Key: G052
+    m_Localized: Drop Ammo
     m_Metadata:
       m_Items: []
   - m_Id: 53
-    m_Key: G053
+    m_Localized: C
     m_Metadata:
       m_Items: []
   - m_Id: 54
-    m_Key: G054
+    m_Localized: Pause
     m_Metadata:
       m_Items: []
   - m_Id: 55
-    m_Key: G055
+    m_Localized: Esc
     m_Metadata:
       m_Items: []
-  m_Metadata:
-    m_Items: []
-  m_KeyGenerator:
-    rid: 6506386727926235466
+  - m_Id: 56
+    m_Localized: Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57
+    m_Localized: Exit Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58
+    m_Localized: Code
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59
+    m_Localized: 'Commander:'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds:
-    - rid: 6506386727926235466
-      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
-      data:
-        m_CustomEpoch: 1794482159683
+    RefIds: []
