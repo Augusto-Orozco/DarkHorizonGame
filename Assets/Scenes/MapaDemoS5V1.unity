@@ -34481,7 +34481,7 @@ GameObject:
   - component: {fileID: 1463309565}
   - component: {fileID: 1463309564}
   m_Layer: 5
-  m_Name: Language
+  m_Name: LanguageDropDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39452,6 +39452,7 @@ MonoBehaviour:
   sensitivityInput: {fileID: 467990828}
   invertYToggle: {fileID: 1247338293}
   fullscreenToggle: {fileID: 224070317}
+  languageDropdown: {fileID: 1463309564}
 --- !u!114 &1647693616
 MonoBehaviour:
   m_ObjectHideFlags: 0

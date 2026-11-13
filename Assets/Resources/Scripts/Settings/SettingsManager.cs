@@ -1,7 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 // Panel de ajustes de la escena. Hay uno por escena: los valores viven en GameSettings.
@@ -24,6 +28,12 @@ public class SettingsManager : MonoBehaviour
     [Header("Video")]
     [SerializeField] private Toggle fullscreenToggle;
 
+    [Header("Idioma")]
+    [Tooltip("Se llena solo con los idiomas de Localization. Opcional.")]
+    [SerializeField] private TMP_Dropdown languageDropdown;
+
+    private List<Locale> locales;
+
     public bool IsOpen => settingsPanel != null && settingsPanel.activeSelf;
 
     // Se dispara al cerrar el panel; el PauseMenu lo usa para volver a mostrarse.
@@ -42,6 +52,24 @@ public class SettingsManager : MonoBehaviour
         Hook();
         RefreshUI(); // el panel muestra los valores reales desde el inicio
         settingsPanel.SetActive(false);
+    }
+
+    // Llena el dropdown con los idiomas disponibles cuando Localization termina de iniciar.
+    private IEnumerator Start()
+    {
+        if (languageDropdown == null)
+            yield break;
+
+        yield return LocalizationSettings.InitializationOperation;
+
+        locales = new List<Locale>(LocalizationSettings.AvailableLocales.Locales);
+        var names = new List<string>();
+        foreach (Locale l in locales)
+            names.Add(GetLanguageName(l));
+
+        languageDropdown.ClearOptions();
+        languageDropdown.AddOptions(names);
+        RefreshUI();
     }
 
     private void Update()
@@ -89,6 +117,12 @@ public class SettingsManager : MonoBehaviour
         }
         if (invertYToggle != null) invertYToggle.onValueChanged.AddListener(v => { if (!refreshing) GameSettings.SetInvertY(v); });
         if (fullscreenToggle != null) fullscreenToggle.onValueChanged.AddListener(v => { if (!refreshing) GameSettings.SetFullscreen(v); });
+        if (languageDropdown != null)
+            languageDropdown.onValueChanged.AddListener(i =>
+            {
+                if (!refreshing && locales != null && i >= 0 && i < locales.Count)
+                    GameSettings.SetLanguage(locales[i].Identifier.Code);
+            });
 
     }
 
@@ -146,6 +180,30 @@ public class SettingsManager : MonoBehaviour
         UpdateSensitivityText();
         if (invertYToggle != null) invertYToggle.isOn = GameSettings.InvertY;
         if (fullscreenToggle != null) fullscreenToggle.isOn = GameSettings.Fullscreen;
+        RefreshLanguageDropdown();
         refreshing = false;
+    }
+
+    // Nombre del idioma en su propio idioma, con la primera letra en mayúscula ("Español", "English").
+    private static string GetLanguageName(Locale locale)
+    {
+        CultureInfo culture = locale.Identifier.CultureInfo;
+        if (culture == null || string.IsNullOrEmpty(culture.NativeName))
+            return locale.LocaleName;
+
+        string name = culture.NativeName;
+        return char.ToUpper(name[0], culture) + name.Substring(1);
+    }
+
+    // Marca en el dropdown el idioma activo en Localization.
+    private void RefreshLanguageDropdown()
+    {
+        if (languageDropdown == null || locales == null)
+            return;
+
+        Locale selected = LocalizationSettings.SelectedLocale;
+        int index = selected != null ? locales.IndexOf(selected) : -1;
+        if (index >= 0)
+            languageDropdown.SetValueWithoutNotify(index);
     }
 }

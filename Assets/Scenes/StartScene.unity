@@ -2308,7 +2308,7 @@ GameObject:
   - component: {fileID: 331810563}
   - component: {fileID: 331810562}
   m_Layer: 5
-  m_Name: Language
+  m_Name: LanguageDropDown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7810,7 +7810,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 330, y: 320}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &900500002
 MonoBehaviour:
@@ -14902,6 +14902,7 @@ MonoBehaviour:
   sensitivityInput: {fileID: 1388790097}
   invertYToggle: {fileID: 1287267179}
   fullscreenToggle: {fileID: 761012380}
+  languageDropdown: {fileID: 331810562}
 --- !u!1 &2065004218
 GameObject:
   m_ObjectHideFlags: 0
