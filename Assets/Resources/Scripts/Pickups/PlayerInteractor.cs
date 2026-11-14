@@ -8,6 +8,11 @@ public class PlayerInteractor : MonoBehaviour
     [Header("Input")]
     [SerializeField] private Key  interactKey = Key.E;
     [SerializeField] private bool allowGamepad = true;
+
+    [SerializeField] private PlayerInput playerInput;
+
+    private InputAction interactAction;
+
     private readonly List<IInteractable> nearby = new List<IInteractable>();
     private IInteractable focused;
     public PlayerInventory Inventory { get; private set; }
@@ -15,6 +20,12 @@ public class PlayerInteractor : MonoBehaviour
     public void Awake()
     {
         Inventory = GetComponent<PlayerInventory>();
+
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+            interactAction = playerInput.actions.FindAction("Player/Interact");
     }
 
     public void Register(IInteractable interactable)
@@ -91,11 +102,8 @@ public class PlayerInteractor : MonoBehaviour
 
     private bool InteractPressed()
     {
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard != null && keyboard[interactKey].wasPressedThisFrame)
-            return true;
-
-        return allowGamepad && Gamepad.current != null && Gamepad.current.buttonWest.wasPressedThisFrame;
+        return interactAction != null &&
+            interactAction.WasPressedThisFrame();
     }
 
     private static bool IsAlive(IInteractable interactable)

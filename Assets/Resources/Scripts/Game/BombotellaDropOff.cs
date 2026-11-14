@@ -1,10 +1,17 @@
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [RequireComponent(typeof(InteractionPrompt))]
 public sealed class BombotellaDropOff : MonoBehaviour, IInteractable
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private KeyItemData bombotellaData;
+
+    // Textos de la tabla "Textos"; {0} es el conteo "(x/y)". Necesitan la casilla "Smart".
+    [SerializeField] private LocalizedString deliverText = new LocalizedString(TextTable, "G091");
+    [SerializeField] private LocalizedString needText = new LocalizedString(TextTable, "G092");
 
     private InteractionPrompt prompt;
     private PlayerInteractor focusedInteractor;
@@ -95,8 +102,8 @@ public sealed class BombotellaDropOff : MonoBehaviour, IInteractable
 
         string count = $"({manager.CollectedBombotellas}/{manager.RequiredBombotellas})";
         prompt.Show(CarriesBombotella(interactor.Inventory)
-            ? $"[E] Entregar bombotella {count}"
-            : $"Necesitas bombotellas {count}");
+            ? deliverText.GetLocalizedString(count)
+            : needText.GetLocalizedString(count));
     }
 
     private bool CarriesBombotella(PlayerInventory inventory)

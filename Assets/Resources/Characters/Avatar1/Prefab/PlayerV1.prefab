@@ -918,6 +918,7 @@ GameObject:
   - component: {fileID: 3625236466234666586}
   - component: {fileID: 5696226455358116900}
   - component: {fileID: 8585989626007528739}
+  - component: {fileID: 12618782135720375}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -944,6 +945,7 @@ Transform:
   - {fileID: 8716193910785119973}
   - {fileID: 9019877757648517604}
   - {fileID: 516653150482708644}
+  - {fileID: 2736735463420390267}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!136 &1017186722176536038
@@ -1010,6 +1012,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 45
   gravity: -20
+  playerInput: {fileID: 12618782135720375}
+  gamepadLookSensitivity: 180
   normalFootstepClip: {fileID: 8300000, guid: 19213e27f4d8fd74d9813229082f2563, type: 3}
   metalFootstepClip: {fileID: 8300000, guid: 071272af4b9faee46abdefd2c6e1430e, type: 3}
   footstepAudioSource: {fileID: 0}
@@ -1134,6 +1138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteractor
   interactKey: 19
   allowGamepad: 1
+  playerInput: {fileID: 0}
 --- !u!114 &4590241207305451954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1342,6 +1347,36 @@ MonoBehaviour:
   photonVoiceView: {fileID: 3625236466234666586}
   photonView: {fileID: -1995471051811677255}
   speakerIcon: {fileID: 3001296074512559438}
+--- !u!114 &12618782135720375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0
@@ -1923,6 +1958,37 @@ Transform:
   - {fileID: 6604143676821924920}
   m_Father: {fileID: 2050872969871475249}
   m_LocalEulerAnglesHint: {x: -15.166739, y: 9.324418, z: 53.943554}
+--- !u!1 &3720116490452047635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2736735463420390267}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2736735463420390267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3720116490452047635}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.2176819, y: 1.9222794, z: 4.026367}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1944887684847529922}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3780568061199020323
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public sealed class TraitorRoomGate : MonoBehaviour
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private Collider gateCollider;
     [SerializeField] private InteractionPrompt prompt;
+
+    // Texto de la tabla "Textos": "Necesitas {0} bombotellas ({1}/{0})".
+    [SerializeField] private LocalizedString requirementText = new LocalizedString(TextTable, "G093");
 
     [Header("Animación de apertura")]
     [SerializeField] private Transform doorVisual;
@@ -74,9 +80,7 @@ public sealed class TraitorRoomGate : MonoBehaviour
 
         TraitorGameManager manager = TraitorGameManager.Instance;
         if (!manager.RoomUnlocked)
-            prompt.Show(
-                $"Necesitas {manager.RequiredBombotellas} bombotellas " +
-                $"({manager.CollectedBombotellas}/{manager.RequiredBombotellas})");
+            prompt.Show(requirementText.GetLocalizedString(manager.RequiredBombotellas, manager.CollectedBombotellas));
         else
             prompt.Hide();
     }

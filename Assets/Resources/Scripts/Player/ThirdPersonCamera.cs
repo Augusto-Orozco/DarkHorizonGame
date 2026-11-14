@@ -26,6 +26,12 @@ public class ThirdPersonCamera : MonoBehaviour
     private bool isChildCamera;
     private Vector3 initialLocalPosition;
 
+    [Header("Input System")]
+    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private float gamepadLookSensitivity = 120f;
+
+    private InputAction lookAction;
+
     void Start()
     {
         if (target == null)
@@ -42,6 +48,21 @@ public class ThirdPersonCamera : MonoBehaviour
             enabled = false;
             return;
         }
+
+        if (playerInput == null)
+            playerInput = target.GetComponent<PlayerInput>();
+
+        if (playerInput == null)
+        {
+            Debug.LogError("ThirdPersonCamera necesita PlayerInput en el jugador.", this);
+            enabled = false;
+            return;
+        }
+
+        InputActionMap playerMap =
+            playerInput.actions.FindActionMap("Player", true);
+
+        lookAction = playerMap.FindAction("Look", true);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -70,16 +91,40 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void HandleMouse()
     {
-        if (Mouse.current == null || PauseMenuController.IsPaused)
+        if (PauseMenuController.IsPaused || lookAction == null)
             return;
 
-        Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+        Vector2 lookInput = lookAction.ReadValue<Vector2>();
 
-        pitch -= mouseDelta.y * sensitivityY * GameSettings.Sensitivity * GameSettings.PitchSign;
+        if (Mathf.Abs(lookInput.y) < 0.01f)
+            return;
+
+        bool usingGamepad =
+            lookAction.activeControl != null &&
+            lookAction.activeControl.device is Gamepad;
+
+        float lookDelta;
+
+        if (usingGamepad)
+        {
+            // El stick representa una velocidad, por eso usamos deltaTime.
+            lookDelta = lookInput.y *
+                        gamepadLookSensitivity *
+                        GameSettings.Sensitivity *
+                        Time.deltaTime;
+        }
+        else
+        {
+            // Mouse Delta ya representa el desplazamiento del frame.
+            lookDelta = lookInput.y *
+                        sensitivityY *
+                        GameSettings.Sensitivity;
+        }
+
+        pitch -= lookDelta * GameSettings.PitchSign;
 
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
-
     void FollowPlayer()
     {
         if (isChildCamera)

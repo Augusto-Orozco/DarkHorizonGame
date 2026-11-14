@@ -438,12 +438,63 @@ MonoBehaviour:
   titleText: {fileID: 8098965393802650441}
   subtitleText: {fileID: 2679996271902035295}
   menuSceneName: StartScene
-  victoryTitle: VICTORIA
-  defeatTitle: DERROTA
-  crewExtractedText: "El escuadr\xF3n escap\xF3 con el artefacto."
-  traitorDefeatedText: El traidor fue eliminado.
-  traitorWinsText: "El traidor acab\xF3 con el escuadr\xF3n."
-  squadWipedText: "El escuadr\xF3n cay\xF3 antes de recuperar el artefacto."
+  victoryTitle:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G074
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  defeatTitle:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G075
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  crewExtractedText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G076
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  traitorDefeatedText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G077
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  traitorWinsText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G078
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  squadWipedText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G079
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &723275423976587175
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,8 +787,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 8907733375125204126, guid: 464d8cd72615640448708d88d8bbbfe0, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1299,8 +1350,19 @@ MonoBehaviour:
   panel: {fileID: 3213860759244639677}
   fill: {fileID: 6887891537420871435}
   nameText: {fileID: 4957860660993060587}
-  label: TRAIDOR
+  label:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G081
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   smoothSpeed: 1.5
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &2592378472626034459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1792,9 +1854,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeamLivesUI
   livesText: {fileID: 8226569193531529949}
-  format: 'Reapariciones: {0}'
+  livesLabel:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G080
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   emptyColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &3540200849961577009
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,6 +3866,7 @@ GameObject:
   - component: {fileID: 5954141146098188919}
   - component: {fileID: 2795348442390990423}
   - component: {fileID: 5480793623049398478}
+  - component: {fileID: 4798551108281296750}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -3856,8 +3930,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3919,6 +3993,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4798551108281296750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6818855425893415390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:67e20062b03c68646bba5f4136765bd9
+    m_TableEntryReference:
+      m_KeyId: 99
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5480793623049398478}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7013542355526110915
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,19 +1,42 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class TeamLivesUI : MonoBehaviour
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private TMP_Text livesText;
-    [SerializeField] private string format = "Reapariciones: {0}";
+    // Texto de la tabla "Textos" ("Reapariciones: {0}"). Necesita la casilla "Smart" activada.
+    [SerializeField] private LocalizedString livesLabel = new LocalizedString(TextTable, "G080");
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color emptyColor = new Color(1f, 0.35f, 0.35f, 1f);
 
     private TraitorGameManager manager;
+    private int lastLives = -1;
 
     private void Awake()
     {
         if (livesText != null)
             livesText.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    }
+
+    private void OnDisable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    }
+
+    // Al cambiar el idioma se vuelve a escribir el texto con el mismo número de vidas.
+    private void OnLocaleChanged(Locale locale)
+    {
+        if (manager != null)
+            Show(lastLives);
     }
 
     private void Update()
@@ -40,6 +63,8 @@ public class TeamLivesUI : MonoBehaviour
 
     private void Show(int lives)
     {
+        lastLives = lives;
+
         if (livesText == null)
             return;
 
@@ -48,7 +73,7 @@ public class TeamLivesUI : MonoBehaviour
         if (!visible)
             return;
 
-        livesText.text = string.Format(format, lives);
+        livesText.text = livesLabel.GetLocalizedString(lives);
         livesText.color = lives > 0 ? normalColor : emptyColor;
     }
 }

@@ -3,17 +3,29 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 [RequireComponent(typeof(Camera))]
 public class SpectatorCamera : MonoBehaviour
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private GameObject labelRoot;
     [SerializeField] private TMP_Text labelText;
-    [SerializeField] private string labelFormat = "Espectando a {0}\n[Clic] Siguiente";
+
+    // Textos de la tabla "Textos". Ya traen su clave por defecto; "Espectando a {0}" y "Jugador {0}"
+    // llevan {0}.
+    [SerializeField] private LocalizedString spectatingText = new LocalizedString(TextTable, "G100");
+    [SerializeField] private LocalizedString nextHintText = new LocalizedString(TextTable, "G101");
+    [SerializeField] private LocalizedString playerNameText = new LocalizedString(TextTable, "G071");
+
     [SerializeField, Min(0f)] private float startDelay = 2f;
     [SerializeField, Min(1f)] private float followSpeed = 15f;
 
     private readonly List<PlayerHealth> candidates = new List<PlayerHealth>();
+    private PlayerInput playerInput;
+    private InputAction nextAction;
     private ThirdPersonCamera thirdPerson;
     private PlayerHealth ownerHealth;
     private Vector3 localOffset;
@@ -32,11 +44,38 @@ public class SpectatorCamera : MonoBehaviour
             labelRoot.SetActive(false);
     }
 
+    private void OnEnable()
+    {
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    }
+
+    private void OnDisable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    }
+
+    // Si se cambia el idioma mientras se espectea, el texto se vuelve a escribir.
+    private void OnLocaleChanged(Locale locale)
+    {
+        if (spectating)
+            UpdateLabel();
+    }
+
     private void Start()
     {
         PhotonView view = GetComponentInParent<PhotonView>();
         if (ownerHealth == null || (PhotonNetwork.InRoom && view != null && !view.IsMine))
             enabled = false;
+
+        playerInput = ownerHealth.GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            InputActionMap playerMap =
+                playerInput.actions.FindActionMap("Player", true);
+
+            nextAction = playerMap.FindAction("Next", true);
+        }
     }
 
     private void Update()
@@ -50,7 +89,11 @@ public class SpectatorCamera : MonoBehaviour
         if (target == null || target.IsDead)
             NextTarget();
 
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        bool nextPressed =
+            (nextAction != null && nextAction.WasPressedThisFrame()) ||
+            (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame);
+
+        if (nextPressed)
             NextTarget();
     }
 
@@ -131,7 +174,7 @@ public class SpectatorCamera : MonoBehaviour
             labelRoot.SetActive(spectating && target != null);
 
         if (labelText != null && target != null)
-            labelText.text = string.Format(labelFormat, GetDisplayName(target));
+            labelText.text = spectatingText.GetLocalizedString(GetDisplayName(target)) + "\n" + nextHintText.GetLocalizedString();
     }
 
     private static int GetActor(PlayerHealth player)
@@ -140,13 +183,13 @@ public class SpectatorCamera : MonoBehaviour
         return view != null ? view.OwnerActorNr : 0;
     }
 
-    private static string GetDisplayName(PlayerHealth player)
+    private string GetDisplayName(PlayerHealth player)
     {
         PhotonView view = player.GetComponent<PhotonView>();
         if (view != null && view.Owner != null && !string.IsNullOrEmpty(view.Owner.NickName))
             return view.Owner.NickName;
 
-        return $"Jugador {GetActor(player)}";
+        return playerNameText.GetLocalizedString(GetActor(player));
     }
 
     private void OnDestroy()

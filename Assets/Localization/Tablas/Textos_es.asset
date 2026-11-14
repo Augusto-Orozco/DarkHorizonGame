@@ -1,0 +1,469 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Textos_es
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 67e20062b03c68646bba5f4136765bd9, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 6842420604274737232
+  m_TableData:
+  - m_Id: 1
+    m_Localized: Jugar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2
+    m_Localized: "Configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3
+    m_Localized: Salir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4
+    m_Localized: Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5
+    m_Localized: Regresar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7
+    m_Localized: Crear Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8
+    m_Localized: Unirse a Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11
+    m_Localized: ...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12
+    m_Localized: Iniciar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13
+    m_Localized: Salir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 14
+    m_Localized: "Configuraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 15
+    m_Localized: Guardar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 16
+    m_Localized: Restablecer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17
+    m_Localized: Cerrar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 18
+    m_Localized: Audio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19
+    m_Localized: Volumen general
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20
+    m_Localized: Video
+    m_Metadata:
+      m_Items: []
+  - m_Id: 21
+    m_Localized: Pantalla Completa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 22
+    m_Localized: Controles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23
+    m_Localized: Sensibilidad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 24
+    m_Localized: Invertir eje Y
+    m_Metadata:
+      m_Items: []
+  - m_Id: 25
+    m_Localized: "Asignaci\xF3n de teclas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 26
+    m_Localized: Moverse adelante
+    m_Metadata:
+      m_Items: []
+  - m_Id: 27
+    m_Localized: W
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28
+    m_Localized: Moverse izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 29
+    m_Localized: A
+    m_Metadata:
+      m_Items: []
+  - m_Id: 30
+    m_Localized: "Moverse atr\xE1s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31
+    m_Localized: S
+    m_Metadata:
+      m_Items: []
+  - m_Id: 32
+    m_Localized: Moverse derecha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 33
+    m_Localized: D
+    m_Metadata:
+      m_Items: []
+  - m_Id: 34
+    m_Localized: Disparar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 35
+    m_Localized: Click
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36
+    m_Localized: Recargar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37
+    m_Localized: R
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38
+    m_Localized: Cambiar de arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39
+    m_Localized: Q
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40
+    m_Localized: Primaria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41
+    m_Localized: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42
+    m_Localized: Secundaria
+    m_Metadata:
+      m_Items: []
+  - m_Id: 43
+    m_Localized: 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 44
+    m_Localized: Interactuar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 45
+    m_Localized: E
+    m_Metadata:
+      m_Items: []
+  - m_Id: 46
+    m_Localized: Soltar Arma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 47
+    m_Localized: X
+    m_Metadata:
+      m_Items: []
+  - m_Id: 48
+    m_Localized: Comer pan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49
+    m_Localized: F
+    m_Metadata:
+      m_Items: []
+  - m_Id: 50
+    m_Localized: Soltar pan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51
+    m_Localized: Z
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52
+    m_Localized: "Soltar munici\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 53
+    m_Localized: C
+    m_Metadata:
+      m_Items: []
+  - m_Id: 54
+    m_Localized: Pausa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55
+    m_Localized: Esc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 56
+    m_Localized: Idioma
+    m_Metadata:
+      m_Items: []
+  - m_Id: 57
+    m_Localized: Salir del juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 58
+    m_Localized: "C\xF3digo"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 59
+    m_Localized: 'Comandante:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 60
+    m_Localized: Conectando...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 61
+    m_Localized: Creando sala {0}...
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 62
+    m_Localized: "El c\xF3digo tiene {0} letras."
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 63
+    m_Localized: Entrando a {0}...
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 64
+    m_Localized: "No existe una sala con ese c\xF3digo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 65
+    m_Localized: "La sala est\xE1 llena."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 66
+    m_Localized: "La partida ya empez\xF3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 67
+    m_Localized: 'No se pudo entrar: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 68
+    m_Localized: "Sin conexi\xF3n ({0})."
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 69
+    m_Localized: "C\xF3digo: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 70
+    m_Localized: Jugadores ({0}/{1})
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 71
+    m_Localized: Jugador {0}
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 72
+    m_Localized: (host)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 73
+    m_Localized: "\u2190 t\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 74
+    m_Localized: VICTORIA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75
+    m_Localized: DERROTA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 76
+    m_Localized: "El escuadr\xF3n escap\xF3 con el artefacto."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 77
+    m_Localized: El traidor fue eliminado.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78
+    m_Localized: "El traidor acab\xF3 con el escuadr\xF3n."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 79
+    m_Localized: "El escuadr\xF3n cay\xF3 antes de recuperar el artefacto."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 80
+    m_Localized: 'Reapariciones: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 81
+    m_Localized: TRAIDOR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 82
+    m_Localized: "Aqu\xED el comandante. Hay 4 Kharvek custodiando las bombotellas.
+      Encu\xE9ntrenlos y tr\xE1iganlas a la b\xF3veda."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 83
+    m_Localized: Bombotella entregada. Faltan {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 84
+    m_Localized: "\xA1La b\xF3veda est\xE1 abierta! Vayan por el artefacto."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 85
+    m_Localized: "Eres el traidor. Elimina al escuadr\xF3n antes de que lleguen a
+      la nave."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 86
+    m_Localized: "\xA1Hay un traidor entre ustedes! Lleven el artefacto a la nave."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 87
+    m_Localized: "\xA1El portador cay\xF3! Recuperen el artefacto."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88
+    m_Localized: "Artefacto recuperado. \xA1Ll\xE9venlo a la nave!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 89
+    m_Localized: "Cay\xF3 un compa\xF1ero. Quedan {0} reapariciones."
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 90
+    m_Localized: "\xA1Ya no quedan reapariciones! Si caen todos, se acab\xF3."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91
+    m_Localized: '[E] Entregar bombotella {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 92
+    m_Localized: Necesitas bombotellas {0}
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 93
+    m_Localized: Necesitas {0} bombotellas ({1}/{0})
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 94
+    m_Localized: '[E] Recoger bombotella'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 95
+    m_Localized: Ya llevas un item
+    m_Metadata:
+      m_Items: []
+  - m_Id: 96
+    m_Localized: '[E] Recoger {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 97
+    m_Localized: '[E] Cambiar {0} por {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 98
+    m_Localized: '[E] Recoger El elemento'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 99
+    m_Localized: "Volver al men\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100
+    m_Localized: Espectando a {0}
+    m_Metadata:
+      m_Items:
+      - rid: 6842420604274737232
+  - m_Id: 101
+    m_Localized: '[Clic] Siguiente'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6842420604274737232
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 61
+        - id: 62
+        - id: 63
+        - id: 67
+        - id: 68
+        - id: 69
+        - id: 70
+        - id: 71
+        - id: 80
+        - id: 83
+        - id: 89
+        - id: 91
+        - id: 92
+        - id: 93
+        - id: 96
+        - id: 97
+        - id: 100

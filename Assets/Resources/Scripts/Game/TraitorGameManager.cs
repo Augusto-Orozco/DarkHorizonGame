@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [RequireComponent(typeof(PhotonView))]
 public sealed class TraitorGameManager : MonoBehaviourPun
 {
+    private const string TextTable = "Textos";
+
     public static TraitorGameManager Instance { get; private set; }
 
     [Header("Desbloqueo de la sala")]
@@ -16,20 +19,22 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
     [Header("Comandante")]
     [SerializeField] private float introDelay = 3f;
-    [TextArea][SerializeField] private string introMessage = "Aquí el comandante. Hay 4 Kharvek custodiando las bombotellas. Encuéntrenlos y tráiganlas a la bóveda.";
-    [TextArea][SerializeField] private string deliveredMessage = "Bombotella entregada. Faltan {0}.";
-    [TextArea][SerializeField] private string unlockedMessage = "¡La bóveda está abierta! Vayan por el artefacto.";
-    [TextArea][SerializeField] private string traitorMessage = "Eres el traidor. Elimina al escuadrón antes de que lleguen a la nave.";
-    [TextArea][SerializeField] private string crewMessage = "¡Hay un traidor entre ustedes! Lleven el artefacto a la nave.";
-    [TextArea][SerializeField] private string artifactDroppedMessage = "¡El portador cayó! Recuperen el artefacto.";
-    [TextArea][SerializeField] private string artifactRecoveredMessage = "Artefacto recuperado. ¡Llévenlo a la nave!";
+    // Mensajes de la tabla "Textos". Ya traen su clave por defecto; se pueden cambiar en el Inspector.
+    // Los que llevan {0} necesitan la casilla "Smart" activada en la tabla.
+    [SerializeField] private LocalizedString introMessage = new LocalizedString(TextTable, "G082");
+    [SerializeField] private LocalizedString deliveredMessage = new LocalizedString(TextTable, "G083");
+    [SerializeField] private LocalizedString unlockedMessage = new LocalizedString(TextTable, "G084");
+    [SerializeField] private LocalizedString traitorMessage = new LocalizedString(TextTable, "G085");
+    [SerializeField] private LocalizedString crewMessage = new LocalizedString(TextTable, "G086");
+    [SerializeField] private LocalizedString artifactDroppedMessage = new LocalizedString(TextTable, "G087");
+    [SerializeField] private LocalizedString artifactRecoveredMessage = new LocalizedString(TextTable, "G088");
 
     [Header("Reapariciones")]
     [SerializeField, Min(0)] private int livesPerPlayer = 2;
     [SerializeField, Min(0)] private int minTeamLives = 3;
     [SerializeField, Min(0f)] private float respawnGrace = 4f;
-    [TextArea][SerializeField] private string lifeLostMessage = "Cayó un compañero. Quedan {0} reapariciones.";
-    [TextArea][SerializeField] private string noLivesMessage = "¡Ya no quedan reapariciones! Si caen todos, se acabó.";
+    [SerializeField] private LocalizedString lifeLostMessage = new LocalizedString(TextTable, "G089");
+    [SerializeField] private LocalizedString noLivesMessage = new LocalizedString(TextTable, "G090");
 
     [Header("Fase final")]
     [SerializeField, Range(0.1f, 1f)] private float carrierSpeedMultiplier = 0.8f;
@@ -182,7 +187,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     {
         TeamLives = Mathf.Max(0, lives);
         OnTeamLivesChanged?.Invoke(TeamLives);
-        Commander.Say(TeamLives > 0 ? string.Format(lifeLostMessage, TeamLives) : noLivesMessage, 4f);
+        Commander.Say(TeamLives > 0 ? lifeLostMessage.GetLocalizedString(TeamLives) : noLivesMessage.GetLocalizedString(), 4f);
     }
 
     private static PlayerHealth FindLocalPlayer()
@@ -217,7 +222,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     private IEnumerator IntroRoutine()
     {
         yield return new WaitForSeconds(introDelay);
-        Commander.Say(introMessage, 6f);
+        Commander.Say(introMessage.GetLocalizedString(), 6f);
     }
 
     private void OnDestroy()
@@ -285,7 +290,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
         RefreshGatePrompts();
 
         if (collectedBombotellas < requiredBombotellas)
-            Commander.Say(string.Format(deliveredMessage, requiredBombotellas - collectedBombotellas), 4f);
+            Commander.Say(deliveredMessage.GetLocalizedString(requiredBombotellas - collectedBombotellas), 4f);
 
         CheckRoomUnlock();
     }
@@ -348,7 +353,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
         ApplyCarrier(collectorActor);
 
         bool iAmTraitor = PhotonNetwork.LocalPlayer.ActorNumber == traitorActor;
-        Commander.Say(iAmTraitor ? traitorMessage : crewMessage, 6f);
+        Commander.Say((iAmTraitor ? traitorMessage : crewMessage).GetLocalizedString(), 6f);
 
         Debug.Log($"[TRAITOR] Artefacto: jugador {collectorActor}. Traidor: jugador {traitorActor}. Escuadrón: {crewCount}.", this);
     }
@@ -357,7 +362,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
     private void RpcSetCarrier(int carrierActor)
     {
         ApplyCarrier(carrierActor);
-        Commander.Say(artifactRecoveredMessage, 4f);
+        Commander.Say(artifactRecoveredMessage.GetLocalizedString(), 4f);
     }
 
     private void ApplyCarrier(int carrierActor)
@@ -400,7 +405,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             SetSpeedMultiplier(previous, 1f);
 
         ArtifactHolderActorNumber = -1;
-        Commander.Say(artifactDroppedMessage, 5f);
+        Commander.Say(artifactDroppedMessage.GetLocalizedString(), 5f);
     }
 
     private static void SetSpeedMultiplier(PlayerHealth player, float multiplier)
@@ -422,7 +427,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
 
         PlayerHealth traitor = all[UnityEngine.Random.Range(0, all.Length)];
         ActivateTraitor(traitor, Mathf.Max(1, all.Length - 1));
-        Commander.Say(crewMessage, 6f);
+        Commander.Say(crewMessage.GetLocalizedString(), 6f);
     }
 
     private void ActivateTraitor(PlayerHealth player, int crewCount)
@@ -573,7 +578,7 @@ public sealed class TraitorGameManager : MonoBehaviourPun
             }
 
             Debug.Log("[TRAITOR] La entrada a la sala del elemento fue desbloqueada.", this);
-            Commander.Say(unlockedMessage, 6f);
+            Commander.Say(unlockedMessage.GetLocalizedString(), 6f);
         }
     }
 

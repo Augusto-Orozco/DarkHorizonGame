@@ -3,6 +3,8 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 
@@ -10,6 +12,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 {
 
     private const string CodeChars = "ABCDEFGHJKMNPQRSTUVWXYZ";
+    private const string TextTable = "Textos";
 
     [Header("Red")]
     [SerializeField] private string gameVersion = "0.1";
@@ -33,6 +36,39 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [Header("Mensajes")]
     [SerializeField] private TMP_Text statusText;
 
+    // Textos de la tabla "Textos". Ya traen su clave por defecto; se pueden cambiar en el Inspector.
+    // Los que llevan {0}, {1} necesitan la casilla "Smart" activada en la tabla.
+    [Header("Textos (tabla Textos)")]
+    [SerializeField] private LocalizedString connectingText = new LocalizedString(TextTable, "G060");
+    [SerializeField] private LocalizedString creatingRoomText = new LocalizedString(TextTable, "G061");
+    [SerializeField] private LocalizedString codeLengthText = new LocalizedString(TextTable, "G062");
+    [SerializeField] private LocalizedString joiningText = new LocalizedString(TextTable, "G063");
+    [SerializeField] private LocalizedString roomNotFoundText = new LocalizedString(TextTable, "G064");
+    [SerializeField] private LocalizedString roomFullText = new LocalizedString(TextTable, "G065");
+    [SerializeField] private LocalizedString gameStartedText = new LocalizedString(TextTable, "G066");
+    [SerializeField] private LocalizedString joinFailedText = new LocalizedString(TextTable, "G067");
+    [SerializeField] private LocalizedString disconnectedText = new LocalizedString(TextTable, "G068");
+    [SerializeField] private LocalizedString roomCodeLabel = new LocalizedString(TextTable, "G069");
+    [SerializeField] private LocalizedString playersLabel = new LocalizedString(TextTable, "G070");
+    [SerializeField] private LocalizedString playerLabel = new LocalizedString(TextTable, "G071");
+    [SerializeField] private LocalizedString hostLabel = new LocalizedString(TextTable, "G072");
+    [SerializeField] private LocalizedString youLabel = new LocalizedString(TextTable, "G073");
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        // Si se cambia el idioma con la sala abierta, se vuelve a escribir el texto de la sala.
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    }
+
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    }
+
+    private void OnLocaleChanged(Locale locale) => RefreshRoom();
+
     private void Start()
     {
 
@@ -48,7 +84,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
 
         SetButtonsInteractable(false);
-        SetStatus("Conectando...");
+        SetStatus(connectingText.GetLocalizedString());
         PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -62,12 +98,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         string code = GenerateCode();
         SetButtonsInteractable(false);
-        SetStatus($"Creando sala {code}...");
+        SetStatus(creatingRoomText.GetLocalizedString(code));
 
         RoomOptions options = new RoomOptions
         {
             MaxPlayers = maxPlayers,
-            IsVisible = false,   
+            IsVisible = false,
             IsOpen = true
         };
         PhotonNetwork.CreateRoom(code, options);
@@ -81,12 +117,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         string code = codeInput != null ? codeInput.text.Trim().ToUpperInvariant() : "";
         if (code.Length != codeLength)
         {
-            SetStatus($"El código tiene {codeLength} letras.");
+            SetStatus(codeLengthText.GetLocalizedString(codeLength));
             return;
         }
 
         SetButtonsInteractable(false);
-        SetStatus($"Entrando a {code}...");
+        SetStatus(joiningText.GetLocalizedString(code));
         PhotonNetwork.JoinRoom(code);
     }
 
@@ -123,13 +159,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         SetButtonsInteractable(true);
 
         if (returnCode == ErrorCode.GameDoesNotExist)
-            SetStatus("No existe una sala con ese código.");
+            SetStatus(roomNotFoundText.GetLocalizedString());
         else if (returnCode == ErrorCode.GameFull)
-            SetStatus("La sala está llena.");
+            SetStatus(roomFullText.GetLocalizedString());
         else if (returnCode == ErrorCode.GameClosed)
-            SetStatus("La partida ya empezó.");
+            SetStatus(gameStartedText.GetLocalizedString());
         else
-            SetStatus($"No se pudo entrar: {message}");
+            SetStatus(joinFailedText.GetLocalizedString(message));
     }
 
     public override void OnJoinedRoom()
@@ -153,7 +189,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         ShowJoinPanel();
         SetButtonsInteractable(false);
-        SetStatus($"Sin conexión ({cause}).");
+        SetStatus(disconnectedText.GetLocalizedString(cause.ToString()));
     }
 
 
@@ -166,18 +202,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Room room = PhotonNetwork.CurrentRoom;
 
         if (roomCodeText != null)
-            roomCodeText.text = $"Código: {room.Name}";
+            roomCodeText.text = roomCodeLabel.GetLocalizedString(room.Name);
 
         if (playersText != null)
         {
             StringBuilder list = new StringBuilder();
-            list.AppendLine($"Jugadores ({room.PlayerCount}/{room.MaxPlayers})");
+            list.AppendLine(playersLabel.GetLocalizedString(room.PlayerCount, (int)room.MaxPlayers));
 
             foreach (Player player in room.Players.Values)
             {
-                string host = player.IsMasterClient ? " (host)" : "";
-                string me = player.IsLocal ? " ← tú" : "";
-                list.AppendLine($"Jugador {player.ActorNumber}{host}{me}");
+                string host = player.IsMasterClient ? " " + hostLabel.GetLocalizedString() : "";
+                string me = player.IsLocal ? " " + youLabel.GetLocalizedString() : "";
+                list.AppendLine(playerLabel.GetLocalizedString(player.ActorNumber) + host + me);
             }
 
             playersText.text = list.ToString();

@@ -1,8 +1,14 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 [RequireComponent(typeof(InteractionPrompt))]
 public sealed class TraitorArtifactPickup : Pickup, IInteractable
 {
+    private const string TextTable = "Textos";
+
+    // Texto de la tabla "Textos".
+    [SerializeField] private LocalizedString pickupText = new LocalizedString(TextTable, "G098");
+
     private InteractionPrompt prompt;
 
     public Vector3 Position => transform.position;
@@ -35,7 +41,7 @@ public sealed class TraitorArtifactPickup : Pickup, IInteractable
     public void SetFocused(PlayerInteractor interactor, bool focused)
     {
         if (focused)
-            prompt.Show("[E] Recoger El elemento");
+            prompt.Show(pickupText.GetLocalizedString());
         else
             prompt.Hide();
     }

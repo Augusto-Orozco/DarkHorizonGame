@@ -1,10 +1,19 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.VFX;
 
 [RequireComponent(typeof(InteractionPrompt))]
 public class GroundWeapon : Pickup, IInteractable
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private WeaponData weaponData;
+
+    // Textos de la tabla "Textos"; llevan {0} y {1}.
+    // El nombre del arma sale tal cual de su WeaponData (aún no está localizado).
+    [SerializeField] private LocalizedString pickupText = new LocalizedString(TextTable, "G096");
+    [SerializeField] private LocalizedString swapText = new LocalizedString(TextTable, "G097");
+
     private WeaponState state;
     private InteractionPrompt prompt;
     public Vector3 Position => transform.position;
@@ -20,7 +29,7 @@ public class GroundWeapon : Pickup, IInteractable
             Debug.LogWarning("GrpundWeapon sin WeaponData asignado");
         else if (state == null)
             state = new WeaponState(weaponData);
-        
+
     }
     public void Initialize(WeaponState existingState){
         state = existingState;
@@ -32,7 +41,7 @@ public class GroundWeapon : Pickup, IInteractable
         PlayerInteractor interactor = inventory.GetComponent<PlayerInteractor>();
         if (interactor != null)
             interactor.Register(this);
-        
+
     }
 
     protected override void OnPlayerExit(PlayerInventory inventory)
@@ -67,8 +76,8 @@ public class GroundWeapon : Pickup, IInteractable
         WeaponState current = inventory.GetWeapon(state.Data.Slot);
 
         return current == null
-            ? $"[E] Recoger {newName}"
-            : $"[E] Cambiar {current.Data.ItemName} por {newName}";
+            ? pickupText.GetLocalizedString(newName)
+            : swapText.GetLocalizedString(current.Data.ItemName, newName);
     }
 
     public static GroundWeapon Spawn(

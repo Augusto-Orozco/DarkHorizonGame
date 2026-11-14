@@ -4,6 +4,12 @@ using UnityEngine.InputSystem;
 
 public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 {
+    [Header("Input System")]
+    [SerializeField] private PlayerInput playerInput;
+
+    private InputAction attackAction;
+    private InputAction reloadAction;
+
     [Header("Daño")]
     [SerializeField] private float tazoDamage = 15f;
 
@@ -43,23 +49,44 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
 
         if (player != null)
             playerRb = player.GetComponentInParent<Rigidbody>();
+
+        if (playerInput == null && player != null)
+            playerInput = player.GetComponent<PlayerInput>();
+
+        if (playerInput != null)
+        {
+            InputActionMap playerMap =
+                playerInput.actions.FindActionMap("Player", true);
+
+            attackAction = playerMap.FindAction("Attack", true);
+
+            // Esta acción debe existir en el Input Actions.
+            reloadAction = playerMap.FindAction("Reload", false);
+        }
+        else
+        {
+            Debug.LogError("LanzaTazosWeapon necesita PlayerInput.", this);
+        }
     }
 
     private void Update()
     {
-        if (player == null || !player.readInput || PauseMenuController.IsPaused || !player.HasBubbleGun())
+        if (player == null ||
+            !player.readInput ||
+            PauseMenuController.IsPaused ||
+            !player.HasBubbleGun())
             return;
 
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard != null && keyboard[reloadKey].wasPressedThisFrame)
+        if (reloadAction != null && reloadAction.WasPressedThisFrame())
             inventory.TryReloadActiveWeapon();
 
-        if (Mouse.current == null)
+        if (attackAction == null)
             return;
 
         bool wantsToFire = automaticFire
-            ? Mouse.current.leftButton.isPressed
-            : Mouse.current.leftButton.wasPressedThisFrame;
+            ? attackAction.IsPressed()
+            : attackAction.WasPressedThisFrame();
+
         WeaponState state = CurrentState;
         bool canFire = state == null || state.CanFire;
 
@@ -80,7 +107,6 @@ public class LanzaTazosWeapon : MonoBehaviour, IRemoteShooter
             }
         }
     }
-
 
     private void Fire()
     {
