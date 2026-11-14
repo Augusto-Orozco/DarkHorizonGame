@@ -1,13 +1,18 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class TraitorHealthBarUI : MonoBehaviour
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private GameObject panel;
     [SerializeField] private Image fill;
     [SerializeField] private TMP_Text nameText;
-    [SerializeField] private string label = "TRAIDOR";
+    // Texto de la tabla "Textos" ("TRAIDOR").
+    [SerializeField] private LocalizedString label = new LocalizedString(TextTable, "G081");
     [SerializeField] private float smoothSpeed = 1.5f;
 
     private PlayerHealth traitorHealth;
@@ -17,6 +22,23 @@ public class TraitorHealthBarUI : MonoBehaviour
     {
         if (panel != null)
             panel.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+    }
+
+    private void OnDisable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+    }
+
+    // Al cambiar el idioma se vuelve a escribir el nombre mientras la barra se muestra.
+    private void OnLocaleChanged(Locale locale)
+    {
+        if (traitorHealth != null && nameText != null)
+            nameText.text = label.GetLocalizedString();
     }
 
     private void Update()
@@ -50,7 +72,7 @@ public class TraitorHealthBarUI : MonoBehaviour
     private void Show(PlayerHealth traitor)
     {
         traitorHealth = traitor;
-        nameText.text = label;
+        nameText.text = label.GetLocalizedString();
         fill.fillAmount = 1f;
         panel.SetActive(true);
     }

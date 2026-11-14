@@ -1,23 +1,27 @@
 
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 
 public class GameOverUI : MonoBehaviour
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text subtitleText;
     [SerializeField] private string menuSceneName = "StartScene";
 
-    [Header("Textos")]
-    [SerializeField] private string victoryTitle = "VICTORIA";
-    [SerializeField] private string defeatTitle = "DERROTA";
-    [SerializeField] private string crewExtractedText = "El escuadrón escapó con el artefacto.";
-    [SerializeField] private string traitorDefeatedText = "El traidor fue eliminado.";
-    [SerializeField] private string traitorWinsText = "El traidor acabó con el escuadrón.";
+    // Textos de la tabla "Textos". Ya traen su clave por defecto; se pueden cambiar en el Inspector.
+    [Header("Textos (tabla Textos)")]
+    [SerializeField] private LocalizedString victoryTitle = new LocalizedString(TextTable, "G074");
+    [SerializeField] private LocalizedString defeatTitle = new LocalizedString(TextTable, "G075");
+    [SerializeField] private LocalizedString crewExtractedText = new LocalizedString(TextTable, "G076");
+    [SerializeField] private LocalizedString traitorDefeatedText = new LocalizedString(TextTable, "G077");
+    [SerializeField] private LocalizedString traitorWinsText = new LocalizedString(TextTable, "G078");
 
-    [SerializeField] private string squadWipedText = "El escuadrón cayó antes de recuperar el artefacto.";
+    [SerializeField] private LocalizedString squadWipedText = new LocalizedString(TextTable, "G079");
 
     private bool subscribed;
 
@@ -48,13 +52,13 @@ public class GameOverUI : MonoBehaviour
         bool traitorWon = result == TraitorGameManager.GameResult.TraitorWins;
         bool won = result != TraitorGameManager.GameResult.SquadWiped && traitorWon == iAmTraitor;
 
-        titleText.text = won ? victoryTitle : defeatTitle;
+        titleText.text = (won ? victoryTitle : defeatTitle).GetLocalizedString();
         subtitleText.text = result switch
         {
-            TraitorGameManager.GameResult.CrewExtracted => crewExtractedText,
-            TraitorGameManager.GameResult.TraitorDefeated => traitorDefeatedText,
-            TraitorGameManager.GameResult.SquadWiped => squadWipedText,
-            _ => traitorWinsText
+            TraitorGameManager.GameResult.CrewExtracted => crewExtractedText.GetLocalizedString(),
+            TraitorGameManager.GameResult.TraitorDefeated => traitorDefeatedText.GetLocalizedString(),
+            TraitorGameManager.GameResult.SquadWiped => squadWipedText.GetLocalizedString(),
+            _ => traitorWinsText.GetLocalizedString()
         };
 
         panel.SetActive(true);

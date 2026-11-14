@@ -1,10 +1,17 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 
 [RequireComponent(typeof(InteractionPrompt))]
 public sealed class BombotellaPickup : Pickup, IInteractable
 {
+    private const string TextTable = "Textos";
+
     [SerializeField] private KeyItemData bombotellaData;
+
+    // Textos de la tabla "Textos".
+    [SerializeField] private LocalizedString pickupText = new LocalizedString(TextTable, "G094");
+    [SerializeField] private LocalizedString carryingText = new LocalizedString(TextTable, "G095");
 
     private InteractionPrompt prompt;
 
@@ -43,7 +50,7 @@ public sealed class BombotellaPickup : Pickup, IInteractable
         }
 
         bool hasFreeSlot = interactor.Inventory.Item == null;
-        prompt.Show(hasFreeSlot ? "[E] Recoger bombotella" : "Ya llevas un item");
+        prompt.Show((hasFreeSlot ? pickupText : carryingText).GetLocalizedString());
     }
 
     public void Interact(PlayerInteractor interactor)
@@ -51,7 +58,7 @@ public sealed class BombotellaPickup : Pickup, IInteractable
         if (!CanInteract || bombotellaData == null)
             return;
 
-    
+
         if (interactor.Inventory.TryCollect(bombotellaData))
             Collect(interactor.Inventory);
     }
