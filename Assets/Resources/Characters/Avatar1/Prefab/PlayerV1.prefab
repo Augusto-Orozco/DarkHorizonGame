@@ -919,6 +919,7 @@ GameObject:
   - component: {fileID: 5696226455358116900}
   - component: {fileID: 8585989626007528739}
   - component: {fileID: 12618782135720375}
+  - component: {fileID: 5083458040018504951}
   m_Layer: 3
   m_Name: PlayerV1
   m_TagString: Player
@@ -1378,6 +1379,28 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5083458040018504951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534777294962824366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f70e71d9c3a2bb49bb0975de74a6cf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponBob
+  weaponHolder: {fileID: 4188566001671353214}
+  bobFrequency: 1.6
+  bobAmountX: 0.04
+  bobAmountY: 0.06
+  bobRoll: 2
+  minSpeed: 0.3
+  fullSpeed: 6
+  idleFrequency: 0.6
+  idleAmountY: 0.01
+  smoothing: 10
 --- !u!1 &1800775660750480569
 GameObject:
   m_ObjectHideFlags: 0
@@ -3583,6 +3606,13 @@ MonoBehaviour:
   leftShoulderX: -0.458
   shoulderSwapSpeed: 6
   shoulderSwapKey: 36
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 193
+  collisionRadius: 0.25
+  collisionPadding: 0.1
+  pivotHeight: 0.6
+  collisionReturnSpeed: 6
   sensitivityX: 0.15
   sensitivityY: 0.12
   minPitch: -20

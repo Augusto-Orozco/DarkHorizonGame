@@ -37,6 +37,8 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
     [SerializeField] private float losePlayerRange = 28f;
     [SerializeField] private float chaseSpeed = 3.5f;
     [SerializeField] private float rotationSpeed = 6f;
+    [SerializeField] private float sidestepAngle = 70f;
+    [SerializeField] private float sidestepDuration = 0.7f;
 
     [Header("Ataque cuerpo a cuerpo")]
     [SerializeField] private float attackRange = 2.5f;
@@ -88,6 +90,8 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
     private int lastLightLevel;
     private bool ownsPatrolCenter;
     private NetworkEnemyVisuals netVisuals;
+    private float sidestepUntil;
+    private float sidestepSign = 1f;
 
     private void Awake()
     {
@@ -167,7 +171,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
             UpdatePatrolling();
     }
 
-   
+
     private void OnAnimatorMove() { }
 
     private void HandleLightLevelChanged(int level)
@@ -182,7 +186,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
                 health.DamageTakenMultiplier = groupLightDamageMultiplier;
         }
 
-   
+
         bool justGotLit = lastLightLevel == 0 && level > 0;
         if (justGotLit && Time.time >= nextFleeAllowedTime)
         {
@@ -245,12 +249,12 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         float maximumAttackDistance = attackRange + attackRangeTolerance;
         if (distance > maximumAttackDistance)
         {
-            MoveTowards(player.position, chaseSpeed, false);
+            ChaseMove(TargetPoint(player));
             UpdateMovementAnimation(true);
         }
         else
         {
-            FaceTarget(player.position);
+            FaceTarget(TargetPoint(player));
             UpdateMovementAnimation(false);
 
             if (Time.time >= nextAttackTime)
@@ -264,7 +268,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         attackTimer = 0f;
         hasProcessedAttack = false;
         nextAttackTime = Time.time + attackCooldown;
-        FaceTarget(player.position);
+        FaceTarget(TargetPoint(player));
         SetAnimationState(AnimationState.Attack);
     }
 
@@ -277,7 +281,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
             return;
         }
 
-        FaceTarget(player.position);
+        FaceTarget(TargetPoint(player));
         attackTimer += Time.deltaTime;
 
         if (!hasProcessedAttack &&
@@ -289,7 +293,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         if (attackTimer >= attackAnimationDuration)
         {
             state = MariangulaState.Chasing;
-            SetAnimationState(AnimationState.Idle);  
+            SetAnimationState(AnimationState.Idle);
         }
     }
 
@@ -303,7 +307,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         if (player == null)
             return;
 
- 
+
         if (DistanceTo(player) > attackRange + attackRangeTolerance)
             return;
 
@@ -398,7 +402,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         }
 
         animator.speed = 1f;
-        animator.applyRootMotion = true;  
+        animator.applyRootMotion = true;
         animator.Play(GetAnimatorStateHash(animationName), 0, 0f);
         if (netVisuals != null)
             netVisuals.SendPlay(GetAnimatorStateHash(animationName));
@@ -509,7 +513,50 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
 
     private float DistanceTo(Transform target)
     {
-        return target == null ? float.PositiveInfinity : DistanceTo(target.position);
+        return target == null ? float.PositiveInfinity : DistanceTo(TargetPoint(target));
+    }
+
+    private static Vector3 TargetPoint(Transform target)
+    {
+        CharacterController controller = target.GetComponent<CharacterController>();
+        if (controller != null)
+            return controller.bounds.center;
+
+        Collider targetCollider = target.GetComponent<Collider>();
+        if (targetCollider != null)
+            return targetCollider.bounds.center;
+
+        return target.position;
+    }
+
+    private void ChaseMove(Vector3 target)
+    {
+        Vector3 toTarget = target - transform.position;
+        toTarget.y = 0f;
+        if (toTarget.sqrMagnitude <= 0.001f)
+            return;
+
+        Vector3 direction = toTarget.normalized;
+        bool sidestepping = Time.time < sidestepUntil;
+        if (sidestepping)
+            direction = Quaternion.Euler(0f, sidestepAngle * sidestepSign, 0f) * direction;
+
+        FaceTarget(transform.position + direction);
+
+        Vector3 desired = direction * chaseSpeed * Time.deltaTime;
+        Vector3 before = transform.position;
+        EnemyMover.Move(transform, bodyCollider, desired, obstacleMask);
+
+        Vector3 moved = transform.position - before;
+        moved.y = 0f;
+
+        if (moved.magnitude < desired.magnitude * 0.3f)
+        {
+            if (sidestepping)
+                sidestepSign = -sidestepSign;
+
+            sidestepUntil = Time.time + sidestepDuration;
+        }
     }
 
     private bool IsOutsidePatrolArea()
@@ -557,7 +604,7 @@ public partial class MariangulaMovement : MonoBehaviour, IPatrolArea
         ownsPatrolCenter = false;
         patrolCenter = center;
         patrolHalfExtents = halfExtents;
-        hasPatrolTarget = false;   
+        hasPatrolTarget = false;
     }
 
     private void OnDestroy()
