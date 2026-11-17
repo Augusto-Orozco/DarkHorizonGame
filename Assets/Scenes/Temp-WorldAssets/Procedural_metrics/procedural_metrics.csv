@@ -1,0 +1,2 @@
+Seed,GridX,GridY,RequestedRooms,PlacedRooms,PlacementAttempts,DelaunayEdges,DelaunayTriangles,SelectedConnections,SuccessfulPaths,FailedPaths,HallwayCells,GenerationTimeMs
+1,80,80,10,10,11,20,11,11,11,0,249,38.6177

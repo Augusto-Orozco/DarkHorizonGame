@@ -148,9 +148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0763b230d22fd334bbc9441aed267b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 75, y: 60}
-  roomCount: 25
-  maxAttemptsPerRoom: 50
+  recordMetrics: 1
+  size: {x: 80, y: 80}
+  roomCount: 10
+  maxAttemptsPerRoom: 100
   roomPrefabs:
   - prefab: {fileID: 1201438342487178271, guid: 9263163d42cb6da40b4db976b83803f1, type: 3}
     footprint: {x: 9, y: 9}
@@ -174,8 +175,8 @@ MonoBehaviour:
   playerInScene: {fileID: 224929076}
   playerSpawnHeight: 0.5
   generatedInstallationParent: {fileID: 1777620633}
-  useFixedSeed: 0
-  seed: 0
+  useFixedSeed: 1
+  seed: 2
 --- !u!4 &203877985
 Transform:
   m_ObjectHideFlags: 0
@@ -415,7 +416,7 @@ Transform:
   m_GameObject: {fileID: 1777620632}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.17456, y: 0, z: -4.85529}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

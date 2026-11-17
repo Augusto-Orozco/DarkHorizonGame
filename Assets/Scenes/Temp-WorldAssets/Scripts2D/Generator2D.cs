@@ -10,6 +10,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 using Graphs;
+/*--<summary>-----------------------------------------------------------------*\
+| Instrumentation for obtaining cuantificable reults and metrics for testing.  |
+|                                                                              |
+\*----------------------------------------------------------------------------*/
+using System.Diagnostics;
+using System.IO;
+using System.Globalization;
+using Debug = UnityEngine.Debug;
 
 /*--<summary>-----------------------------------------------------------------*\
 | Generates the dungeon with prefabs of the rooms and hallways.                |
@@ -17,6 +25,31 @@ using Graphs;
 |...                                                                           |
 \*----------------------------------------------------------------------------*/
 public class Generator2D : MonoBehaviour {
+
+    /*--<summary>-------------------------------------------------------------*\
+    | Declaration of metrics for tracking the generation process.              |
+    |                                                                          |
+    \*------------------------------------------------------------------------*/
+
+    [Header("Experimental Metrics")]
+    [SerializeField] private bool recordMetrics = true;
+
+    private Stopwatch generationTimer;
+
+    private int requestedRooms;
+    private int placedRooms;
+    private int attemptedRoomPlacements;
+
+    private int triangulationEdges;
+    private int triangulationTriangles;
+
+    private int selectedConnections;
+    private int successfulPaths;
+    private int failedPaths;
+
+    private int totalHallwayCells;
+    private float generationTimeMs;
+
     enum CellType 
     {
         None,
@@ -90,6 +123,21 @@ public class Generator2D : MonoBehaviour {
     \*----------------------------------------------------------------------------*/
     public void Generate() 
     {
+        generationTimer = Stopwatch.StartNew();
+
+        requestedRooms = roomCount;
+        placedRooms = 0;
+        attemptedRoomPlacements = 0;
+
+        triangulationEdges = 0;
+        triangulationTriangles = 0;
+
+        selectedConnections = 0;
+        successfulPaths = 0;
+        failedPaths = 0;
+
+        totalHallwayCells = 0;
+
         ClearPreviousGeneration();
 
         random = useFixedSeed ? new Random(seed) : new Random();
@@ -129,6 +177,18 @@ public class Generator2D : MonoBehaviour {
             Debug.LogWarning(
                 $"Generator2D: {roomCount} rooms were requested, but only {rooms.Count} were placed. " +
                 "Try a larger grid, smaller footprints, or more attempts.", this);
+        }
+
+        generationTimer.Stop();
+
+        generationTimeMs =
+            (float)generationTimer.Elapsed.TotalMilliseconds;
+
+        placedRooms = rooms.Count;
+
+        if (recordMetrics)
+        {
+            SaveMetrics();
         }
     }
 
@@ -211,6 +271,8 @@ public class Generator2D : MonoBehaviour {
 
             for (int attempt = 0; attempt < maxAttemptsPerRoom; attempt++)
             {
+                attemptedRoomPlacements++; // Increment the counter for attempted room placements
+
                 RoomPrefabOption option = ChooseRoomPrefab();
                 if (option == null)
                 {
@@ -322,6 +384,12 @@ public class Generator2D : MonoBehaviour {
             delaunay = Delaunay2D.Triangulate(roomVertices);
         else
             delaunay = null;
+        
+        if (delaunay != null) // If triangulation was successful, record the number 
+            {                 // of edges and triangles
+                triangulationEdges = delaunay.Edges.Count;
+                triangulationTriangles = delaunay.Triangles.Count;
+            }
     }
 
     private void CreateHallways()
@@ -362,6 +430,8 @@ public class Generator2D : MonoBehaviour {
             if (random.NextDouble() < 0.125)
                 selectedEdges.Add(edge);
         }
+
+        selectedConnections = selectedEdges.Count; // Count of edges selected for hallways
     }
 
     private void PathfindHallways()
@@ -413,7 +483,11 @@ public class Generator2D : MonoBehaviour {
                 });
 
             if (path == null)
+            {
+                failedPaths++; // Increment the counter for failed hallway paths
                 continue;
+            }
+            successfulPaths++; // Increment the counter for successful hallway paths
 
             foreach (Vector2Int current in path)
             {
@@ -430,6 +504,8 @@ public class Generator2D : MonoBehaviour {
 
         foreach (Vector2Int cell in hallwayCells)
             PlaceHallway(cell);
+        
+        totalHallwayCells = hallwayCells.Count; // Count of unique hallway cells placed
     }
 
     private Vector2Int GetOutsideDoorCell(Room room, Vector2 targetCenter)
@@ -504,6 +580,61 @@ public class Generator2D : MonoBehaviour {
             body.linearVelocity = Vector3.zero;
             body.angularVelocity = Vector3.zero;
         }
+    }
+
+    /*--<summary>-----------------------------------------------------------------*\
+    | Export data to a CSV, spawn prefabs, and assign optional materials to the    |
+    | renderers. Allows results analysis for other software graphics.              |
+    |--<returns>-------------------------------------------------------------------|
+    |...                                                                           |
+    \*----------------------------------------------------------------------------*/ 
+    private void SaveMetrics()
+    {
+        string folderPath =
+            @"C:\Users\elsup\Unity\DarkHorizonGame\DarkHorizonGame\Assets\Scenes\Temp-WorldAssets\Procedural_metrics";
+
+        // Create the folder if it does not exist.
+        Directory.CreateDirectory(folderPath);
+
+        string path = Path.Combine(
+            folderPath,
+            "procedural_metrics.csv"
+        );
+
+        bool fileExists = File.Exists(path);
+
+        using (StreamWriter writer = new StreamWriter(path, true))
+        {
+            if (!fileExists)
+            {
+                writer.WriteLine(
+                    "Seed,GridX,GridY,RequestedRooms,PlacedRooms," +
+                    "PlacementAttempts,DelaunayEdges,DelaunayTriangles," +
+                    "SelectedConnections,SuccessfulPaths,FailedPaths," +
+                    "HallwayCells,GenerationTimeMs"
+                );
+            }
+
+            writer.WriteLine(string.Join(",",
+                seed,
+                size.x,
+                size.y,
+                requestedRooms,
+                placedRooms,
+                attemptedRoomPlacements,
+                triangulationEdges,
+                triangulationTriangles,
+                selectedConnections,
+                successfulPaths,
+                failedPaths,
+                totalHallwayCells,
+                generationTimeMs.ToString(
+                    CultureInfo.InvariantCulture
+                )
+            ));
+        }
+
+        Debug.Log("Metrics saved to: " + path);
     }
     
     /*--<summary>-----------------------------------------------------------------*\
