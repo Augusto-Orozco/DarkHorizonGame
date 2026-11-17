@@ -7,19 +7,17 @@ using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
-
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-
     private const string CodeChars = "ABCDEFGHJKMNPQRSTUVWXYZ";
     private const string TextTable = "Textos";
 
     [Header("Red")]
-    [SerializeField] private string gameVersion = "0.1";
+    [SerializeField] private string gameVersion = "0.2";
     [SerializeField] private byte maxPlayers = 4;
     [SerializeField] private int codeLength = 4;
-    [Tooltip("Nombre de la escena del juego (tiene que estar en Build Settings)")]
     [SerializeField] private string gameSceneName = "MapaDemoS4";
+    [SerializeField] private int maxCreateRetries = 3;
 
     [Header("Panel de crear / unirse")]
     [SerializeField] private GameObject joinPanel;
@@ -36,8 +34,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [Header("Mensajes")]
     [SerializeField] private TMP_Text statusText;
 
-    // Textos de la tabla "Textos". Ya traen su clave por defecto; se pueden cambiar en el Inspector.
-    // Los que llevan {0}, {1} necesitan la casilla "Smart" activada en la tabla.
     [Header("Textos (tabla Textos)")]
     [SerializeField] private LocalizedString connectingText = new LocalizedString(TextTable, "G060");
     [SerializeField] private LocalizedString creatingRoomText = new LocalizedString(TextTable, "G061");
@@ -54,10 +50,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private LocalizedString hostLabel = new LocalizedString(TextTable, "G072");
     [SerializeField] private LocalizedString youLabel = new LocalizedString(TextTable, "G073");
 
+    private bool busy;
+    private bool starting;
+    private bool leaving;
+    private int createRetries;
+
+    private bool CanAct => !busy && !leaving && PhotonNetwork.IsConnectedAndReady && !PhotonNetwork.InRoom;
+
     public override void OnEnable()
     {
         base.OnEnable();
-        // Si se cambia el idioma con la sala abierta, se vuelve a escribir el texto de la sala.
         LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
     }
 
@@ -71,12 +73,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-
         PhotonNetwork.AutomaticallySyncScene = true;
 
         ShowJoinPanel();
 
-        if (PhotonNetwork.IsConnectedAndReady)
+        if (PhotonNetwork.IsConnectedAndReady && !PhotonNetwork.InRoom)
         {
             SetButtonsInteractable(true);
             SetStatus("");
@@ -85,19 +86,29 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
         SetButtonsInteractable(false);
         SetStatus(connectingText.GetLocalizedString());
+
+        if (PhotonNetwork.IsConnected)
+            return;
+
         PhotonNetwork.GameVersion = gameVersion;
         PhotonNetwork.ConnectUsingSettings();
     }
 
-
-
     public void CreateRoom()
     {
-        if (!PhotonNetwork.IsConnectedAndReady)
+        if (!CanAct)
             return;
 
-        string code = GenerateCode();
+        createRetries = 0;
+        TryCreateRoom();
+    }
+
+    private void TryCreateRoom()
+    {
+        busy = true;
         SetButtonsInteractable(false);
+
+        string code = GenerateCode();
         SetStatus(creatingRoomText.GetLocalizedString(code));
 
         RoomOptions options = new RoomOptions
@@ -106,12 +117,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             IsVisible = false,
             IsOpen = true
         };
-        PhotonNetwork.CreateRoom(code, options);
+
+        if (!PhotonNetwork.CreateRoom(code, options))
+            FailOperation(joinFailedText.GetLocalizedString("CreateRoom"));
     }
 
     public void JoinRoom()
     {
-        if (!PhotonNetwork.IsConnectedAndReady)
+        if (!CanAct)
             return;
 
         string code = codeInput != null ? codeInput.text.Trim().ToUpperInvariant() : "";
@@ -121,15 +134,22 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        busy = true;
         SetButtonsInteractable(false);
         SetStatus(joiningText.GetLocalizedString(code));
-        PhotonNetwork.JoinRoom(code);
+
+        if (!PhotonNetwork.JoinRoom(code))
+            FailOperation(joinFailedText.GetLocalizedString("JoinRoom"));
     }
 
     public void StartGame()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (starting || leaving || !PhotonNetwork.InRoom || !PhotonNetwork.IsMasterClient)
             return;
+
+        starting = true;
+        if (startButton != null)
+            startButton.interactable = false;
 
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.LoadLevel(gameSceneName);
@@ -137,39 +157,57 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
-        if (PhotonNetwork.InRoom)
-            PhotonNetwork.LeaveRoom();
-    }
+        if (leaving || starting || !PhotonNetwork.InRoom)
+            return;
 
+        leaving = true;
+        PhotonNetwork.LeaveRoom();
+    }
 
     public override void OnConnectedToMaster()
     {
+        busy = false;
+        leaving = false;
+        starting = false;
         SetButtonsInteractable(true);
         SetStatus("");
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        Debug.LogWarning($"[LOBBY] No se pudo crear la sala ({message}). Reintentando...");
-        CreateRoom();
+        createRetries++;
+
+        if (createRetries <= maxCreateRetries && PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.LogWarning($"[LOBBY] No se pudo crear la sala ({message}). Reintento {createRetries}/{maxCreateRetries}");
+            TryCreateRoom();
+            return;
+        }
+
+        FailOperation(joinFailedText.GetLocalizedString(message));
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        SetButtonsInteractable(true);
-
         if (returnCode == ErrorCode.GameDoesNotExist)
-            SetStatus(roomNotFoundText.GetLocalizedString());
+            FailOperation(roomNotFoundText.GetLocalizedString());
         else if (returnCode == ErrorCode.GameFull)
-            SetStatus(roomFullText.GetLocalizedString());
+            FailOperation(roomFullText.GetLocalizedString());
         else if (returnCode == ErrorCode.GameClosed)
-            SetStatus(gameStartedText.GetLocalizedString());
+            FailOperation(gameStartedText.GetLocalizedString());
         else
-            SetStatus(joinFailedText.GetLocalizedString(message));
+            FailOperation(joinFailedText.GetLocalizedString(message));
     }
 
     public override void OnJoinedRoom()
     {
+        busy = false;
+        starting = false;
+        createRetries = 0;
+
+        if (startButton != null)
+            startButton.interactable = true;
+
         SetStatus("");
         ShowRoomPanel();
         RefreshRoom();
@@ -177,8 +215,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        busy = false;
+        starting = false;
         ShowJoinPanel();
-        SetStatus("");
+        SetButtonsInteractable(false);
+        SetStatus(connectingText.GetLocalizedString());
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer) => RefreshRoom();
@@ -187,12 +228,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        busy = false;
+        starting = false;
+        leaving = false;
         ShowJoinPanel();
         SetButtonsInteractable(false);
         SetStatus(disconnectedText.GetLocalizedString(cause.ToString()));
     }
 
-
+    private void FailOperation(string message)
+    {
+        busy = false;
+        SetButtonsInteractable(PhotonNetwork.IsConnectedAndReady && !PhotonNetwork.InRoom);
+        SetStatus(message);
+    }
 
     private void RefreshRoom()
     {
@@ -218,7 +267,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
             playersText.text = list.ToString();
         }
-
 
         if (startButton != null)
             startButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
