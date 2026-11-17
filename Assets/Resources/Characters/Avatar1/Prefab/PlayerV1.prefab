@@ -1161,6 +1161,7 @@ MonoBehaviour:
   dropPoint: {fileID: 1556829423684261578}
   dropPickupDelay: 2
   ammoBoxToDrop: {fileID: 11400000, guid: 439272832fb07db4683408c2a5ab2a47, type: 2}
+  playerInput: {fileID: 0}
 --- !u!114 &7645694998568775379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3578,11 +3579,17 @@ MonoBehaviour:
   target: {fileID: 1944887684847529922}
   distance: 5
   height: 2
+  shoulderOffset: 0.6
+  leftShoulderX: -0.458
+  shoulderSwapSpeed: 6
+  shoulderSwapKey: 36
   sensitivityX: 0.15
   sensitivityY: 0.12
   minPitch: -20
   maxPitch: 50
   followSpeed: 15
+  playerInput: {fileID: 0}
+  gamepadLookSensitivity: 120
 --- !u!114 &2401247629466119516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3636,11 +3643,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpectatorCamera
   labelRoot: {fileID: 7324962258014706242}
   labelText: {fileID: 2392473742681839191}
-  labelFormat: 'Espectando a {0}
-
-    [Clic] Siguiente'
+  spectatingText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G100
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  nextHintText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G101
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerNameText:
+    m_TableReference:
+      m_TableCollectionName: Textos
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: G071
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   startDelay: 2
   followSpeed: 15
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &4469047451922787543
 PrefabInstance:
   m_ObjectHideFlags: 0

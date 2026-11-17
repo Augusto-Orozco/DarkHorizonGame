@@ -11,11 +11,13 @@ public static class GameSettings
     private const string KeyInvertY = "set_invertY";
     private const string KeyFullscreen = "set_fullscreen";
     private const string KeyLanguage = "set_language";
+    private const string KeyShoulderLeft = "set_shoulderLeft";
 
     public const float DefaultVolume = 1f;
     public const float DefaultSensitivity = 1f;
     public const bool DefaultInvertY = false;
     public const bool DefaultFullscreen = true;
+    public const bool DefaultShoulderLeft = false;
 
     // Rango permitido de la sensibilidad
     public const float MinSensitivity = 0.1f;
@@ -25,6 +27,7 @@ public static class GameSettings
     public static float Sensitivity { get; private set; } = DefaultSensitivity;
     public static bool InvertY { get; private set; } = DefaultInvertY;
     public static bool Fullscreen { get; private set; } = DefaultFullscreen;
+    public static bool ShoulderLeft { get; private set; } = DefaultShoulderLeft;
 
     // Código del idioma ("en", "es"). Vacío = el idioma por defecto: el de la computadora
     // si el juego lo tiene, y si no, el de respaldo de Localization Settings (inglés).
@@ -57,6 +60,7 @@ public static class GameSettings
         InvertY = PlayerPrefs.GetInt(KeyInvertY, DefaultInvertY ? 1 : 0) == 1;
         Fullscreen = PlayerPrefs.GetInt(KeyFullscreen, DefaultFullscreen ? 1 : 0) == 1;
         Language = PlayerPrefs.GetString(KeyLanguage, "");
+        ShoulderLeft = PlayerPrefs.GetInt(KeyShoulderLeft, DefaultShoulderLeft ? 1 : 0) == 1;
         Apply();
     }
 
@@ -67,6 +71,7 @@ public static class GameSettings
         PlayerPrefs.SetInt(KeyInvertY, InvertY ? 1 : 0);
         PlayerPrefs.SetInt(KeyFullscreen, Fullscreen ? 1 : 0);
         PlayerPrefs.SetString(KeyLanguage, Language);
+        PlayerPrefs.SetInt(KeyShoulderLeft, ShoulderLeft ? 1 : 0);
         PlayerPrefs.Save();
     }
 
@@ -76,6 +81,7 @@ public static class GameSettings
         Sensitivity = DefaultSensitivity;
         InvertY = DefaultInvertY;
         Fullscreen = DefaultFullscreen;
+        ShoulderLeft = DefaultShoulderLeft;
         Language = ""; // vuelve al idioma de la computadora
         Apply();
     }
@@ -85,6 +91,7 @@ public static class GameSettings
     public static void SetInvertY(bool v) { InvertY = v; Apply(); }
     public static void SetFullscreen(bool v) { Fullscreen = v; Apply(); }
     public static void SetLanguage(string code) { Language = code ?? ""; Apply(); }
+    public static void SetShoulderLeft(bool v) { ShoulderLeft = v; Apply(); }
 
     private static void Apply()
     {

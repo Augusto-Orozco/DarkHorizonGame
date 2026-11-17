@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,12 @@ public class ThirdPersonCamera : MonoBehaviour
     [Header("Posicion de la camara")]
     public float distance = 5f;
     public float height = 2f;
+    public float shoulderOffset = 0.6f;
+
+    [Header("Cambio de hombro")]
+    public float leftShoulderX = 0f;
+    public float shoulderSwapSpeed = 6f;
+    public Key shoulderSwapKey = Key.V;
 
     [Header("Mouse")]
     public float sensitivityX = 0.15f;
@@ -25,12 +32,18 @@ public class ThirdPersonCamera : MonoBehaviour
     private float pitch = 15f;
     private bool isChildCamera;
     private Vector3 initialLocalPosition;
+    private float currentSide = 1f;
+    private PhotonView targetView;
 
     [Header("Input System")]
     [SerializeField] private PlayerInput playerInput;
     [SerializeField] private float gamepadLookSensitivity = 120f;
 
     private InputAction lookAction;
+
+    private float TargetSide => GameSettings.ShoulderLeft ? -1f : 1f;
+
+    private bool IsLocal => !PhotonNetwork.InRoom || targetView == null || targetView.IsMine;
 
     void Start()
     {
@@ -48,6 +61,8 @@ public class ThirdPersonCamera : MonoBehaviour
             enabled = false;
             return;
         }
+
+        targetView = target.GetComponent<PhotonView>();
 
         if (playerInput == null)
             playerInput = target.GetComponent<PlayerInput>();
@@ -68,6 +83,7 @@ public class ThirdPersonCamera : MonoBehaviour
         Cursor.visible = false;
 
         isChildCamera = transform.IsChildOf(target);
+        currentSide = TargetSide;
 
         if (isChildCamera)
         {
@@ -85,8 +101,30 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void LateUpdate()
     {
+        HandleShoulderSwap();
         HandleMouse();
         FollowPlayer();
+    }
+
+    void HandleShoulderSwap()
+    {
+        if (IsLocal && !PauseMenuController.IsPaused && SwapPressed())
+        {
+            GameSettings.SetShoulderLeft(!GameSettings.ShoulderLeft);
+            GameSettings.Save();
+        }
+
+        currentSide = Mathf.MoveTowards(currentSide, TargetSide, shoulderSwapSpeed * Time.deltaTime);
+    }
+
+    bool SwapPressed()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard != null && keyboard[shoulderSwapKey].wasPressedThisFrame)
+            return true;
+
+        Gamepad gamepad = Gamepad.current;
+        return gamepad != null && gamepad.leftStickButton.wasPressedThisFrame;
     }
 
     void HandleMouse()
@@ -107,7 +145,6 @@ public class ThirdPersonCamera : MonoBehaviour
 
         if (usingGamepad)
         {
-            // El stick representa una velocidad, por eso usamos deltaTime.
             lookDelta = lookInput.y *
                         gamepadLookSensitivity *
                         GameSettings.Sensitivity *
@@ -115,7 +152,6 @@ public class ThirdPersonCamera : MonoBehaviour
         }
         else
         {
-            // Mouse Delta ya representa el desplazamiento del frame.
             lookDelta = lookInput.y *
                         sensitivityY *
                         GameSettings.Sensitivity;
@@ -125,27 +161,29 @@ public class ThirdPersonCamera : MonoBehaviour
 
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
+
     void FollowPlayer()
     {
         if (isChildCamera)
         {
-            transform.localPosition = initialLocalPosition;
+            Vector3 localPosition = initialLocalPosition;
+            localPosition.x = Mathf.Lerp(leftShoulderX, initialLocalPosition.x, (currentSide + 1f) * 0.5f);
+
+            transform.localPosition = localPosition;
             transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
             return;
         }
 
         Quaternion cameraRotation = Quaternion.Euler(pitch, yaw, 0f);
 
-        // Posicion alrededor del personaje
         Vector3 cameraOffset =
-            cameraRotation * new Vector3(0f, 0f, -distance);
+            cameraRotation * new Vector3(shoulderOffset * currentSide, 0f, -distance);
 
         Vector3 targetPosition =
             target.position +
             Vector3.up * height +
             cameraOffset;
 
-        // Seguir suavemente al personaje
         transform.position = Vector3.Lerp(
             transform.position,
             targetPosition,
