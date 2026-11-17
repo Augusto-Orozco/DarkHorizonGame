@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 using Photon.Pun;
 using Photon.Realtime;
@@ -18,12 +19,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private int codeLength = 4;
     [SerializeField] private string gameSceneName = "MapaDemoS4";
     [SerializeField] private int maxCreateRetries = 3;
+    [SerializeField] private bool createPublicRooms = true;
 
     [Header("Panel de crear / unirse")]
     [SerializeField] private GameObject joinPanel;
     [SerializeField] private TMP_InputField codeInput;
     [SerializeField] private Button createButton;
     [SerializeField] private Button joinButton;
+
+    [Header("Lista de salas publicas")]
+    [SerializeField] private Transform roomListContent;
+    [SerializeField] private Button roomEntryPrefab;
+    [SerializeField] private GameObject emptyListLabel;
 
     [Header("Panel de sala de espera")]
     [SerializeField] private GameObject roomPanel;
@@ -49,6 +56,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private LocalizedString playerLabel = new LocalizedString(TextTable, "G071");
     [SerializeField] private LocalizedString hostLabel = new LocalizedString(TextTable, "G072");
     [SerializeField] private LocalizedString youLabel = new LocalizedString(TextTable, "G073");
+
+    private readonly Dictionary<string, RoomInfo> cachedRooms = new Dictionary<string, RoomInfo>();
+    private readonly List<GameObject> roomEntries = new List<GameObject>();
 
     private bool busy;
     private bool starting;
@@ -76,11 +86,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;
 
         ShowJoinPanel();
+        RefreshRoomList();
 
         if (PhotonNetwork.IsConnectedAndReady && !PhotonNetwork.InRoom)
         {
             SetButtonsInteractable(true);
             SetStatus("");
+            EnterLobby();
             return;
         }
 
@@ -114,7 +126,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         RoomOptions options = new RoomOptions
         {
             MaxPlayers = maxPlayers,
-            IsVisible = false,
+            IsVisible = createPublicRooms,
             IsOpen = true
         };
 
@@ -124,11 +136,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
+        string code = codeInput != null ? codeInput.text.Trim().ToUpperInvariant() : "";
+        JoinRoomByCode(code);
+    }
+
+    public void JoinRoomByCode(string code)
+    {
         if (!CanAct)
             return;
 
-        string code = codeInput != null ? codeInput.text.Trim().ToUpperInvariant() : "";
-        if (code.Length != codeLength)
+        if (string.IsNullOrEmpty(code) || code.Length != codeLength)
         {
             SetStatus(codeLengthText.GetLocalizedString(codeLength));
             return;
@@ -152,6 +169,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             startButton.interactable = false;
 
         PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.LoadLevel(gameSceneName);
     }
 
@@ -171,6 +189,32 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         starting = false;
         SetButtonsInteractable(true);
         SetStatus("");
+        EnterLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        cachedRooms.Clear();
+        RefreshRoomList();
+    }
+
+    public override void OnLeftLobby()
+    {
+        cachedRooms.Clear();
+        RefreshRoomList();
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        foreach (RoomInfo info in roomList)
+        {
+            if (info.RemovedFromList || !info.IsOpen || !info.IsVisible)
+                cachedRooms.Remove(info.Name);
+            else
+                cachedRooms[info.Name] = info;
+        }
+
+        RefreshRoomList();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -205,6 +249,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         starting = false;
         createRetries = 0;
 
+        cachedRooms.Clear();
+        RefreshRoomList();
+
         if (startButton != null)
             startButton.interactable = true;
 
@@ -231,9 +278,58 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         busy = false;
         starting = false;
         leaving = false;
+        cachedRooms.Clear();
+        RefreshRoomList();
         ShowJoinPanel();
         SetButtonsInteractable(false);
         SetStatus(disconnectedText.GetLocalizedString(cause.ToString()));
+    }
+
+    private void EnterLobby()
+    {
+        if (roomListContent == null || PhotonNetwork.InLobby || PhotonNetwork.InRoom)
+            return;
+
+        PhotonNetwork.JoinLobby();
+    }
+
+    private void RefreshRoomList()
+    {
+        foreach (GameObject entry in roomEntries)
+        {
+            if (entry != null)
+                Destroy(entry);
+        }
+        roomEntries.Clear();
+
+        if (roomListContent == null || roomEntryPrefab == null)
+        {
+            if (emptyListLabel != null)
+                emptyListLabel.SetActive(cachedRooms.Count == 0);
+            return;
+        }
+
+        List<RoomInfo> rooms = new List<RoomInfo>(cachedRooms.Values);
+        rooms.Sort((a, b) => string.CompareOrdinal(a.Name, b.Name));
+
+        foreach (RoomInfo info in rooms)
+        {
+            Button entry = Instantiate(roomEntryPrefab, roomListContent);
+            roomEntries.Add(entry.gameObject);
+
+            TMP_Text label = entry.GetComponentInChildren<TMP_Text>();
+            if (label != null)
+                label.text = $"{info.Name}    {info.PlayerCount}/{info.MaxPlayers}";
+
+            bool full = info.MaxPlayers > 0 && info.PlayerCount >= info.MaxPlayers;
+            entry.interactable = !full;
+
+            string code = info.Name;
+            entry.onClick.AddListener(() => JoinRoomByCode(code));
+        }
+
+        if (emptyListLabel != null)
+            emptyListLabel.SetActive(rooms.Count == 0);
     }
 
     private void FailOperation(string message)
