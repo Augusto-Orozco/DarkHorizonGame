@@ -35885,7 +35885,7 @@ MonoBehaviour:
   respawnGrace: 4
   lifeLostMessage: "Cay\xF3 un compa\xF1ero. Quedan {0} reapariciones."
   noLivesMessage: "\xA1Ya no quedan reapariciones! Si caen todos, se acab\xF3."
-  carrierSpeedMultiplier: 0.6
+  carrierSpeedMultiplier: 0.9
   endCheckInterval: 0.5
   artifactPrefab: {fileID: 8572417032865578737, guid: 86403afc60d752a45b86a2aa6f4aba32, type: 3}
 --- !u!4 &1495867858

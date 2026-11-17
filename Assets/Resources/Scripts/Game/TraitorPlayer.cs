@@ -7,7 +7,7 @@ public sealed class TraitorPlayer : MonoBehaviour
     [Header("Balance")]
     [SerializeField, Min(1f)] private float baseHealth = 100f;
     [SerializeField, Min(0f)] private float healthPerCrewMember = 75f;
-    [SerializeField, Range(0.1f, 2f)] private float movementSpeedMultiplier = 0.85f;
+    [SerializeField, Range(0.1f, 2f)] private float movementSpeedMultiplier = 1.1f;
     [SerializeField, Min(1f)] private float damageMultiplier = 1.5f;
     [SerializeField, Min(0f)] private float revealStunDuration = 3f;
 
