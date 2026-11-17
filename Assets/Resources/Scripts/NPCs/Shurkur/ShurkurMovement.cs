@@ -239,7 +239,7 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
             return;
         }
 
-        Vector3 aimPoint = player.position + Vector3.up * aimHeight;
+        Vector3 aimPoint = GetAimPoint(player);
         Vector3 direction = aimPoint - spitSpawnPoint.position;
         if (direction.sqrMagnitude <= 0.001f)
             return;
@@ -247,6 +247,19 @@ public class ShurkurMovement : MonoBehaviour, IPatrolArea
         SpawnSpitProjectile(spitSpawnPoint.position, direction, spitProjectileDamage);
         if (netVisuals != null)
             netVisuals.SendSpit(spitSpawnPoint.position, direction);
+    }
+
+    private Vector3 GetAimPoint(Transform target)
+    {
+        CharacterController controller = target.GetComponent<CharacterController>();
+        if (controller != null)
+            return controller.bounds.center;
+
+        Collider targetCollider = target.GetComponent<Collider>();
+        if (targetCollider != null)
+            return targetCollider.bounds.center;
+
+        return target.position + Vector3.up * aimHeight;
     }
     public void SpawnSpitProjectile(Vector3 position, Vector3 direction, float damage)
     {

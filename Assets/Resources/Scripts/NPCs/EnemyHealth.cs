@@ -18,6 +18,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public event Action OnDied;
 
     private bool IsNetworked => PhotonNetwork.InRoom && view != null && view.ViewID != 0;
+    public bool Invulnerable { get; set; }
 
     private void Awake()
     {
@@ -69,8 +70,10 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     private void ApplyDamage(float amount)
     {
-        if (IsDead)
+        if (IsDead || Invulnerable)
             return;
+
+        amount *= DamageTakenMultiplier;
 
         amount *= DamageTakenMultiplier;  
         SetHealth(CurrentHealth - amount);

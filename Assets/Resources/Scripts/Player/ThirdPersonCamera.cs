@@ -17,6 +17,13 @@ public class ThirdPersonCamera : MonoBehaviour
     public float shoulderSwapSpeed = 6f;
     public Key shoulderSwapKey = Key.V;
 
+    [Header("Colision con paredes")]
+    public LayerMask collisionMask = (1 << 0) | (1 << 6) | (1 << 7);
+    public float collisionRadius = 0.25f;
+    public float collisionPadding = 0.1f;
+    public float pivotHeight = 0.6f;
+    public float collisionReturnSpeed = 6f;
+
     [Header("Mouse")]
     public float sensitivityX = 0.15f;
     public float sensitivityY = 0.12f;
@@ -34,6 +41,8 @@ public class ThirdPersonCamera : MonoBehaviour
     private Vector3 initialLocalPosition;
     private float currentSide = 1f;
     private PhotonView targetView;
+    private CharacterController targetController;
+    private float collisionFraction = 1f;
 
     [Header("Input System")]
     [SerializeField] private PlayerInput playerInput;
@@ -63,6 +72,7 @@ public class ThirdPersonCamera : MonoBehaviour
         }
 
         targetView = target.GetComponent<PhotonView>();
+        targetController = target.GetComponent<CharacterController>();
 
         if (playerInput == null)
             playerInput = target.GetComponent<PlayerInput>();
@@ -171,6 +181,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
             transform.localPosition = localPosition;
             transform.localRotation = Quaternion.Euler(pitch, yaw, 0f);
+            ApplyCollision();
             return;
         }
 
@@ -191,6 +202,44 @@ public class ThirdPersonCamera : MonoBehaviour
         );
 
         transform.rotation = cameraRotation;
+        ApplyCollision();
+    }
+
+    void ApplyCollision()
+    {
+        Vector3 desired = transform.position;
+        Vector3 origin = GetPivot();
+        Vector3 offset = desired - origin;
+        float fullDistance = offset.magnitude;
+
+        if (fullDistance <= 0.001f)
+            return;
+
+        Vector3 direction = offset / fullDistance;
+        float allowed = fullDistance;
+
+        if (Physics.SphereCast(origin, collisionRadius, direction, out RaycastHit hit, fullDistance, collisionMask, QueryTriggerInteraction.Ignore))
+            allowed = Mathf.Max(0f, hit.distance - collisionPadding);
+
+        float targetFraction = allowed / fullDistance;
+
+        if (targetFraction < collisionFraction)
+            collisionFraction = targetFraction;
+        else
+            collisionFraction = Mathf.MoveTowards(collisionFraction, targetFraction, collisionReturnSpeed * Time.deltaTime);
+
+        transform.position = origin + direction * (fullDistance * collisionFraction);
+    }
+
+    Vector3 GetPivot()
+    {
+        if (targetController != null)
+        {
+            Bounds bounds = targetController.bounds;
+            return bounds.center + Vector3.up * (bounds.extents.y * pivotHeight);
+        }
+
+        return target.position + Vector3.up * height;
     }
 
     float NormalizeAngle(float angle)

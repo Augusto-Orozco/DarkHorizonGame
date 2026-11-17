@@ -10,7 +10,11 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
     [Header("Persecution")]
     [SerializeField] private float detectionRange = 30f;
+    [SerializeField] private bool immuneUntilDetect = true;
+    [SerializeField] private float immunityGrace = 2f;
     [SerializeField] private float losePlayerRange = 120f;
+    private EnemyHealth health;
+    private float lastChaseTime = -999f;
 
     [Header("Walls")]
     [SerializeField] private LayerMask obstacleMask = ~0;
@@ -117,6 +121,9 @@ public class ProceduralKharvekMovement : MonoBehaviour
 
         lastNetworkPosition = transform.position;
         spawnHome = transform.position;
+        health = GetComponentInParent<EnemyHealth>();
+        if (health == null)
+            health = GetComponentInChildren<EnemyHealth>();
     }
 
     private void CalculateBodyHeightFromStartPosition()
@@ -176,6 +183,8 @@ public class ProceduralKharvekMovement : MonoBehaviour
     {
         bool isChasing = TryGetChaseDirection(out Vector3 chaseDirection);
 
+        UpdateImmunity(isChasing);
+
         EnemyAudio enemyAudio = GetComponentInParent<EnemyAudio>();
         if (enemyAudio != null)
             enemyAudio.SetChasing(isChasing);
@@ -207,6 +216,17 @@ public class ProceduralKharvekMovement : MonoBehaviour
         EnemyMover.Move(transform, wallCollider, lastMoveDirection * (currentSpeed * Time.deltaTime), wallMask);
         distanceSinceStep += currentSpeed * Time.deltaTime;
         bodyBobPhase += currentSpeed * Time.deltaTime * bodyBobSpeed;
+    }
+
+        private void UpdateImmunity(bool isChasing)
+    {
+        if (health == null)
+            return;
+
+        if (isChasing)
+            lastChaseTime = Time.time;
+
+        health.Invulnerable = immuneUntilDetect && Time.time > lastChaseTime + immunityGrace;
     }
 
     private bool TryGetChaseDirection(out Vector3 chaseDirection)
