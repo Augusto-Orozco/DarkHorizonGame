@@ -24,6 +24,7 @@ public class SettingsManager : MonoBehaviour
     [Tooltip("Campo numérico (como en Valorant). El valor se limita a 0.1 - 5.")]
     [SerializeField] private TMP_InputField sensitivityInput;
     [SerializeField] private Toggle invertYToggle;
+    [SerializeField] private Toggle shoulderLeftToggle;
 
     [Header("Video")]
     [SerializeField] private Toggle fullscreenToggle;
@@ -116,6 +117,7 @@ public class SettingsManager : MonoBehaviour
             sensitivityInput.onEndEdit.AddListener(OnSensitivityTyped);
         }
         if (invertYToggle != null) invertYToggle.onValueChanged.AddListener(v => { if (!refreshing) GameSettings.SetInvertY(v); });
+        if (shoulderLeftToggle != null) shoulderLeftToggle.onValueChanged.AddListener(v => { if (!refreshing) GameSettings.SetShoulderLeft(v); });
         if (fullscreenToggle != null) fullscreenToggle.onValueChanged.AddListener(v => { if (!refreshing) GameSettings.SetFullscreen(v); });
         if (languageDropdown != null)
             languageDropdown.onValueChanged.AddListener(i =>
@@ -179,6 +181,7 @@ public class SettingsManager : MonoBehaviour
         if (volumeSlider != null) volumeSlider.value = GameSettings.Volume;
         UpdateSensitivityText();
         if (invertYToggle != null) invertYToggle.isOn = GameSettings.InvertY;
+        if (shoulderLeftToggle != null) shoulderLeftToggle.isOn = GameSettings.ShoulderLeft;
         if (fullscreenToggle != null) fullscreenToggle.isOn = GameSettings.Fullscreen;
         RefreshLanguageDropdown();
         refreshing = false;

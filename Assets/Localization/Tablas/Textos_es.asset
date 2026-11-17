@@ -442,6 +442,10 @@ MonoBehaviour:
     m_Localized: '[Clic] Siguiente'
     m_Metadata:
       m_Items: []
+  - m_Id: 1960133064376320
+    m_Localized: Left shoulder camera
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

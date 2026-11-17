@@ -441,6 +441,10 @@ MonoBehaviour:
     m_Localized: '[Click] Next'
     m_Metadata:
       m_Items: []
+  - m_Id: 1960133064376320
+    m_Localized: "C\xE1mara a la izquierda"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
