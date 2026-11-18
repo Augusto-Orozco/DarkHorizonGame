@@ -100,3 +100,6 @@ G098,98,[E] Pick up the element,[E] Recoger El elemento,TraitorArtifactPickup,Pr
 G099,99,Back to menu,Volver al menú,GameOverUI,BackButton,
 G100,100,Spectating {0},Espectando a {0},SpectatorCamera,Label,
 G101,101,[Click] Next,[Clic] Siguiente,SpectatorCamera,Label,
+G102,102,Left shoulder camera,Cámara a la izquierda,ShoulderToggle,Label,
+G103,103,Switch camera side,Cambiar cámara de lado,SwitchCameraSide,Label,
+G104,104,V,V,V,,
