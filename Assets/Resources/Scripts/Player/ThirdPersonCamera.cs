@@ -139,7 +139,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     void HandleMouse()
     {
-        if (PauseMenuController.IsPaused || lookAction == null)
+        if (PauseMenuController.IsPaused || GameOverUI.IsShowing || lookAction == null)
             return;
 
         Vector2 lookInput = lookAction.ReadValue<Vector2>();

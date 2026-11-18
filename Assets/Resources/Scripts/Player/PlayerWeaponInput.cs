@@ -70,7 +70,7 @@ public class PlayerWeaponInput : MonoBehaviour
         if (health != null && health.IsDead)
             return;
 
-        if (PauseMenuController.IsPaused)
+        if (PauseMenuController.IsPaused || GameOverUI.IsShowing)
             return;
 
         if (dropWeaponAction == null)

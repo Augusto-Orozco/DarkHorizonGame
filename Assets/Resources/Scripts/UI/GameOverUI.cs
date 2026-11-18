@@ -23,10 +23,14 @@ public class GameOverUI : MonoBehaviour
 
     [SerializeField] private LocalizedString squadWipedText = new LocalizedString(TextTable, "G079");
 
+    // true mientras el panel de game over esta visible (la camara y el arma lo consultan).
+    public static bool IsShowing { get; private set; }
+
     private bool subscribed;
 
     private void Awake()
     {
+        IsShowing = false;
         if (panel != null)
             panel.SetActive(false);
     }
@@ -62,6 +66,7 @@ public class GameOverUI : MonoBehaviour
         };
 
         panel.SetActive(true);
+        IsShowing = true;
 
         PlayerMovement movement = GetComponentInParent<PlayerMovement>();
         if (movement != null)
