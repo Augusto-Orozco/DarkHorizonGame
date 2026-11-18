@@ -1,29 +1,52 @@
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class NetworkEnemy : MonoBehaviour, IPunInstantiateMagicCallback
+public class NetworkEnemy : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     public const byte RoleNormal = 0;
     public const byte RoleBoss = 1;
     public const byte RoleEscort = 2;
 
-    [Tooltip("Scripts que SOLO corren en el Master (IA, daño, drop). En los demás se apagan.")]
     [SerializeField] private Behaviour[] masterOnly;
 
     public static bool IsAuthority => !PhotonNetwork.InRoom || PhotonNetwork.IsMasterClient;
 
     public byte Role { get; private set; }
     private bool isSetup;
+    private bool[] originalEnabled;
 
     private void Awake()
     {
-        if (IsAuthority)
+        if (masterOnly != null)
+        {
+            originalEnabled = new bool[masterOnly.Length];
+            for (int i = 0; i < masterOnly.Length; i++)
+                originalEnabled[i] = masterOnly[i] != null && masterOnly[i].enabled;
+        }
+
+        if (!IsAuthority)
+            SetMasterOnly(false);
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if (!PhotonNetwork.IsMasterClient)
             return;
 
-        foreach (Behaviour behaviour in masterOnly)
+        SetMasterOnly(true);
+        Debug.Log($"[RED] {name}: este jugador es el nuevo host, la IA del enemigo ahora corre aqui.", this);
+    }
+
+    private void SetMasterOnly(bool value)
+    {
+        if (masterOnly == null)
+            return;
+
+        for (int i = 0; i < masterOnly.Length; i++)
         {
-            if (behaviour != null)
-                behaviour.enabled = false;
+            if (masterOnly[i] != null)
+                masterOnly[i].enabled = value && originalEnabled[i];
         }
     }
 
