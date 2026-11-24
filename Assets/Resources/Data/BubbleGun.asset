@@ -21,7 +21,7 @@ MonoBehaviour:
   heldPrefab: {fileID: 8841270499998432789, guid: d4ef18294e03a894880a1d84a0ba4e8f, type: 3}
   hidesRightArm: 1
   maxHeat: 100
-  heatPerShot: 8
+  heatPerShot: 25
   coolingPerSecond: 25
   coolDelay: 0.5
   resumeAtHeat: 30
